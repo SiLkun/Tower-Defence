@@ -199,8 +199,8 @@ namespace TD
 		}
 
 		// Create the window with the screen settings and get the handle to it.
-		hwnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, 
-								WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+		hwnd = CreateWindowEx(WS_EX_WINDOWEDGE, applicationName, applicationName, 
+								WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_CAPTION | WS_SYSMENU,
 								posX, posY, screenWidth, screenHeight, NULL, NULL, hinstance, NULL);
 
 		// Bring the window up on the screen and set it as main focus.
@@ -208,8 +208,8 @@ namespace TD
 		SetForegroundWindow(hwnd);
 		SetFocus(hwnd);
 
-		// Hide the pMouse cursor.
-		ShowCursor(false);
+		// Hide the mouse cursor.
+		ShowCursor(true);
 
 		return;
 	}
