@@ -6,20 +6,24 @@
 #ifndef STDAFX_H_
 #define STDAFX_H_
 
-
 //////////////
 // INCLUDES //
 //////////////
-#include <windows.h>
+
 #include <dxgi.h>
-#include <d3dcommon.h>
 #include <d3d11.h>
+#include <d3d10.h>
 #include <d3dx10math.h>
 #include <d3dx11async.h>
 #include <fstream>
 #include <vector>
+#include <windows.h>
+#include <dinput.h>
+#include <pdh.h>
+#include <mmsystem.h>
 
 using namespace std;
+
 /////////////
 // LINKING //
 /////////////
@@ -27,18 +31,38 @@ using namespace std;
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dx11.lib")
 #pragma comment(lib, "d3dx10.lib")
-
-
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "pdh.lib")
+#pragma comment(lib, "winmm.lib")
 
 namespace TD
 {
 	using namespace TD;
 
+	#include "Texture.h"
+	#include "Font.h"
+	#include "Fontshader.h"
+	#include "Text.h"
+	#include "Cpu.h"
+	#include "Fps.h"
+	#include "Position.h"
+	#include "Timer.h"
+	#include "Colorshader.h"
+	#include "Terrain.h"
+	#include "Camera.h"
+	#include "Input.h"
 	#include "Tower.h"
 	#include "Creeper.h"
 	#include "Game.h"
-	#include "Application.h"
+	#include "D3D.h"
+	#include "Engine.h"
 	#include "System.h"
+	
+	
+
+	
+
 }
 
 #endif

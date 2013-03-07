@@ -18,6 +18,51 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\Camera.cpp" />
+    <ClCompile Include="Src\Colorshader.cpp" />
+    <ClCompile Include="Src\Cpu.cpp" />
+    <ClCompile Include="Src\Creeper.cpp" />
+    <ClCompile Include="Src\D3D.cpp" />
+    <ClCompile Include="Src\Engine.cpp" />
+    <ClCompile Include="Src\Font.cpp" />
+    <ClCompile Include="Src\Fontshader.cpp" />
+    <ClCompile Include="Src\Fps.cpp" />
+    <ClCompile Include="Src\Game.cpp" />
+    <ClCompile Include="Src\Input.cpp" />
+    <ClCompile Include="Src\Position.cpp" />
+    <ClCompile Include="Src\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Src\System.cpp" />
+    <ClCompile Include="Src\Terrain.cpp" />
+    <ClCompile Include="Src\Text.cpp" />
+    <ClCompile Include="Src\Texture.cpp" />
+    <ClCompile Include="Src\Timer.cpp" />
+    <ClCompile Include="Src\Tower.cpp" />
+    <ClCompile Include="Src\Winmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\Camera.h" />
+    <ClInclude Include="Src\Colorshader.h" />
+    <ClInclude Include="Src\Cpu.h" />
+    <ClInclude Include="Src\D3D.h" />
+    <ClInclude Include="Src\Engine.h" />
+    <ClInclude Include="Src\Creeper.h" />
+    <ClInclude Include="Src\Font.h" />
+    <ClInclude Include="Src\Fontshader.h" />
+    <ClInclude Include="Src\Fps.h" />
+    <ClInclude Include="Src\Game.h" />
+    <ClInclude Include="Src\Input.h" />
+    <ClInclude Include="Src\Position.h" />
+    <ClInclude Include="Src\stdafx.h" />
+    <ClInclude Include="Src\System.h" />
+    <ClInclude Include="Src\Terrain.h" />
+    <ClInclude Include="Src\Text.h" />
+    <ClInclude Include="Src\Texture.h" />
+    <ClInclude Include="Src\Timer.h" />
+    <ClInclude Include="Src\Tower.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8867BC02-C993-4837-AA44-612527F1A55F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -146,30 +191,6 @@
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Tower.cpp" />
-    <ClCompile Include="Winmain.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="System.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="Creeper.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="System.h" />
-    <ClInclude Include="Tower.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="light.ps" />
-    <None Include="light.vs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Cube.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,20 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Tower.cpp
+// Filename: Game.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 
 namespace TD
 {
-
-	Tower::Tower()
+	Creeper::Creeper()
 	{
 	}
 
-	Tower::Tower(const Tower&)
+	Creeper::Creeper(const Creeper&)
 	{
 	}
 
-	Tower::~Tower()
+	Creeper::~Creeper()
 	{
 	}
 }

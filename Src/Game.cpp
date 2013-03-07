@@ -1,16 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Application.cpp
+// Filename: Game.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 
-Application::Application()
+namespace TD
 {
-}
-
-Application::Application(const Application&)
-{
-}
-
-Application::~Application()
-{
+	Game::Game()
+	{
+	}
+	Game::Game(const Game&)
+	{
+	}
+	Game::~Game()
+	{
+	}
 }

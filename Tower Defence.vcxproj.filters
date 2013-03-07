@@ -1,48 +1,122 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{9a58978d-7c89-4c70-9f1e-24dd1f46be4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{5163e408-0512-476e-9d19-9182feed1692}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Tower.cpp">
+    <ClCompile Include="Src\stdafx.cpp" />
+    <ClCompile Include="Src\Winmain.cpp" />
+    <ClCompile Include="Src\Tower.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Winmain.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="System.cpp" />
-    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Src\System.cpp" />
+    <ClCompile Include="Src\Engine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\D3D.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Terrain.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Text.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Texture.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Timer.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Position.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Camera.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Colorshader.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cpu.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Fontshader.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Creeper.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Fps.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Font.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="Src\stdafx.h" />
+    <ClInclude Include="Src\Creeper.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Tower.h">
+    <ClInclude Include="Src\Game.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Creeper.h">
+    <ClInclude Include="Src\Tower.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="System.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="light.ps">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="light.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Cube.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
+    <ClInclude Include="Src\System.h" />
+    <ClInclude Include="Src\Engine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\D3D.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Terrain.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Text.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Texture.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Timer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Position.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Camera.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Colorshader.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cpu.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Fontshader.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Fps.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Font.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

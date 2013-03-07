@@ -31,11 +31,11 @@ private:
 	void ShutdownWindows();
 
 private:
-	LPCWSTR m_applicationName;
-	HINSTANCE m_hinstance;
-	HWND m_hwnd;
+	LPCWSTR applicationName;
+	HINSTANCE hinstance;
+	HWND hwnd;
 
-	Application* pApplication;
+	Engine * pEngine;
 };
 
 
