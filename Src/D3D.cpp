@@ -546,21 +546,21 @@ namespace TD
 
 	void D3D::GetProjectionMatrix(D3DXMATRIX& projectionMatrix)
 	{
-		projectionMatrix = projectionMatrix;
+		projectionMatrix = this->projectionMatrix;
 		return;
 	}
 
 
 	void D3D::GetWorldMatrix(D3DXMATRIX& worldMatrix)
 	{
-		worldMatrix = worldMatrix;
+		worldMatrix = this->worldMatrix;
 		return;
 	}
 
 
 	void D3D::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
 	{
-		orthoMatrix = orthoMatrix;
+		orthoMatrix = this->orthoMatrix;
 		return;
 	}
 

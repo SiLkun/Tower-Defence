@@ -43,7 +43,7 @@ namespace TD
 		screenHeight = screenHeight;
 
 		// Store the base view matrix for 2D text rendering.
-		baseViewMatrix = baseViewMatrix;
+		this->baseViewMatrix = baseViewMatrix;
 
 		// Create the font object.
 		pFont = new Font;

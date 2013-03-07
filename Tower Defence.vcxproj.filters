@@ -7,6 +7,9 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{5163e408-0512-476e-9d19-9182feed1692}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{1e3f5ca4-ebee-4bef-bc14-eb7362579742}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\stdafx.cpp" />
@@ -118,5 +121,19 @@
     <ClInclude Include="Src\Font.h">
       <Filter>Engine</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Data\color.ps">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Data\color.vs">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Data\font.ps">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Data\font.vs">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
