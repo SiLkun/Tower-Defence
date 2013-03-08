@@ -21,7 +21,6 @@ namespace TD
 	bool Engine::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 	{
 		bool result;
-		float cameraX, cameraY, cameraZ;
 		D3DXMATRIX baseViewMatrix;
 		char videoCard[128];
 		int videoMemory;
@@ -64,16 +63,11 @@ namespace TD
 		}
 
 		// Initialize a base view matrix with the camera for 2D user interface rendering.
-		pCamera->SetPosition(0.0f, 0.0f, -1.0f);
+		pCamera->SetPosition( D3DXVECTOR3(0.0f, 0.0f, -1.0f));
 		pCamera->Render();
 		pCamera->GetViewMatrix(baseViewMatrix);
 
-		// Set the initial position of the camera.
-		cameraX = 50.0f;
-		cameraY = 2.0f;
-		cameraZ = -7.0f;
-
-		pCamera->SetPosition(cameraX, cameraY, cameraZ);
+		pCamera->SetPosition(D3DXVECTOR3(50.0f, 2.0f, 7.0f));
 		
 		// Create the terrain object.
 		pTerrain = new Terrain;
@@ -119,16 +113,6 @@ namespace TD
 			MessageBox(hwnd, L"Could not initialize the timer object.", L"Error", MB_OK);
 			return false;
 		}
-
-		// Create the position object.
-		pPosition = new Position;
-		if(!pPosition)
-		{
-			return false;
-		}
-
-		// Set the initial position of the viewer to the same as the initial camera position.
-		pPosition->SetPosition(cameraX, cameraY, cameraZ);
 
 		// Create the fps object.
 		pFps = new Fps;
@@ -228,13 +212,6 @@ namespace TD
 			pFps = 0;
 		}
 
-		// Release the position object.
-		if(pPosition)
-		{
-			delete pPosition;
-			pPosition = 0;
-		}
-
 		// Release the timer object.
 		if(pTimer)
 		{
@@ -298,7 +275,7 @@ namespace TD
 		}
 	
 		// Check if the user pressed escape and wants to exit the application.
-		if(pInput->IsEscapePressed() == true)
+		if(pInput->IsKeyPressed(DIK_ESCAPE) == true)
 		{
 			return false;
 		}
@@ -342,55 +319,59 @@ namespace TD
 	
 	bool Engine::HandleInput(float frameTime)
 	{
-		bool keyDown, result;
-		float posX, posY, posZ, rotX, rotY, rotZ;
-
+		bool result;
 
 		// Set the frame time for calculating the updated position.
-		pPosition->SetFrameTime(frameTime);
+		pCamera->SetFrameTime(frameTime);
+
+		D3DXVECTOR3 move(0,0,0);
+		D3DXVECTOR3 rotate(0,0,0);
 
 		// Handle the input.
-		keyDown = pInput->IsLeftPressed();
-		pPosition->TurnLeft(keyDown);
+		if(pInput->IsKeyPressed(DIK_LEFT) || pInput->IsKeyPressed(DIK_A))
+			move.x = -1.0f;
 
-		keyDown = pInput->IsRightPressed();
-		pPosition->TurnRight(keyDown);
+		if(pInput->IsKeyPressed(DIK_RIGHT)|| pInput->IsKeyPressed(DIK_D))
+			move.x = 1.0f;
 
-		keyDown = pInput->IsUpPressed();
-		pPosition->MoveForward(keyDown);
+		if(pInput->IsKeyPressed(DIK_UP)|| pInput->IsKeyPressed(DIK_W))
+			move.z = 1.0f;
 
-		keyDown = pInput->IsDownPressed();
-		pPosition->MoveBackward(keyDown);
-
-		keyDown = pInput->IsAPressed();
-		pPosition->MoveUpward(keyDown);
-
-		keyDown = pInput->IsZPressed();
-		pPosition->MoveDownward(keyDown);
-
-		keyDown = pInput->IsPgUpPressed();
-		pPosition->LookUpward(keyDown);
-
-		keyDown = pInput->IsPgDownPressed();
-		pPosition->LookDownward(keyDown);
+		if(pInput->IsKeyPressed(DIK_DOWN)|| pInput->IsKeyPressed(DIK_S))
+			move.z = -1.0f;
 	
-		// Get the view point position/rotation.
-		pPosition->GetPosition(posX, posY, posZ);
-		pPosition->GetRotation(rotX, rotY, rotZ);
+		if(pInput->IsMouseRightPressed())
+		{
+			int pMousePreviousX, pMousePreviousY,pMouseX, pMouseY;
+			pInput->GetMousePreviousLocation(pMousePreviousX, pMousePreviousY);
+			pInput->GetMouseLocation(pMouseX, pMouseY);
+
+			int mouseMovementX = pMouseX - pMousePreviousX;
+			int mouseMovementY = pMouseY - pMousePreviousY;
+
+			rotate.x = mouseMovementY;
+			rotate.y = mouseMovementX;
+		}
+		pCamera->Move(move);
+		pCamera->Rotate(rotate);
+
+
+		D3DXVECTOR3 position(0,0,0);
+		D3DXVECTOR3 rotation(0,0,0);
 
 		// Set the position of the camera.
-		pCamera->SetPosition(posX, posY, posZ);
-		pCamera->SetRotation(rotX, rotY, rotZ);
+		pCamera->GetPosition(position);
+		pCamera->GetRotation(rotation);
 
 		// Update the position values in the text object.
-		result = pText->SetCameraPosition(posX, posY, posZ, pDirect3D->GetDeviceContext());
+		result = pText->SetCameraPosition(position.x, position.y, position.z, pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			return false;
 		}
 
 		// Update the rotation values in the text object.
-		result = pText->SetCameraRotation(rotX, rotY, rotZ, pDirect3D->GetDeviceContext());
+		result = pText->SetCameraRotation(rotation.x, rotation.y, rotation.z, pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			return false;

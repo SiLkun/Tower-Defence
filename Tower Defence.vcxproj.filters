@@ -39,9 +39,6 @@
     <ClCompile Include="Src\Input.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Position.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Camera.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -98,9 +95,6 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Src\Input.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Position.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Src\Camera.h">

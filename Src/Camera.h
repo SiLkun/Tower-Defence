@@ -21,19 +21,36 @@ public:
 	Camera(const Camera&);
 	~Camera();
 
-	void SetPosition(float, float, float);
-	void SetRotation(float, float, float);
+	void SetPosition(D3DXVECTOR3);
+	void SetRotation(D3DXVECTOR3);
 
-	D3DXVECTOR3 GetPosition();
-	D3DXVECTOR3 GetRotation();
+	void GetPosition(D3DXVECTOR3&);
+	void GetRotation(D3DXVECTOR3&);
 
+	void SetFrameTime(float);
+
+	void Move(D3DXVECTOR3);
+	void Rotate(D3DXVECTOR3);
 	void Render();
 	void GetViewMatrix(D3DXMATRIX&);
 
 private:
-	float positionX, positionY, positionZ;
-	float rotationX, rotationY, rotationZ;
+	D3DXVECTOR3 position;
+	D3DXVECTOR3 acceleration;
+	D3DXVECTOR3 moveSpeed;
+	D3DXVECTOR3 maxMoveSpeed;
+	
+	D3DXVECTOR3 rotation;
+	D3DXVECTOR3 rotationAcceleration;
+	D3DXVECTOR3 rotationSpeed;
+	D3DXVECTOR3 maxRotationSpeed;
+
+	float friction;
+	float frameTime;
+
+	D3DXMATRIX rotationMatrix;
 	D3DXMATRIX viewMatrix;
+
 };
 
 #endif

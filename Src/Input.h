@@ -27,17 +27,14 @@ public:
 	void Shutdown();
 	bool Frame();
 
+	bool IsMouseLeftPressed();
+	bool IsMouseRightPressed();
+	void GetMouseLeftDownLocation(int&, int&);
+	void GetMousePreviousLocation(int&, int&);
 	void GetMouseLocation(int&, int&);
 
-	bool IsEscapePressed();
-	bool IsLeftPressed();
-	bool IsRightPressed();
-	bool IsUpPressed();
-	bool IsDownPressed();
-	bool IsAPressed();
-	bool IsZPressed();
-	bool IsPgUpPressed();
-	bool IsPgDownPressed();
+	bool IsKeyPressed(char);
+
 
 private:
 	bool ReadKeyboard();
@@ -49,11 +46,15 @@ private:
 	IDirectInputDevice8* pKeyboard;
 	IDirectInputDevice8* pMouse;
 
-	unsigned char pKeyboardState[256];
-	DIMOUSESTATE pMouseState;
+	unsigned char keyboardState[256];
+	DIMOUSESTATE mouseState;
 
 	int screenWidth, screenHeight;
-	int pMouseX, pMouseY;
+
+	bool mouseLeftDown,mouseRightDown;
+	int mouseX, mouseY;
+	int mouseLeftDownX, mouseLeftDownY;
+	int mousePreviousX, mousePreviousY;
 };
 
 #endif

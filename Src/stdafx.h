@@ -46,7 +46,6 @@ namespace TD
 	#include "Text.h"
 	#include "Cpu.h"
 	#include "Fps.h"
-	#include "Position.h"
 	#include "Timer.h"
 	#include "Colorshader.h"
 	#include "Terrain.h"

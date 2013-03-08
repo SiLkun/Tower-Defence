@@ -30,12 +30,12 @@ namespace TD
 
 
 		// Store the screen size which will be used for positioning the pMouse cursor.
-		screenWidth = screenWidth;
-		screenHeight = screenHeight;
+		this->screenWidth = screenWidth;
+		this->screenHeight = screenHeight;
 
 		// Initialize the location of the pMouse on the screen.
-		pMouseX = 0;
-		pMouseY = 0;
+		mouseX = 0;
+		mouseY = 0;
 
 		// Initialize the main direct input interface.
 		result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&pDirectInput, NULL);
@@ -165,7 +165,7 @@ namespace TD
 
 
 		// Read the pKeyboard pDevice.
-		result = pKeyboard->GetDeviceState(sizeof(pKeyboardState), (LPVOID)&pKeyboardState);
+		result = pKeyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
 		if(FAILED(result))
 		{
 			// If the pKeyboard lost focus or was not acquired then try to get control back.
@@ -189,7 +189,7 @@ namespace TD
 
 
 		// Read the pMouse pDevice.
-		result = pMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&pMouseState);
+		result = pMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&mouseState);
 		if(FAILED(result))
 		{
 			// If the pMouse lost focus or was not acquired then try to get control back.
@@ -209,129 +209,98 @@ namespace TD
 
 	void Input::ProcessInput()
 	{
+		mousePreviousX = mouseX;
+		mousePreviousY = mouseY;
+
 		// Update the location of the pMouse cursor based on the change of the pMouse location during the frame.
-		pMouseX += pMouseState.lX;
-		pMouseY += pMouseState.lY;
+		mouseX += mouseState.lX;
+		mouseY += mouseState.lY;
 
 		// Ensure the pMouse location doesn't exceed the screen width or height.
-		if(pMouseX < 0)  { pMouseX = 0; }
-		if(pMouseY < 0)  { pMouseY = 0; }
+		if(mouseX < 0)  { mouseX = 0; }
+		if(mouseY < 0)  { mouseY = 0; }
 	
-		if(pMouseX > screenWidth)  { pMouseX = screenWidth; }
-		if(pMouseY > screenHeight) { pMouseY = screenHeight; }
+		if(mouseX > screenWidth)  { mouseX = screenWidth; }
+		if(mouseY > screenHeight) { mouseY = screenHeight; }
 	
+		if(mouseLeftDown)
+		{
+			if(!IsMouseLeftPressed())
+			{
+				mouseLeftDown = false;
+			}
+		}
+		else
+		{
+			if(IsMouseLeftPressed())
+			{
+				mouseLeftDown = true;
+				mouseLeftDownX = mouseX;
+				mouseLeftDownY = mouseY;
+
+			}
+		}
+
+		if(IsMouseRightPressed())
+		{
+			if(!mouseRightDown)
+			{
+				mouseRightDown = true;
+				mousePreviousX = mouseX;
+				mousePreviousY = mouseY;
+			}
+		}
+		else if(!IsMouseRightPressed())
+		{
+			mouseRightDown = false;
+		}
+		
 		return;
 	}
 
-
-	void Input::GetMouseLocation(int& pMouseX, int& pMouseY)
+	bool Input::IsMouseLeftPressed()
 	{
-		pMouseX = pMouseX;
-		pMouseY = pMouseY;
+		if(mouseState.rgbButtons[0] & 0x80)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool Input::IsMouseRightPressed()
+	{
+		if(mouseState.rgbButtons[1] & 0x80)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	void Input::GetMouseLeftDownLocation(int& mouseX, int& mouseY)
+	{
+		mouseX = this->mouseLeftDownX;
+		mouseY = this->mouseLeftDownY;
+		return;
+	}
+
+	void Input::GetMousePreviousLocation(int& mouseX, int& mouseY)
+	{
+		mouseX = this->mousePreviousX;
+		mouseY = this->mousePreviousY;
+		return;
+	}
+	void Input::GetMouseLocation(int& mouseX, int& mouseY)
+	{
+		mouseX = this->mouseX;
+		mouseY = this->mouseY;
 		return;
 	}
 
 
-	bool Input::IsEscapePressed()
+	bool Input::IsKeyPressed(char key)
 	{
 		// Do a bitwise and on the pKeyboard state to check if the escape key is currently being pressed.
-		if(pKeyboardState[DIK_ESCAPE] & 0x80)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	bool Input::IsLeftPressed()
-	{
-		// Do a bitwise and on the pKeyboard state to check if the key is currently being pressed.
-		if(pKeyboardState[DIK_LEFT] & 0x80)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	bool Input::IsRightPressed()
-	{
-		// Do a bitwise and on the pKeyboard state to check if the key is currently being pressed.
-		if(pKeyboardState[DIK_RIGHT] & 0x80)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	bool Input::IsUpPressed()
-	{
-		// Do a bitwise and on the pKeyboard state to check if the key is currently being pressed.
-		if(pKeyboardState[DIK_UP] & 0x80)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	bool Input::IsDownPressed()
-	{
-		// Do a bitwise and on the pKeyboard state to check if the key is currently being pressed.
-		if(pKeyboardState[DIK_DOWN] & 0x80)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	bool Input::IsAPressed()
-	{
-		// Do a bitwise and on the pKeyboard state to check if the key is currently being pressed.
-		if(pKeyboardState[DIK_A] & 0x80)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	bool Input::IsZPressed()
-	{
-		// Do a bitwise and on the pKeyboard state to check if the key is currently being pressed.
-		if(pKeyboardState[DIK_Z] & 0x80)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	bool Input::IsPgUpPressed()
-	{
-		// Do a bitwise and on the pKeyboard state to check if the key is currently being pressed.
-		if(pKeyboardState[DIK_PGUP] & 0x80)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	bool Input::IsPgDownPressed()
-	{
-		// Do a bitwise and on the pKeyboard state to check if the key is currently being pressed.
-		if(pKeyboardState[DIK_PGDN] & 0x80)
+		if(keyboardState[key] & 0x80)
 		{
 			return true;
 		}

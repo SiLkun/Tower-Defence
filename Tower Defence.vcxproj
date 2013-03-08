@@ -30,7 +30,6 @@
     <ClCompile Include="Src\Fps.cpp" />
     <ClCompile Include="Src\Game.cpp" />
     <ClCompile Include="Src\Input.cpp" />
-    <ClCompile Include="Src\Position.cpp" />
     <ClCompile Include="Src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -54,7 +53,6 @@
     <ClInclude Include="Src\Fps.h" />
     <ClInclude Include="Src\Game.h" />
     <ClInclude Include="Src\Input.h" />
-    <ClInclude Include="Src\Position.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\System.h" />
     <ClInclude Include="Src\Terrain.h" />

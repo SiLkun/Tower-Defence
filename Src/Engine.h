@@ -46,7 +46,6 @@ private:
 	Terrain* pTerrain;
 	ColorShader* pColorShader;
 	Timer* pTimer;
-	Position* pPosition;
 	Fps* pFps;
 	Cpu* pCpu;
 	FontShader* pFontShader;
