@@ -48,9 +48,14 @@ namespace TD
 	#include "Fps.h"
 	#include "Timer.h"
 	#include "Colorshader.h"
+
+	#include "Lightshader.h"
+	#include "Light.h"
+
 	#include "Terrain.h"
 	#include "Camera.h"
 	#include "Input.h"
+	#include "Model.h"
 	#include "Tower.h"
 	#include "Creeper.h"
 	#include "Game.h"

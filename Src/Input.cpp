@@ -297,7 +297,7 @@ namespace TD
 	}
 
 
-	bool Input::IsKeyPressed(char key)
+	bool Input::IsKeyPressed(unsigned char key)
 	{
 		// Do a bitwise and on the pKeyboard state to check if the escape key is currently being pressed.
 		if(keyboardState[key] & 0x80)

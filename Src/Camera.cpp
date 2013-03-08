@@ -17,13 +17,13 @@ namespace TD
 		acceleration.y = 0.0f; 
 		acceleration.z = 0.0f; 
 
-		moveSpeed.x = D3DXToRadian(0.0001f);
-		moveSpeed.y = D3DXToRadian(0.0001f); 
-		moveSpeed.z = D3DXToRadian(0.0001f); 
+		moveSpeed.x = (float)D3DXToRadian(0.001f);
+		moveSpeed.y = (float)D3DXToRadian(0.0f); 
+		moveSpeed.z = (float)D3DXToRadian(0.01f); 
 
-		maxMoveSpeed.x = D3DXToRadian(0.01f);
-		maxMoveSpeed.y = D3DXToRadian(0.01f); 
-		maxMoveSpeed.z = D3DXToRadian(0.01f); 
+		maxMoveSpeed.x = (float)D3DXToRadian(0.1f);
+		maxMoveSpeed.y = (float)D3DXToRadian(0.00f); 
+		maxMoveSpeed.z = (float)D3DXToRadian(1.0f); 
 
 		rotation.x = 0.0f;
 		rotation.y = 0.0f;
@@ -33,16 +33,16 @@ namespace TD
 		rotationAcceleration.y = 0.0f;
 		rotationAcceleration.z = 0.0f;
 
-		rotationSpeed.x = D3DXToRadian(0.0001f);
-		rotationSpeed.y = D3DXToRadian(0.0005f);
-		rotationSpeed.z = D3DXToRadian(0.0000f);
+		rotationSpeed.x = (float)D3DXToRadian(0.0003f);
+		rotationSpeed.y = (float)D3DXToRadian(0.0005f);
+		rotationSpeed.z = (float)D3DXToRadian(0.0000f);
 		
-		maxRotationSpeed.x = D3DXToRadian(0.1f);
-		maxRotationSpeed.y = D3DXToRadian(0.3f);
-		maxRotationSpeed.z = D3DXToRadian(0.0f);
+		maxRotationSpeed.x = (float)D3DXToRadian(0.2f);
+		maxRotationSpeed.y = (float)D3DXToRadian(0.3f);
+		maxRotationSpeed.z = (float)D3DXToRadian(0.0f);
 
 		frameTime = 0.0f;
-		friction = D3DXToRadian(0.001f);
+		friction = (float)D3DXToRadian(0.001f);
 	}
 
 
@@ -89,35 +89,76 @@ namespace TD
 
 	void Camera::Move(D3DXVECTOR3 move)
 	{
-		D3DXVec3TransformCoord(&move, &move, &rotationMatrix);
 
-		position += move;
-		/*
-
-
-		forwardSpeed += frameTime * 0.001f;
-
-		if(forwardSpeed > (frameTime * 0.03f))
+		if(move.x > 0.0001f || move.x < -0.0001f)
 		{
-			forwardSpeed = frameTime * 0.03f;
+			acceleration.x += frameTime * moveSpeed.x * move.x;
+
+			if(acceleration.x > (frameTime * maxMoveSpeed.x))
+			{
+				acceleration.x = frameTime * maxMoveSpeed.x;
+			}
+			else if(acceleration.x < (frameTime * -maxMoveSpeed.x))
+			{
+				acceleration.x = frameTime * -maxMoveSpeed.x;
+			}
+		}
+		else if(acceleration.x > 0.0001f)
+		{
+			acceleration.x -= frameTime * moveSpeed.x * 10.0f;
+
+			if(acceleration.x < -0.0001f)
+			{
+				acceleration.x = 0.0f;
+			}
+		}
+		else if(acceleration.x < -0.0001f)
+		{
+			acceleration.x += frameTime * moveSpeed.x * 10.0f;
+
+			if(acceleration.x > 0.0001f)
+			{
+				acceleration.x = 0.0f;
+			}
 		}
 
-		forwardSpeed -= frameTime * 0.0007f;
-
-		if(forwardSpeed < 0.0f)
+		if(move.z > 0.0001f || move.z < -0.0001f)
 		{
-			forwardSpeed = 0.0f;
+			acceleration.z += frameTime * moveSpeed.z * move.z;
+
+			if(acceleration.z > (frameTime * maxMoveSpeed.z))
+			{
+				acceleration.z = frameTime * maxMoveSpeed.z;
+			}
+			else if(acceleration.z < (frameTime * -maxMoveSpeed.z))
+			{
+				acceleration.z = frameTime * -maxMoveSpeed.z;
+			}
+		}
+		else if(acceleration.z > 0.0001f)
+		{
+			acceleration.z -= frameTime * moveSpeed.z * 10.0f;
+
+			if(acceleration.z < -0.0001f)
+			{
+				acceleration.z = 0.0f;
+			}
+		}
+		else if(acceleration.z < -0.0001f)
+		{
+			acceleration.z += frameTime * moveSpeed.z * 10.0f;
+
+			if(acceleration.z > 0.0001f)
+			{
+				acceleration.z = 0.0f;
+			}
 		}
 
 
-		// Convert degrees to radians.
-		radians = rotationY * 0.0174532925f;
+		D3DXVECTOR3 rotatedAcceleration(0,0,0);
+		D3DXVec3TransformCoord(&rotatedAcceleration, &acceleration, &rotationMatrix);
 
-		// Update the position.
-		positionX += sinf(radians) * forwardSpeed;
-		positionZ += cosf(radians) * forwardSpeed;
-		*/
-		return;
+		position += rotatedAcceleration;
 	}
 
 
@@ -136,7 +177,7 @@ namespace TD
 				rotationAcceleration.x = frameTime * -maxRotationSpeed.x;
 			}
 		}
-		else if(rotationAcceleration.x > 0.0001f)
+		else if(rotationAcceleration.x > -0.0001f)
 		{
 			rotationAcceleration.x -= frameTime * rotationSpeed.x * 10.0f;
 
@@ -145,7 +186,7 @@ namespace TD
 				rotationAcceleration.x = 0.0f;
 			}
 		}
-		else if(rotationAcceleration.x < -0.0001f)
+		else if(rotationAcceleration.x < 0.0001f)
 		{
 			rotationAcceleration.x += frameTime * rotationSpeed.x * 10.0f;
 
@@ -191,20 +232,22 @@ namespace TD
 		rotation.x += rotationAcceleration.x;
 		rotation.y += rotationAcceleration.y;
 
-		if(rotation.x > D3DX_PI/2)
+		if(rotation.x > D3DX_PI/4.0f)
 		{
-			rotation.x = D3DX_PI /2;
+			rotationAcceleration.x = 0.0f;
+			rotation.x = (float)D3DX_PI /4.0f;
 		}
 
-		if(rotation.x < -D3DX_PI/2)
+		if(rotation.x < -D3DX_PI/4.0f)
 		{
-			rotation.x = -D3DX_PI /2;
+			rotationAcceleration.x = 0.0f;
+			rotation.x = (float)-D3DX_PI /4.0f;
 		}
 
 		// Keep the rotation in the 0 to 360 range.
-		if(rotation.y > D3DX_PI*2)
+		if(rotation.y > D3DX_PI*2.0f)
 		{
-			rotation.y -= D3DX_PI *2;
+			rotation.y -= (float)D3DX_PI *2.0f;
 		}
 
 		return;

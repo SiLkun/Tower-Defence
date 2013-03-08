@@ -33,7 +33,7 @@ public:
 	void GetMousePreviousLocation(int&, int&);
 	void GetMouseLocation(int&, int&);
 
-	bool IsKeyPressed(char);
+	bool IsKeyPressed(unsigned char);
 
 
 private:

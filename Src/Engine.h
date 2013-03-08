@@ -43,8 +43,6 @@ private:
 	D3D* pDirect3D;
 	Input* pInput;
 	Camera* pCamera;
-	Terrain* pTerrain;
-	ColorShader* pColorShader;
 	Timer* pTimer;
 	Fps* pFps;
 	Cpu* pCpu;

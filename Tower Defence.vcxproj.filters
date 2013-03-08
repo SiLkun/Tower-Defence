@@ -24,9 +24,6 @@
     <ClCompile Include="Src\D3D.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Terrain.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Text.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -63,6 +60,18 @@
     <ClCompile Include="Src\Font.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Model.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Lightshader.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Light.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Terrain.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\stdafx.h" />
@@ -80,9 +89,6 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Src\D3D.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Terrain.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Src\Text.h">
@@ -115,6 +121,18 @@
     <ClInclude Include="Src\Font.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Model.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\LightShader.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Light.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Terrain.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Data\color.ps">
@@ -129,5 +147,13 @@
     <FxCompile Include="Data\font.vs">
       <Filter>Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\light.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Data\light.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

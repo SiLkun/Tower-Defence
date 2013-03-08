@@ -70,35 +70,20 @@ namespace TD
 		pCamera->SetPosition(D3DXVECTOR3(50.0f, 2.0f, 7.0f));
 		
 		// Create the terrain object.
-		pTerrain = new Terrain;
-		if(!pTerrain)
+		pGame = new Game;
+		if(!pGame)
 		{
 			return false;
 		}
 
-		// Initialize the terrain object.
-		result = pTerrain->Initialize(pDirect3D->GetDevice());
+		// Initialize the game object.
+		result = pGame->Initialize(pDirect3D->GetDevice(),hwnd);
 		if(!result)
 		{
-			MessageBox(hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
+			MessageBox(hwnd, L"Could not initialize the game object.", L"Error", MB_OK);
 			return false;
 		}
 		
-		// Create the color shader object.
-		pColorShader = new ColorShader;
-		if(!pColorShader)
-		{
-			return false;
-		}
-
-		// Initialize the color shader object.
-		result = pColorShader->Initialize(pDirect3D->GetDevice(), hwnd);
-		if(!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
-			return false;
-		}
-
 		// Create the timer object.
 		pTimer = new Timer;
 		if(!pTimer)
@@ -218,21 +203,13 @@ namespace TD
 			delete pTimer;
 			pTimer = 0;
 		}
-
-		// Release the color shader object.
-		if(pColorShader)
-		{
-			pColorShader->Shutdown();
-			delete pColorShader;
-			pColorShader = 0;
-		}
-
+		
 		// Release the terrain object.
-		if(pTerrain)
+		if(pGame)
 		{
-			pTerrain->Shutdown();
-			delete pTerrain;
-			pTerrain = 0;
+			pGame->Shutdown();
+			delete pGame;
+			pGame = 0;
 		}
 
 		// Release the camera object.
@@ -349,8 +326,8 @@ namespace TD
 			int mouseMovementX = pMouseX - pMousePreviousX;
 			int mouseMovementY = pMouseY - pMousePreviousY;
 
-			rotate.x = mouseMovementY;
-			rotate.y = mouseMovementX;
+			rotate.x = (float)mouseMovementY;
+			rotate.y = (float)mouseMovementX;
 		}
 		pCamera->Move(move);
 		pCamera->Rotate(rotate);
@@ -399,15 +376,7 @@ namespace TD
 		pDirect3D->GetProjectionMatrix(projectionMatrix);
 		pDirect3D->GetOrthoMatrix(orthoMatrix);
 
-		// Render the terrain buffers.
-		pTerrain->Render(pDirect3D->GetDeviceContext());
-
-		// Render the model using the color shader.
-		result = pColorShader->Render(pDirect3D->GetDeviceContext(), pTerrain->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
-		if(!result)
-		{
-			return false;
-		}
+		pGame->Render(pDirect3D->GetDeviceContext(),worldMatrix, viewMatrix, projectionMatrix);
 
 		// Turn off the Z buffer to begin all 2D rendering.
 		pDirect3D->TurnZBufferOff();

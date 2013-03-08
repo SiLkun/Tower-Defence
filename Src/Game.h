@@ -21,16 +21,19 @@ public:
 	Game();
 	Game(const Game&);
 	~Game();
-
-
-
+	bool Initialize(ID3D11Device*,HWND);
+	void Shutdown();
+	Terrain * GetTerrain();
+	bool Render(ID3D11DeviceContext*,D3DXMATRIX,D3DXMATRIX,D3DXMATRIX);
 private:
+	Terrain* pTerrain;
+	ColorShader* pColorShader;
+	
+	Light* pLight;
+	LightShader* pLightShader;
 
-
-private:
-	//Terrain* pTerrain;
-	vector<Creeper> * creepers;
-	//vector<Tower> * towers;
+	vector<Creeper*> * creepers;
+	vector<Tower*> * towers;
 };
 
 #endif

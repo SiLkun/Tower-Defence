@@ -30,6 +30,9 @@
     <ClCompile Include="Src\Fps.cpp" />
     <ClCompile Include="Src\Game.cpp" />
     <ClCompile Include="Src\Input.cpp" />
+    <ClCompile Include="Src\Light.cpp" />
+    <ClCompile Include="Src\Lightshader.cpp" />
+    <ClCompile Include="Src\Model.cpp" />
     <ClCompile Include="Src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -53,6 +56,9 @@
     <ClInclude Include="Src\Fps.h" />
     <ClInclude Include="Src\Game.h" />
     <ClInclude Include="Src\Input.h" />
+    <ClInclude Include="Src\Light.h" />
+    <ClInclude Include="Src\LightShader.h" />
+    <ClInclude Include="Src\Model.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\System.h" />
     <ClInclude Include="Src\Terrain.h" />
@@ -82,6 +88,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\light.ps" />
+    <None Include="Data\light.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8867BC02-C993-4837-AA44-612527F1A55F}</ProjectGuid>
@@ -154,6 +164,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4005</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -208,7 +208,7 @@ namespace TD
 		featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 		// Create the swap chain, Direct3D pDevice, and Direct3D pDevice context.
-		result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_DEBUG , &featureLevel, 1, 
+		result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0 , &featureLevel, 1, 
 											   D3D11_SDK_VERSION, &pSwapChainDesc, &pSwapChain, &pDevice, NULL, &pDeviceContext);
 		if(FAILED(result))
 		{
