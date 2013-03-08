@@ -67,7 +67,7 @@ namespace TD
 		pCamera->Render();
 		pCamera->GetViewMatrix(baseViewMatrix);
 
-		pCamera->SetPosition(D3DXVECTOR3(50.0f, 2.0f, 7.0f));
+		pCamera->SetPosition(D3DXVECTOR3(0.0f, 2.0f, -25.0f));
 		
 		// Create the terrain object.
 		pGame = new Game;

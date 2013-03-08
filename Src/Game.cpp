@@ -59,6 +59,7 @@ namespace TD
 			return false;
 		}
 		result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
+		pCreeper->SetPosition(0,2.0f,0);
 
 		creepers->push_back(pCreeper);
 

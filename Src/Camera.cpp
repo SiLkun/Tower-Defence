@@ -17,11 +17,11 @@ namespace TD
 		acceleration.y = 0.0f; 
 		acceleration.z = 0.0f; 
 
-		moveSpeed.x = (float)D3DXToRadian(0.001f);
+		moveSpeed.x = (float)D3DXToRadian(0.005f);
 		moveSpeed.y = (float)D3DXToRadian(0.0f); 
 		moveSpeed.z = (float)D3DXToRadian(0.01f); 
 
-		maxMoveSpeed.x = (float)D3DXToRadian(0.1f);
+		maxMoveSpeed.x = (float)D3DXToRadian(0.5f);
 		maxMoveSpeed.y = (float)D3DXToRadian(0.00f); 
 		maxMoveSpeed.z = (float)D3DXToRadian(1.0f); 
 

@@ -354,6 +354,7 @@ namespace TD
 		// Create an orthographic projection matrix for 2D rendering.
 		D3DXMatrixOrthoLH(&orthoMatrix, (float)screenWidth, (float)screenHeight, screenNear, screenDepth);
 
+		/*
 		// Clear the second depth stencil state before setting the parameters.
 		ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
 
@@ -410,7 +411,7 @@ namespace TD
 		{
 			return false;
 		}
-
+		*/
 		return true;
 	}
 

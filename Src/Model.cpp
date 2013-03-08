@@ -321,4 +321,9 @@ namespace TD
 
 		return;
 	}
+
+	void Model::SetPosition(float x,float y,float z)
+	{
+	}
+
 }

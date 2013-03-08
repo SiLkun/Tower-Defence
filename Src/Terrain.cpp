@@ -108,8 +108,8 @@ namespace TD
 			{
 				// LINE 1
 				// Upper left.
-				positionX = (float)i;
-				positionZ = (float)(j+1);
+				positionX = (float)i -50.0f;
+				positionZ = (float)(j+1) - 50.0f;
 
 				vertices[index].position = D3DXVECTOR3(positionX, 0.0f, positionZ);
 				vertices[index].color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -117,8 +117,8 @@ namespace TD
 				index++;
 
 				// Upper right.
-				positionX = (float)(i+1);
-				positionZ = (float)(j+1);
+				positionX = (float)(i+1) - 50.0f;
+				positionZ = (float)(j+1) - 50.0f;
 
 				vertices[index].position = D3DXVECTOR3(positionX, 0.0f, positionZ);
 				vertices[index].color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -127,8 +127,8 @@ namespace TD
 
 				// LINE 2
 				// Upper right.
-				positionX = (float)(i+1);
-				positionZ = (float)(j+1);
+				positionX = (float)(i+1) - 50.0f;
+				positionZ = (float)(j+1) - 50.0f;
 
 				vertices[index].position = D3DXVECTOR3(positionX, 0.0f, positionZ);
 				vertices[index].color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -136,8 +136,8 @@ namespace TD
 				index++;
 
 				// Bottom right.
-				positionX = (float)(i+1);
-				positionZ = (float)j;
+				positionX = (float)(i+1) - 50.0f;
+				positionZ = (float)j - 50.0f;
 
 				vertices[index].position = D3DXVECTOR3(positionX, 0.0f, positionZ);
 				vertices[index].color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -146,8 +146,8 @@ namespace TD
 
 				// LINE 3
 				// Bottom right.
-				positionX = (float)(i+1);
-				positionZ = (float)j;
+				positionX = (float)(i+1) - 50.0f;
+				positionZ = (float)j - 50.0f;
 
 				vertices[index].position = D3DXVECTOR3(positionX, 0.0f, positionZ);
 				vertices[index].color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -155,8 +155,8 @@ namespace TD
 				index++;
 
 				// Bottom left.
-				positionX = (float)i;
-				positionZ = (float)j;
+				positionX = (float)i - 50.0f;
+				positionZ = (float)j - 50.0f;
 
 				vertices[index].position = D3DXVECTOR3(positionX, 0.0f, positionZ);
 				vertices[index].color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -165,8 +165,8 @@ namespace TD
 
 				// LINE 4
 				// Bottom left.
-				positionX = (float)i;
-				positionZ = (float)j;
+				positionX = (float)i - 50.0f;
+				positionZ = (float)j - 50.0f;
 
 				vertices[index].position = D3DXVECTOR3(positionX, 0.0f, positionZ);
 				vertices[index].color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -174,8 +174,8 @@ namespace TD
 				index++;
 
 				// Upper left.
-				positionX = (float)i;
-				positionZ = (float)(j+1);
+				positionX = (float)i - 50.0f;
+				positionZ = (float)(j+1) - 50.0f;
 
 				vertices[index].position = D3DXVECTOR3(positionX, 0.0f, positionZ);
 				vertices[index].color = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
