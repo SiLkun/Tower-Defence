@@ -16,7 +16,7 @@ public:
 	Creeper();
 	Creeper(const Creeper&);
 	~Creeper();
-
+	void Update(float);
 };
 
 #endif

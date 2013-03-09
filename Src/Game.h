@@ -24,7 +24,7 @@ public:
 	bool Initialize(ID3D11Device*,HWND);
 	void Shutdown();
 	Terrain * GetTerrain();
-	bool Render(ID3D11DeviceContext*,D3DXMATRIX,D3DXMATRIX,D3DXMATRIX);
+	bool Render(ID3D11DeviceContext*,D3DXMATRIX,D3DXMATRIX,D3DXMATRIX,float);
 private:
 	Terrain* pTerrain;
 	ColorShader* pColorShader;

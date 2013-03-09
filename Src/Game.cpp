@@ -52,16 +52,22 @@ namespace TD
 			return false;
 		}
 
-		// Create the model object.
-		Creeper* pCreeper = new Creeper;
-		if(!pCreeper)
+		for (int i = 0; i < 20; i++)
 		{
-			return false;
-		}
-		result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
-		pCreeper->SetPosition(0,2.0f,0);
+			// Create the model object.
+			Creeper* pCreeper = new Creeper;
+			if(!pCreeper)
+			{
+				return false;
+			}
+			result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
+			
+			pCreeper->SetPosition(-50.0f + (i *5.0f),1.0f,50.0f);
 
-		creepers->push_back(pCreeper);
+			creepers->push_back(pCreeper);
+		}
+
+		
 
 		// Create the light shader object.
 		pLightShader = new LightShader;
@@ -144,9 +150,12 @@ namespace TD
 		return pTerrain;
 	}
 
-	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX worldMatrix,D3DXMATRIX viewMatrix,D3DXMATRIX projectionMatrix)
+	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX worldMatrix,D3DXMATRIX viewMatrix,D3DXMATRIX projectionMatrix,float frameTime)
 	{
 		bool result;
+		
+		pLight->Update(frameTime);
+		
 		// Render the terrain buffers.
 		pTerrain->Render(pDeviceContext);
 
@@ -163,10 +172,16 @@ namespace TD
 			for(UINT iCreeper = 0;iCreeper < creepers->size();iCreeper++)
 			{
 				Creeper* pCreeper = creepers->at(iCreeper);
+
+				pCreeper->Update(frameTime);
 				pCreeper->Render(pDeviceContext);
 				
+				D3DXMATRIX modelMatrix;
+				D3DXMatrixIdentity(&modelMatrix);
+				D3DXMatrixTranslation(&modelMatrix,pCreeper->GetPosition()->x,pCreeper->GetPosition()->y,pCreeper->GetPosition()->z);
+
 				// Render the model using the light shader.
-				result = pLightShader->Render(pDeviceContext, pCreeper->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+				result = pLightShader->Render(pDeviceContext, pCreeper->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix, 
 						   pCreeper->GetTexture(), pLight->GetDirection(), pLight->GetDiffuseColor());
 			}
 		}

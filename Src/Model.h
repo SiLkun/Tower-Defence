@@ -35,6 +35,7 @@ public:
 	void Render(ID3D11DeviceContext*);
 	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
+	D3DXVECTOR3 * GetPosition();
 	void SetPosition(float,float,float);
 private:
 	bool InitializeBuffers(ID3D11Device*);
@@ -46,11 +47,11 @@ private:
 
 	bool LoadModel(char*);
 	void ReleaseModel();
-private:
+protected:
 	ID3D11Buffer *pVertexBuffer, * pIndexBuffer;
 	int vertexCount, indexCount;
 	Texture* pTexture;
-
+	D3DXVECTOR3 position;
 	ModelType* pModel;
 };
 

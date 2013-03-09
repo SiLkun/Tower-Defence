@@ -67,7 +67,7 @@ namespace TD
 		pCamera->Render();
 		pCamera->GetViewMatrix(baseViewMatrix);
 
-		pCamera->SetPosition(D3DXVECTOR3(0.0f, 2.0f, -25.0f));
+		pCamera->SetPosition(D3DXVECTOR3(0.0f, 5.0f, -25.0f));
 		
 		// Create the terrain object.
 		pGame = new Game;
@@ -376,7 +376,7 @@ namespace TD
 		pDirect3D->GetProjectionMatrix(projectionMatrix);
 		pDirect3D->GetOrthoMatrix(orthoMatrix);
 
-		pGame->Render(pDirect3D->GetDeviceContext(),worldMatrix, viewMatrix, projectionMatrix);
+		pGame->Render(pDirect3D->GetDeviceContext(),worldMatrix, viewMatrix, projectionMatrix,pTimer->GetTime());
 
 		// Turn off the Z buffer to begin all 2D rendering.
 		pDirect3D->TurnZBufferOff();

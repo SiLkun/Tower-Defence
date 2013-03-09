@@ -322,8 +322,16 @@ namespace TD
 		return;
 	}
 
+	D3DXVECTOR3 * Model::GetPosition()
+	{
+		return &position;
+	}
+
 	void Model::SetPosition(float x,float y,float z)
 	{
+		position.x = x;
+		position.y = y;
+		position.z = z;
 	}
 
 }

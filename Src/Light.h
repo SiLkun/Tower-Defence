@@ -26,9 +26,11 @@ public:
 	D3DXVECTOR4 GetDiffuseColor();
 	D3DXVECTOR3 GetDirection();
 
+	void Update(float);
 private:
 	D3DXVECTOR4 diffuseColor;
 	D3DXVECTOR3 direction;
+	float yaw;
 };
 
 #endif

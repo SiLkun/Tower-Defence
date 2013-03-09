@@ -16,4 +16,11 @@ namespace TD
 	Creeper::~Creeper()
 	{
 	}
+
+	void Creeper::Update(float frameTime)
+	{
+		position.z -= (1 - (rand() % 2)) *frameTime * 0.001f;
+
+	}
+
 }
