@@ -8,6 +8,7 @@
 #include "stdafx.h"
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: Text
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,26 +35,27 @@ public:
 
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, D3DXMATRIX);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, FontShader*, D3DXMATRIX, D3DXMATRIX);
+	bool Render(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX);
 
-	bool SetVideoCardInfo(char*, int, ID3D11DeviceContext*);
 	bool SetFps(int, ID3D11DeviceContext*);
 	bool SetCpu(int, ID3D11DeviceContext*);
-	bool SetCameraPosition(float, float, float, ID3D11DeviceContext*);
-	bool SetCameraRotation(float, float, float, ID3D11DeviceContext*);
-
+	bool SetVideoCardInfo(char*, int, ID3D11DeviceContext*);
 private:
 	bool InitializeSentence(SentenceType**, int, ID3D11Device*);
 	bool UpdateSentence(SentenceType*, char*, int, int, float, float, float, ID3D11DeviceContext*);
 	void ReleaseSentence(SentenceType**);
-	bool RenderSentence(SentenceType*, ID3D11DeviceContext*, FontShader*, D3DXMATRIX, D3DXMATRIX);
+	bool RenderSentence(ID3D11DeviceContext*, SentenceType*, D3DXMATRIX, D3DXMATRIX);
 
 private:
-	int screenWidth, screenHeight;
-	D3DXMATRIX baseViewMatrix;
 	Font* pFont;
-	SentenceType *sentence1, *sentence2, *sentence3, *sentence4, *sentence5;
-	SentenceType *sentence6, *sentence7, *sentence8, *sentence9, *sentence10;
+	FontShader* pFontShader;
+	int pScreenWidth, pScreenHeight;
+	D3DXMATRIX pBaseViewMatrix;
+	SentenceType* pFpsSentence;
+	SentenceType* pCpuSentence;
+	SentenceType* pVideocardName;
+	SentenceType* pVideocardMemory;
+
 };
 
 #endif

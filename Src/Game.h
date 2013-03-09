@@ -27,7 +27,7 @@ public:
 	bool Render(ID3D11DeviceContext*,D3DXMATRIX,D3DXMATRIX,D3DXMATRIX,float);
 private:
 	Terrain* pTerrain;
-	ColorShader* pColorShader;
+	TerrainShader* pTerrainShader;
 	
 	Light* pLight;
 	LightShader* pLightShader;

@@ -72,6 +72,9 @@
     <ClCompile Include="Src\Terrain.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Terrainshader.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\stdafx.h" />
@@ -133,6 +136,9 @@
     <ClInclude Include="Src\Terrain.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Terrainshader.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Data\color.ps">
@@ -153,6 +159,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Data\light.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Data\terrain.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Data\terrain.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

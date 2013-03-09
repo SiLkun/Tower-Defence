@@ -51,7 +51,7 @@ namespace TD
 
 	#include "Lightshader.h"
 	#include "Light.h"
-
+	#include "Terrainshader.h"
 	#include "Terrain.h"
 	#include "Camera.h"
 	#include "Input.h"

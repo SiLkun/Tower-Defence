@@ -30,22 +30,22 @@ namespace TD
 			return false;
 		}
 
-		// Initialize the terrain object.
-		result = pTerrain->Initialize(pDevice);
+		result = pTerrain->Initialize(pDevice, "Data/heightmap01.bmp", "Data/legend.txt", 
+						   "Data/materialmap01.bmp", "Data/colorm01.bmp");
 		if(!result)
 		{
+			MessageBox(hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
 			return false;
 		}
-
 		// Create the color shader object.
-		pColorShader = new ColorShader;
-		if(!pColorShader)
+		pTerrainShader = new TerrainShader;
+		if(!pTerrainShader)
 		{
 			return false;
 		}
 
 		// Initialize the color shader object.
-		result = pColorShader->Initialize(pDevice, hwnd);
+		result = pTerrainShader->Initialize(pDevice, hwnd);
 		if(!result)
 		{
 			MessageBox(hwnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
@@ -93,6 +93,8 @@ namespace TD
 		}
 
 		// Initialize the light object.
+		
+		pLight->SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
 		pLight->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 		pLight->SetDirection(0.0f, 0.0f, 1.0f);
 		// Initialize the model object.
@@ -110,11 +112,11 @@ namespace TD
 		}
 
 		// Release the color shader object.
-		if(pColorShader)
+		if(pTerrainShader)
 		{
-			pColorShader->Shutdown();
-			delete pColorShader;
-			pColorShader = 0;
+			pTerrainShader->Shutdown();
+			delete pTerrainShader;
+			pTerrainShader = 0;
 		}
 
 
@@ -156,15 +158,14 @@ namespace TD
 		
 		pLight->Update(frameTime);
 		
-		// Render the terrain buffers.
-		pTerrain->Render(pDeviceContext);
-
-		// Render the model using the color shader.
-		result = pColorShader->Render(pDeviceContext, pTerrain->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+		// Render the terrain buffers using the terrain shader.
+		result = pTerrain->Render(pDeviceContext, pTerrainShader, worldMatrix, viewMatrix, projectionMatrix, pLight->GetAmbientColor(), 
+					   pLight->GetDiffuseColor(), pLight->GetDirection());
 		if(!result)
 		{
 			return false;
 		}
+
 		
 
 		if(creepers)
@@ -186,11 +187,6 @@ namespace TD
 			}
 		}
 
-
-		if(!result)
-		{
-			return false;
-		}
 
 		return result;
 	}

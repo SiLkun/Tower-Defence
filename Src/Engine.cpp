@@ -152,6 +152,7 @@ namespace TD
 		// Retrieve the video card information.
 		pDirect3D->GetVideoCardInfo(videoCard, videoMemory);
 
+		
 		// Set the video card information in the text object.
 		result = pText->SetVideoCardInfo(videoCard, videoMemory, pDirect3D->GetDeviceContext());
 		if(!result)
@@ -275,7 +276,7 @@ namespace TD
 		{
 			return false;
 		}
-
+		
 		// Do the frame input processing.
 		result = HandleInput(pTimer->GetTime());
 		if(!result)
@@ -332,7 +333,7 @@ namespace TD
 		pCamera->Move(move);
 		pCamera->Rotate(rotate);
 
-
+/*
 		D3DXVECTOR3 position(0,0,0);
 		D3DXVECTOR3 rotation(0,0,0);
 
@@ -353,7 +354,7 @@ namespace TD
 		{
 			return false;
 		}
-
+		*/
 		return true;
 	}
 
@@ -385,7 +386,7 @@ namespace TD
 		pDirect3D->TurnOnAlphaBlending();
 
 		// Render the text user interface elements.
-		result = pText->Render(pDirect3D->GetDeviceContext(), pFontShader, worldMatrix, orthoMatrix);
+		result = pText->Render(pDirect3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 		if(!result)
 		{
 			return false;

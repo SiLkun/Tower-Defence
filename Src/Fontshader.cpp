@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Fontshader.cpp
+// Filename: fontshaderclass.cpp
 ////////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 
 namespace TD
@@ -28,13 +27,13 @@ namespace TD
 	}
 
 
-	bool FontShader::Initialize(ID3D11Device* pDevice, HWND hwnd)
+	bool FontShader::Initialize(ID3D11Device* device, HWND hwnd)
 	{
 		bool result;
 
 
 		// Initialize the vertex and pixel shaders.
-		result = InitializeShader(pDevice, hwnd, L"Data/font.vs", L"Data/font.ps");
+		result = InitializeShader(device, hwnd, L"Data/font.vs", L"Data/font.ps");
 		if(!result)
 		{
 			return false;
@@ -53,32 +52,32 @@ namespace TD
 	}
 
 
-	bool FontShader::Render(ID3D11DeviceContext* pDeviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
+	bool FontShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
 								 D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColor)
 	{
 		bool result;
 
 
 		// Set the shader parameters that it will use for rendering.
-		result = SetShaderParameters(pDeviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, pixelColor);
+		result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, pixelColor);
 		if(!result)
 		{
 			return false;
 		}
 
 		// Now render the prepared buffers with the shader.
-		RenderShader(pDeviceContext, indexCount);
+		RenderShader(deviceContext, indexCount);
 
 		return true;
 	}
 
 
-	bool FontShader::InitializeShader(ID3D11Device* pDevice, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+	bool FontShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 	{
 		HRESULT result;
 		ID3D10Blob* errorMessage;
-		ID3D10Blob* pVertexShaderBuffer;
-		ID3D10Blob* pPixelShaderBuffer;
+		ID3D10Blob* vertexShaderBuffer;
+		ID3D10Blob* pixelShaderBuffer;
 		D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 		unsigned int numElements;
 		D3D11_BUFFER_DESC constantBufferDesc;
@@ -88,12 +87,12 @@ namespace TD
 
 		// Initialize the pointers this function will use to null.
 		errorMessage = 0;
-		pVertexShaderBuffer = 0;
-		pPixelShaderBuffer = 0;
+		vertexShaderBuffer = 0;
+		pixelShaderBuffer = 0;
 
 		// Compile the vertex shader code.
 		result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "FontVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
-									   &pVertexShaderBuffer, &errorMessage, NULL);
+									   &vertexShaderBuffer, &errorMessage, NULL);
 		if(FAILED(result))
 		{
 			// If the shader failed to compile it should have writen something to the error message.
@@ -112,7 +111,7 @@ namespace TD
 
 		// Compile the pixel shader code.
 		result = D3DX11CompileFromFile(psFilename, NULL, NULL, "FontPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
-									   &pPixelShaderBuffer, &errorMessage, NULL);
+									   &pixelShaderBuffer, &errorMessage, NULL);
 		if(FAILED(result))
 		{
 			// If the shader failed to compile it should have writen something to the error message.
@@ -130,7 +129,7 @@ namespace TD
 		}
 
 		// Create the vertex shader from the buffer.
-		result = pDevice->CreateVertexShader(pVertexShaderBuffer->GetBufferPointer(), pVertexShaderBuffer->GetBufferSize(), NULL, 
+		result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, 
 											&pVertexShader);
 		if(FAILED(result))
 		{
@@ -138,14 +137,14 @@ namespace TD
 		}
 
 		// Create the vertex shader from the buffer.
-		result = pDevice->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, 
+		result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, 
 										   &pPixelShader);
 		if(FAILED(result))
 		{
 			return false;
 		}
 
-		// Create the vertex input pLayout description.
+		// Create the vertex input layout description.
 		// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
 		polygonLayout[0].SemanticName = "POSITION";
 		polygonLayout[0].SemanticIndex = 0;
@@ -163,23 +162,23 @@ namespace TD
 		polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		polygonLayout[1].InstanceDataStepRate = 0;
 
-		// Get a count of the elements in the pLayout.
+		// Get a count of the elements in the layout.
 		numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-		// Create the vertex input pLayout.
-		result = pDevice->CreateInputLayout(polygonLayout, numElements, pVertexShaderBuffer->GetBufferPointer(), 
-										   pVertexShaderBuffer->GetBufferSize(), &pLayout);
+		// Create the vertex input layout.
+		result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), 
+										   vertexShaderBuffer->GetBufferSize(), &pLayout);
 		if(FAILED(result))
 		{
 			return false;
 		}
 
 		// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
-		pVertexShaderBuffer->Release();
-		pVertexShaderBuffer = 0;
+		vertexShaderBuffer->Release();
+		vertexShaderBuffer = 0;
 
-		pPixelShaderBuffer->Release();
-		pPixelShaderBuffer = 0;
+		pixelShaderBuffer->Release();
+		pixelShaderBuffer = 0;
 
 		// Setup the description of the dynamic constant buffer that is in the vertex shader.
 		constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -190,7 +189,7 @@ namespace TD
 		constantBufferDesc.StructureByteStride = 0;
 
 		// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-		result = pDevice->CreateBuffer(&constantBufferDesc, NULL, &pConstantBuffer);
+		result = device->CreateBuffer(&constantBufferDesc, NULL, &pConstantBuffer);
 		if(FAILED(result))
 		{
 			return false;
@@ -212,7 +211,7 @@ namespace TD
 		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 		// Create the texture sampler state.
-		result = pDevice->CreateSamplerState(&samplerDesc, &pSampleState);
+		result = device->CreateSamplerState(&samplerDesc, &pSampleState);
 		if(FAILED(result))
 		{
 			return false;
@@ -227,7 +226,7 @@ namespace TD
 		pixelBufferDesc.StructureByteStride = 0;
 
 		// Create the pixel constant buffer pointer so we can access the pixel shader constant buffer from within this class.
-		result = pDevice->CreateBuffer(&pixelBufferDesc, NULL, &pPixelBuffer);
+		result = device->CreateBuffer(&pixelBufferDesc, NULL, &pPixelBuffer);
 		if(FAILED(result))
 		{
 			return false;
@@ -260,7 +259,7 @@ namespace TD
 			pConstantBuffer = 0;
 		}
 
-		// Release the pLayout.
+		// Release the layout.
 		if(pLayout)
 		{
 			pLayout->Release();
@@ -321,7 +320,7 @@ namespace TD
 	}
 
 
-	bool FontShader::SetShaderParameters(ID3D11DeviceContext* pDeviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
+	bool FontShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
 											  D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColor)
 	{
 		HRESULT result;
@@ -332,7 +331,7 @@ namespace TD
 
 
 		// Lock the constant buffer so it can be written to.
-		result = pDeviceContext->Map(pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		result = deviceContext->Map(pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		if(FAILED(result))
 		{
 			return false;
@@ -352,19 +351,19 @@ namespace TD
 		dataPtr->projection = projectionMatrix;
 
 		// Unlock the constant buffer.
-		pDeviceContext->Unmap(pConstantBuffer, 0);
+		deviceContext->Unmap(pConstantBuffer, 0);
 
 		// Set the position of the constant buffer in the vertex shader.
 		bufferNumber = 0;
 
 		// Now set the constant buffer in the vertex shader with the updated values.
-		pDeviceContext->VSSetConstantBuffers(bufferNumber, 1, &pConstantBuffer);
+		deviceContext->VSSetConstantBuffers(bufferNumber, 1, &pConstantBuffer);
 
 		// Set shader texture resource in the pixel shader.
-		pDeviceContext->PSSetShaderResources(0, 1, &texture);
+		deviceContext->PSSetShaderResources(0, 1, &texture);
 
 		// Lock the pixel constant buffer so it can be written to.
-		result = pDeviceContext->Map(pPixelBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		result = deviceContext->Map(pPixelBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		if(FAILED(result))
 		{
 			return false;
@@ -377,32 +376,32 @@ namespace TD
 		dataPtr2->pixelColor = pixelColor;
 
 		// Unlock the pixel constant buffer.
-		pDeviceContext->Unmap(pPixelBuffer, 0);
+		deviceContext->Unmap(pPixelBuffer, 0);
 
 		// Set the position of the pixel constant buffer in the pixel shader.
 		bufferNumber = 0;
 
 		// Now set the pixel constant buffer in the pixel shader with the updated value.
-		pDeviceContext->PSSetConstantBuffers(bufferNumber, 1, &pPixelBuffer);
+		deviceContext->PSSetConstantBuffers(bufferNumber, 1, &pPixelBuffer);
 
 		return true;
 	}
 
 
-	void FontShader::RenderShader(ID3D11DeviceContext* pDeviceContext, int indexCount)
+	void FontShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 	{
-		// Set the vertex input pLayout.
-		pDeviceContext->IASetInputLayout(pLayout);
+		// Set the vertex input layout.
+		deviceContext->IASetInputLayout(pLayout);
 
 		// Set the vertex and pixel shaders that will be used to render the triangles.
-		pDeviceContext->VSSetShader(pVertexShader, NULL, 0);
-		pDeviceContext->PSSetShader(pPixelShader, NULL, 0);
+		deviceContext->VSSetShader(pVertexShader, NULL, 0);
+		deviceContext->PSSetShader(pPixelShader, NULL, 0);
 
 		// Set the sampler state in the pixel shader.
-		pDeviceContext->PSSetSamplers(0, 1, &pSampleState);
+		deviceContext->PSSetSamplers(0, 1, &pSampleState);
 
 		// Render the triangles.
-		pDeviceContext->DrawIndexed(indexCount, 0, 0);
+		deviceContext->DrawIndexed(indexCount, 0, 0);
 
 		return;
 	}

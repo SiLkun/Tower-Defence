@@ -37,6 +37,12 @@ namespace TD
 		D3DXVec3TransformCoord(&direction, &direction, &rotationMatrix);
 	}
 
+	void Light::SetAmbientColor(float red, float green, float blue, float alpha)
+	{
+		ambientColor = D3DXVECTOR4(red, green, blue, alpha);
+		return;
+	}
+
 	void Light::SetDiffuseColor(float red, float green, float blue, float alpha)
 	{
 		diffuseColor = D3DXVECTOR4(red, green, blue, alpha);
@@ -50,6 +56,11 @@ namespace TD
 		return;
 	}
 
+	
+	D3DXVECTOR4 Light::GetAmbientColor()
+	{
+		return ambientColor;
+	}
 
 	D3DXVECTOR4 Light::GetDiffuseColor()
 	{

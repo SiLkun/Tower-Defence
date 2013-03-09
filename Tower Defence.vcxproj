@@ -38,6 +38,7 @@
     </ClCompile>
     <ClCompile Include="Src\System.cpp" />
     <ClCompile Include="Src\Terrain.cpp" />
+    <ClCompile Include="Src\Terrainshader.cpp" />
     <ClCompile Include="Src\Text.cpp" />
     <ClCompile Include="Src\Texture.cpp" />
     <ClCompile Include="Src\Timer.cpp" />
@@ -62,6 +63,7 @@
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\System.h" />
     <ClInclude Include="Src\Terrain.h" />
+    <ClInclude Include="Src\Terrainshader.h" />
     <ClInclude Include="Src\Text.h" />
     <ClInclude Include="Src\Texture.h" />
     <ClInclude Include="Src\Timer.h" />
@@ -92,6 +94,8 @@
   <ItemGroup>
     <None Include="Data\light.ps" />
     <None Include="Data\light.vs" />
+    <None Include="Data\terrain.ps" />
+    <None Include="Data\terrain.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8867BC02-C993-4837-AA44-612527F1A55F}</ProjectGuid>
