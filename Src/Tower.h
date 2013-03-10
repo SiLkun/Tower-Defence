@@ -19,13 +19,16 @@ class Tower : public Model
 {
 private:
 	Creeper * pTarget;
+	vector<Projectile*> * projectiles;
 public:
 	Tower();
 	Tower(const Tower&);
 	~Tower();
+	void Update(float);
 	void DetermineTarget();
-	bool hasTarget();
+	bool HasTarget();
 	void Attack();
+	vector<Projectile*> GetProjectiles();
 };
 
 #endif

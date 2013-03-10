@@ -228,7 +228,8 @@ namespace TD
 				Tower* pTower = towers->at(iTower);
 
 				pTower->Render(pDeviceContext);
-				
+				pTower->Update(frameTime);
+
 				D3DXMATRIX modelMatrix;
 				D3DXMatrixIdentity(&modelMatrix);
 				D3DXMatrixTranslation(&modelMatrix,pTower->GetPosition()->x,pTower->GetPosition()->y,pTower->GetPosition()->z);
