@@ -71,9 +71,19 @@ namespace TD
 
 			creepers->push_back(pCreeper);
 		}
-
 		
+		for (int i = 0; i < 5; i++)
+		{
+			Tower * pTower = new Tower();
+			if(!pTower)
+			{
+				return false;
+			}
+			result = pTower->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
+			pTower->SetPosition(-5.0f,2.5f,20.0f -(i * 5.0f));
 
+			towers->push_back(pTower);
+		}
 		// Create the light shader object.
 		pLightShader = new LightShader;
 		if(!pLightShader)
@@ -150,6 +160,25 @@ namespace TD
 			delete creepers;
 			creepers = 0;
 		}
+
+		if(towers)
+		{
+			for(UINT iTower = 0;iTower < towers->size();iTower++)
+			{
+				Tower* pTower = towers->at(iTower);
+				// Release the terrain object.
+				if(pTower)
+				{
+					pTower->Shutdown();
+					delete pTower;
+					pTower = 0;
+				}
+			}
+
+			towers->clear();
+			delete towers;
+			towers = 0;
+		}
 	}
 
 	Terrain * Game::GetTerrain()
@@ -192,6 +221,23 @@ namespace TD
 			}
 		}
 
+		if(towers)
+		{
+			for(UINT iTower = 0;iTower < towers->size();iTower++)
+			{
+				Tower* pTower = towers->at(iTower);
+
+				pTower->Render(pDeviceContext);
+				
+				D3DXMATRIX modelMatrix;
+				D3DXMatrixIdentity(&modelMatrix);
+				D3DXMatrixTranslation(&modelMatrix,pTower->GetPosition()->x,pTower->GetPosition()->y,pTower->GetPosition()->z);
+
+				// Render the model using the light shader.
+				result = pLightShader->Render(pDeviceContext, pTower->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix, 
+						   pTower->GetTexture(), pLight->GetDirection(), pLight->GetDiffuseColor());
+			}
+		}
 
 		return result;
 	}

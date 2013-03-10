@@ -1,9 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Tower.h
+// Filename: Model.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _TOWER_H_
-#define _TOWER_H_
-
+#ifndef _PROJECTILE_H_
+#define _PROJECTILE_H_
 
 ///////////////////////
 // MY CLASS INCLUDES //
@@ -11,21 +10,19 @@
 #include "stdafx.h"
 
 
-
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: Tower
+// Class name: Projectile
 ////////////////////////////////////////////////////////////////////////////////
-class Tower : public Model
+class Projectile : public Model
 {
 private:
-	Creeper * pTarget;
+	D3DXVECTOR3 target;
 public:
-	Tower();
-	Tower(const Tower&);
-	~Tower();
-	void DetermineTarget();
-	bool hasTarget();
-	void Attack();
+	Projectile();
+	Projectile(const Projectile&);
+	~Projectile();
+	void Update(float);
 };
+
 
 #endif

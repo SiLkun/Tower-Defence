@@ -75,6 +75,9 @@
     <ClCompile Include="Src\Terrainshader.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Projectile.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\stdafx.h" />
@@ -138,6 +141,9 @@
     </ClInclude>
     <ClInclude Include="Src\Terrainshader.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Projectile.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,4 +17,21 @@ namespace TD
 	Tower::~Tower()
 	{
 	}
+
+	void Tower::DetermineTarget()
+	{
+		
+	}
+
+	bool Tower::hasTarget()
+	{
+		if(pTarget)
+			return true;
+
+		return false;
+	}
+
+	void Tower::Attack()
+	{
+	}
 }
