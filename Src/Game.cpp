@@ -9,6 +9,11 @@ namespace TD
 	{
 		creepers = new vector<Creeper*>();
 		towers = new vector<Tower*>();
+		pTerrainShader = 0;
+		pTerrain = 0;
+		pLight = 0;
+		pLightShader = 0;
+
 	}
 	Game::Game(const Game&)
 	{
@@ -52,7 +57,7 @@ namespace TD
 			return false;
 		}
 
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			// Create the model object.
 			Creeper* pCreeper = new Creeper;
@@ -62,7 +67,7 @@ namespace TD
 			}
 			result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
 			
-			pCreeper->SetPosition(-50.0f + (i *5.0f),1.0f,50.0f);
+			pCreeper->SetPosition(-1.0f,1.5f,128.0f -(i * 3.0f));
 
 			creepers->push_back(pCreeper);
 		}
@@ -159,7 +164,7 @@ namespace TD
 		pLight->Update(frameTime);
 		
 		// Render the terrain buffers using the terrain shader.
-		result = pTerrain->Render(pDeviceContext, pTerrainShader, worldMatrix, viewMatrix, projectionMatrix, pLight->GetAmbientColor(), 
+		result = pTerrain->Render(pDeviceContext, pTerrainShader, viewMatrix, projectionMatrix, pLight->GetAmbientColor(), 
 					   pLight->GetDiffuseColor(), pLight->GetDirection());
 		if(!result)
 		{

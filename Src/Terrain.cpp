@@ -8,10 +8,15 @@ namespace TD
 
 	Terrain::Terrain()
 	{
-	pHeightMap = 0;
-	pTextures = 0;
-	pMaterials = 0;
+		pHeightMap = 0;
+		pTextures = 0;
+		pMaterials = 0;
+
+		position.x = 0;
+		position.y = 0;
+		position.z = 0;
 	}
+
 
 
 	Terrain::Terrain(const Terrain& other)
@@ -60,6 +65,10 @@ namespace TD
 			return false;
 		}
 
+
+
+		D3DXMatrixIdentity(&worldMatrix);
+		D3DXMatrixTranslation(&worldMatrix,position.x,position.y,position.z);
 		return true;
 	}
 
@@ -109,11 +118,11 @@ namespace TD
 		}
 
 		// Save the dimensions of the terrain.
-		pTerrainWidth = bitmapInfoHeader.biWidth;
-		pTerrainHeight = bitmapInfoHeader.biHeight;
+		terrainWidth = bitmapInfoHeader.biWidth;
+		terrainHeight = bitmapInfoHeader.biHeight;
 
 		// Calculate the size of the bitmap image data.
-		imageSize = pTerrainWidth * pTerrainHeight * 3;
+		imageSize = terrainWidth * terrainHeight * 3;
 
 		// Allocate memory for the bitmap image data.
 		bitmapImage = new unsigned char[imageSize];
@@ -140,7 +149,7 @@ namespace TD
 		}
 
 		// Create the structure to hold the height map data.
-		pHeightMap = new HeightMapType[pTerrainWidth * pTerrainHeight];
+		pHeightMap = new HeightMapType[terrainWidth * terrainHeight];
 		if(!pHeightMap)
 		{
 			return false;
@@ -150,17 +159,17 @@ namespace TD
 		k=0;
 
 		// Read the image data into the height map.
-		for(j=0; j<pTerrainHeight; j++)
+		for(j=0; j<terrainHeight; j++)
 		{
-			for(i=0; i<pTerrainWidth; i++)
+			for(i=0; i<terrainWidth; i++)
 			{
 				height = bitmapImage[k];
 			
-				index = (pTerrainHeight * j) + i;
+				index = (terrainHeight * j) + i;
 
-				pHeightMap[index].x = (float)i;
+				pHeightMap[index].x = (float)i - terrainWidth/2;
 				pHeightMap[index].y = (float)height;
-				pHeightMap[index].z = (float)j;
+				pHeightMap[index].z = (float)j  - terrainHeight/2;
 
 				k+=3;
 			}
@@ -179,11 +188,11 @@ namespace TD
 		int i, j;
 
 
-		for(j=0; j<pTerrainHeight; j++)
+		for(j=0; j<terrainHeight; j++)
 		{
-			for(i=0; i<pTerrainWidth; i++)
+			for(i=0; i<terrainWidth; i++)
 			{
-				pHeightMap[(pTerrainHeight * j) + i].y /= 15.0f;
+				pHeightMap[(terrainHeight * j) + i].y /= 15.0f;
 			}
 		}
 
@@ -199,20 +208,20 @@ namespace TD
 
 
 		// Create a temporary array to hold the un-normalized normal vectors.
-		normals = new VectorType[(pTerrainHeight-1) * (pTerrainWidth-1)];
+		normals = new VectorType[(terrainHeight-1) * (terrainWidth-1)];
 		if(!normals)
 		{
 			return false;
 		}
 
 		// Go through all the faces in the mesh and calculate their normals.
-		for(j=0; j<(pTerrainHeight-1); j++)
+		for(j=0; j<(terrainHeight-1); j++)
 		{
-			for(i=0; i<(pTerrainWidth-1); i++)
+			for(i=0; i<(terrainWidth-1); i++)
 			{
-				index1 = (j * pTerrainHeight) + i;
-				index2 = (j * pTerrainHeight) + (i+1);
-				index3 = ((j+1) * pTerrainHeight) + i;
+				index1 = (j * terrainHeight) + i;
+				index2 = (j * terrainHeight) + (i+1);
+				index3 = ((j+1) * terrainHeight) + i;
 
 				// Get three vertices from the face.
 				vertex1[0] = pHeightMap[index1].x;
@@ -235,7 +244,7 @@ namespace TD
 				vector2[1] = vertex3[1] - vertex2[1];
 				vector2[2] = vertex3[2] - vertex2[2];
 
-				index = (j * (pTerrainHeight-1)) + i;
+				index = (j * (terrainHeight-1)) + i;
 
 				// Calculate the cross product of those two vectors to get the un-normalized value for this face normal.
 				normals[index].x = (vector1[1] * vector2[2]) - (vector1[2] * vector2[1]);
@@ -246,9 +255,9 @@ namespace TD
 
 		// Now go through all the vertices and take an average of each face normal 	
 		// that the vertex touches to get the averaged normal for that vertex.
-		for(j=0; j<pTerrainHeight; j++)
+		for(j=0; j<terrainHeight; j++)
 		{
-			for(i=0; i<pTerrainWidth; i++)
+			for(i=0; i<terrainWidth; i++)
 			{
 				// Initialize the sum.
 				sum[0] = 0.0f;
@@ -261,7 +270,7 @@ namespace TD
 				// Bottom left face.
 				if(((i-1) >= 0) && ((j-1) >= 0))
 				{
-					index = ((j-1) * (pTerrainHeight-1)) + (i-1);
+					index = ((j-1) * (terrainHeight-1)) + (i-1);
 
 					sum[0] += normals[index].x;
 					sum[1] += normals[index].y;
@@ -270,9 +279,9 @@ namespace TD
 				}
 
 				// Bottom right face.
-				if((i < (pTerrainWidth-1)) && ((j-1) >= 0))
+				if((i < (terrainWidth-1)) && ((j-1) >= 0))
 				{
-					index = ((j-1) * (pTerrainHeight-1)) + i;
+					index = ((j-1) * (terrainHeight-1)) + i;
 
 					sum[0] += normals[index].x;
 					sum[1] += normals[index].y;
@@ -281,9 +290,9 @@ namespace TD
 				}
 
 				// Upper left face.
-				if(((i-1) >= 0) && (j < (pTerrainHeight-1)))
+				if(((i-1) >= 0) && (j < (terrainHeight-1)))
 				{
-					index = (j * (pTerrainHeight-1)) + (i-1);
+					index = (j * (terrainHeight-1)) + (i-1);
 
 					sum[0] += normals[index].x;
 					sum[1] += normals[index].y;
@@ -292,9 +301,9 @@ namespace TD
 				}
 
 				// Upper right face.
-				if((i < (pTerrainWidth-1)) && (j < (pTerrainHeight-1)))
+				if((i < (terrainWidth-1)) && (j < (terrainHeight-1)))
 				{
-					index = (j * (pTerrainHeight-1)) + i;
+					index = (j * (terrainHeight-1)) + i;
 
 					sum[0] += normals[index].x;
 					sum[1] += normals[index].y;
@@ -311,7 +320,7 @@ namespace TD
 				length = sqrt((sum[0] * sum[0]) + (sum[1] * sum[1]) + (sum[2] * sum[2]));
 			
 				// Get an index to the vertex location in the height map array.
-				index = (j * pTerrainHeight) + i;
+				index = (j * terrainHeight) + i;
 
 				// Normalize the final shared normal for this vertex and store it in the height map array.
 				pHeightMap[index].nx = (sum[0] / length);
@@ -375,7 +384,7 @@ namespace TD
 		colorMapWidth = bitmapInfoHeader.biWidth;
 		colorMapHeight = bitmapInfoHeader.biHeight;
 
-		if((colorMapWidth != pTerrainWidth) || (colorMapHeight != pTerrainHeight))
+		if((colorMapWidth != terrainWidth) || (colorMapHeight != terrainHeight))
 		{
 			return false;
 		}
@@ -584,7 +593,7 @@ namespace TD
 		}
 
 		// Make sure the material index map dimensions are the same as the terrain dimensions for 1 to 1 mapping.
-		if((bitmapInfoHeader.biWidth != pTerrainWidth) || (bitmapInfoHeader.biHeight != pTerrainHeight))
+		if((bitmapInfoHeader.biWidth != terrainWidth) || (bitmapInfoHeader.biHeight != terrainHeight))
 		{
 			return false;
 		}
@@ -620,11 +629,11 @@ namespace TD
 		k=0;
 
 		// Read the material index data into the height map structure.
-		for(j=0; j<pTerrainHeight; j++)
+		for(j=0; j<terrainHeight; j++)
 		{
-			for(i=0; i<pTerrainWidth; i++)
+			for(i=0; i<terrainWidth; i++)
 			{
-				index = (pTerrainHeight * j) + i;
+				index = (terrainHeight * j) + i;
 
 				pHeightMap[index].rIndex = (int)bitmapImage[k+2];
 				pHeightMap[index].gIndex = (int)bitmapImage[k+1];
@@ -651,7 +660,7 @@ namespace TD
 
 
 		// Create the value for the maximum number of vertices a material group could possibly have.
-		maxVertexCount = (pTerrainWidth - 1) * (pTerrainHeight - 1) * 6;
+		maxVertexCount = (terrainWidth - 1) * (terrainHeight - 1) * 6;
 
 		// Set the index count to the same as the maximum vertex count.
 		maxIndexCount = maxVertexCount;
@@ -679,14 +688,14 @@ namespace TD
 		}
 
 		// Now loop through the terrain and build the vertex arrays for each material group.
-		for(j=0; j<(pTerrainHeight-1); j++)
+		for(j=0; j<(terrainHeight-1); j++)
 		{
-			for(i=0; i<(pTerrainWidth-1); i++)
+			for(i=0; i<(terrainWidth-1); i++)
 			{
-				index1 = (pTerrainHeight * j) + i;          // Bottom left.
-				index2 = (pTerrainHeight * j) + (i+1);      // Bottom right.
-				index3 = (pTerrainHeight * (j+1)) + i;      // Upper left.
-				index4 = (pTerrainHeight * (j+1)) + (i+1);  // Upper right.
+				index1 = (terrainHeight * j) + i;          // Bottom left.
+				index2 = (terrainHeight * j) + (i+1);      // Bottom right.
+				index3 = (terrainHeight * (j+1)) + i;      // Upper left.
+				index4 = (terrainHeight * (j+1)) + (i+1);  // Upper right.
 
 				// Query the upper left corner vertex for the material index.
 				redIndex   = pHeightMap[index3].rIndex;
@@ -779,29 +788,32 @@ namespace TD
 			vertexData.SysMemPitch = 0;
 			vertexData.SysMemSlicePitch = 0;
 
-			result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &pMaterials[i].vertexBuffer);
-			if(FAILED(result))
+			if(pMaterials[i].vertexCount > 0)
 			{
-				return false;
+				result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &pMaterials[i].vertexBuffer);
+				if(FAILED(result))
+				{
+					return false;
+				}
+			
+
+				indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+				indexBufferDesc.ByteWidth = sizeof(unsigned long) * pMaterials[i].indexCount;
+				indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+				indexBufferDesc.CPUAccessFlags = 0;
+				indexBufferDesc.MiscFlags = 0;
+				indexBufferDesc.StructureByteStride = 0;
+
+				indexData.pSysMem = pMaterials[i].indices;
+				indexData.SysMemPitch = 0;
+				indexData.SysMemSlicePitch = 0;
+
+				result = device->CreateBuffer(&indexBufferDesc, &indexData, &pMaterials[i].indexBuffer);
+				if(FAILED(result))
+				{
+					return false;
+				}
 			}
-
-			indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-			indexBufferDesc.ByteWidth = sizeof(unsigned long) * pMaterials[i].indexCount;
-			indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-			indexBufferDesc.CPUAccessFlags = 0;
-			indexBufferDesc.MiscFlags = 0;
-			indexBufferDesc.StructureByteStride = 0;
-
-			indexData.pSysMem = pMaterials[i].indices;
-			indexData.SysMemPitch = 0;
-			indexData.SysMemSlicePitch = 0;
-
-			result = device->CreateBuffer(&indexBufferDesc, &indexData, &pMaterials[i].indexBuffer);
-			if(FAILED(result))
-			{
-				return false;
-			}
-
 			delete [] pMaterials[i].vertices;
 			pMaterials[i].vertices = 0;
 
@@ -866,7 +878,7 @@ namespace TD
 		return;
 	}
 
-	bool Terrain::Render(ID3D11DeviceContext* deviceContext, TerrainShader* shader, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+	bool Terrain::Render(ID3D11DeviceContext* deviceContext, TerrainShader* shader, D3DXMATRIX viewMatrix,
 				  D3DXMATRIX projectionMatrix, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor, D3DXVECTOR3 lightDirection)
 	{
 		unsigned int stride;
@@ -923,5 +935,18 @@ namespace TD
 		}
 
 		return true;
+	}
+
+	
+	D3DXVECTOR3 * Terrain::GetPosition()
+	{
+		return &position;
+	}
+
+	void Terrain::SetPosition(float x,float y,float z)
+	{
+		position.x = x;
+		position.y = y;
+		position.z = z;
 	}
 }

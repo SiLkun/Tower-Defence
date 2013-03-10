@@ -8,6 +8,15 @@ namespace TD
 
 	Engine::Engine()
 	{
+		pText = 0;
+		pGame = 0;
+		pDirect3D = 0;
+		pInput = 0;
+		pCamera = 0;
+		pTimer = 0;
+		pFps = 0;
+		pCpu = 0;
+		pFontShader = 0;
 	}
 
 	Engine::Engine(const Engine&)
@@ -67,7 +76,7 @@ namespace TD
 		pCamera->Render();
 		pCamera->GetViewMatrix(baseViewMatrix);
 
-		pCamera->SetPosition(D3DXVECTOR3(0.0f, 5.0f, -25.0f));
+		pCamera->SetPosition(D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 		
 		// Create the terrain object.
 		pGame = new Game;

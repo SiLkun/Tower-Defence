@@ -51,8 +51,10 @@ public:
 	bool Initialize(ID3D11Device*, char*, char*, char*, char*);
 	void Shutdown();
 
-	bool Render(ID3D11DeviceContext*, TerrainShader*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, D3DXVECTOR4, D3DXVECTOR4, D3DXVECTOR3);
-
+	bool Render(ID3D11DeviceContext*, TerrainShader*, D3DXMATRIX, D3DXMATRIX, D3DXVECTOR4, D3DXVECTOR4, D3DXVECTOR3);
+	
+	D3DXVECTOR3 * GetPosition();
+	void SetPosition(float,float,float);
 private:
 	bool LoadHeightMap(char*);
 	void NormalizeHeightMap();
@@ -67,11 +69,13 @@ private:
 	void ReleaseMaterials();
 
 private:
-	int pTerrainWidth, pTerrainHeight;
+	int terrainWidth, terrainHeight;
 	HeightMapType* pHeightMap;
 	int pTextureCount, pMaterialCount;
 	Texture* pTextures;
 	MaterialGroupType* pMaterials;
+	D3DXMATRIX worldMatrix;
+	D3DXVECTOR3 position;
 };
 
 #endif
