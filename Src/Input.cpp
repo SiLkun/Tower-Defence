@@ -209,9 +209,6 @@ namespace TD
 
 	void Input::ProcessInput()
 	{
-		mousePreviousX = mouseX;
-		mousePreviousY = mouseY;
-
 		// Update the location of the pMouse cursor based on the change of the pMouse location during the frame.
 		mouseX += mouseState.lX;
 		mouseY += mouseState.lY;
@@ -246,8 +243,8 @@ namespace TD
 			if(!mouseRightDown)
 			{
 				mouseRightDown = true;
-				mousePreviousX = mouseX;
-				mousePreviousY = mouseY;
+				mouseRightDownX = mouseX;
+				mouseRightDownY = mouseY;
 			}
 		}
 		else if(!IsMouseRightPressed())
@@ -283,10 +280,10 @@ namespace TD
 		return;
 	}
 
-	void Input::GetMousePreviousLocation(int& mouseX, int& mouseY)
+	void Input::GetMouseRightDownLocation(int& mouseX, int& mouseY)
 	{
-		mouseX = this->mousePreviousX;
-		mouseY = this->mousePreviousY;
+		mouseX = this->mouseRightDownX;
+		mouseY = this->mouseRightDownY;
 		return;
 	}
 	void Input::GetMouseLocation(int& mouseX, int& mouseY)

@@ -21,6 +21,7 @@ public:
 	Projectile();
 	Projectile(const Projectile&);
 	~Projectile();
+	void SetTarget(D3DXVECTOR3);
 	void Update(float);
 };
 

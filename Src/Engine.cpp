@@ -76,8 +76,9 @@ namespace TD
 		pCamera->Render();
 		pCamera->GetViewMatrix(baseViewMatrix);
 
-		pCamera->SetPosition(D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-		
+		pCamera->SetPosition(D3DXVECTOR3(60.0f, 30.0f, -60.0f));
+		pCamera->SetRotation(D3DXVECTOR3(D3DX_PI /8 , -D3DX_PI /4 , 0.0f));
+
 		// Create the terrain object.
 		pGame = new Game;
 		if(!pGame)
@@ -342,12 +343,12 @@ namespace TD
 	
 		if(pInput->IsMouseRightPressed())
 		{
-			int pMousePreviousX, pMousePreviousY,pMouseX, pMouseY;
-			pInput->GetMousePreviousLocation(pMousePreviousX, pMousePreviousY);
+			int pMouseRightDownX, pMouseRightDownY,pMouseX, pMouseY;
+			pInput->GetMouseRightDownLocation(pMouseRightDownX, pMouseRightDownY);
 			pInput->GetMouseLocation(pMouseX, pMouseY);
 
-			int mouseMovementX = pMouseX - pMousePreviousX;
-			int mouseMovementY = pMouseY - pMousePreviousY;
+			int mouseMovementX = pMouseX - pMouseRightDownX;
+			int mouseMovementY = pMouseY - pMouseRightDownY;
 
 			rotate.x = (float)mouseMovementY;
 			rotate.y = (float)mouseMovementX;

@@ -86,7 +86,7 @@ namespace TD
 			{
 				return false;
 			}
-			result = pTower->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
+			result = pTower->Initialize(pDevice, "data/cube.txt", L"data/Tower.dds");
 			pTower->SetPosition(-5.0f,2.5f,20.0f -(i * 5.0f));
 
 			towers->push_back(pTower);
@@ -210,10 +210,14 @@ namespace TD
 				{
 					return false;
 				}
-				result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
+				result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/Creeper.dds");
 			
 				pCreeper->SetPosition(-1.0f,1.5f,192.0f -(i * 4.0f));
 
+				float scale = 1.0f;
+				scale += ((rand() % 20) - 10.0f) * 0.01f;
+
+				pCreeper->SetScale(scale,scale,scale);
 				creepers->push_back(pCreeper);
 			}
 		}
@@ -239,7 +243,8 @@ namespace TD
 			for(UINT iTower = 0;iTower < towers->size();iTower++)
 			{
 				Tower* pTower = towers->at(iTower);
-				pTower->Update(frameTime);
+				pTower->DetermineTarget(creepers);
+				pTower->Update(pDevice,time,frameTime);
 			}
 		}
 
@@ -280,7 +285,7 @@ namespace TD
 			{
 				Tower* pTower = towers->at(iTower);
 
-				pTower->Render(pDeviceContext);
+				pTower->Render(pDeviceContext,pLightShader,viewMatrix, projectionMatrix,pLight);
 
 				// Render the model using the light shader.
 				pLightShader->Render(pDeviceContext, pTower->GetIndexCount(), pTower->GetWorldMatrix(), viewMatrix, projectionMatrix, 

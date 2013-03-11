@@ -20,14 +20,19 @@ class Tower : public Model
 private:
 	Creeper * pTarget;
 	vector<Projectile*> * projectiles;
+	float reloadTime;
+	float lastAtackTime;
+	float range;
 public:
 	Tower();
 	Tower(const Tower&);
 	~Tower();
-	void Update(float);
-	void DetermineTarget();
+	void Update(ID3D11Device*,float,float);
+	void Render(ID3D11DeviceContext* deviceContext, LightShader *, D3DXMATRIX,D3DXMATRIX, Light *);
+
+	void DetermineTarget(vector<Creeper*>*);
 	bool HasTarget();
-	void Attack();
+	void Attack(ID3D11Device*);
 	vector<Projectile*> GetProjectiles();
 };
 

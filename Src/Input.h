@@ -30,7 +30,7 @@ public:
 	bool IsMouseLeftPressed();
 	bool IsMouseRightPressed();
 	void GetMouseLeftDownLocation(int&, int&);
-	void GetMousePreviousLocation(int&, int&);
+	void GetMouseRightDownLocation(int&, int&);
 	void GetMouseLocation(int&, int&);
 
 	bool IsKeyPressed(unsigned char);
@@ -54,7 +54,7 @@ private:
 	bool mouseLeftDown,mouseRightDown;
 	int mouseX, mouseY;
 	int mouseLeftDownX, mouseLeftDownY;
-	int mousePreviousX, mousePreviousY;
+	int mouseRightDownX, mouseRightDownY;
 };
 
 #endif

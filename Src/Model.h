@@ -37,6 +37,8 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 	D3DXVECTOR3 * GetPosition();
 	void SetPosition(float,float,float);
+	D3DXVECTOR3 * GetScale();
+	void SetScale(float,float,float);
 	void Update();
 	D3DXMATRIX GetWorldMatrix();
 private:
@@ -54,6 +56,7 @@ protected:
 	int vertexCount, indexCount;
 	Texture* pTexture;
 	D3DXVECTOR3 position;
+	D3DXVECTOR3 scale;
 	ModelType* pModel;
 	D3DXMATRIX worldMatrix;
 	bool onMap;
