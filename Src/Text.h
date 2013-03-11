@@ -40,6 +40,10 @@ public:
 	bool SetFps(int, ID3D11DeviceContext*);
 	bool SetCpu(int, ID3D11DeviceContext*);
 	bool SetVideoCardInfo(char*, int, ID3D11DeviceContext*);
+	bool SetTime(int time, ID3D11DeviceContext* deviceContext);
+	bool SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext);
+
+	
 private:
 	bool InitializeSentence(SentenceType**, int, ID3D11Device*);
 	bool UpdateSentence(SentenceType*, char*, int, int, float, float, float, ID3D11DeviceContext*);
@@ -55,7 +59,10 @@ private:
 	SentenceType* pCpuSentence;
 	SentenceType* pVideocardName;
 	SentenceType* pVideocardMemory;
+	SentenceType* pTimeSentence;
+	SentenceType* pNextWaveTimeSentence;
 
+	
 };
 
 #endif

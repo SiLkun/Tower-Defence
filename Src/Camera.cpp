@@ -21,9 +21,9 @@ namespace TD
 		moveSpeed.y = (float)D3DXToRadian(0.0f); 
 		moveSpeed.z = (float)D3DXToRadian(0.01f); 
 
-		maxMoveSpeed.x = (float)D3DXToRadian(0.5f);
+		maxMoveSpeed.x = (float)D3DXToRadian(1.0f);
 		maxMoveSpeed.y = (float)D3DXToRadian(0.00f); 
-		maxMoveSpeed.z = (float)D3DXToRadian(1.0f); 
+		maxMoveSpeed.z = (float)D3DXToRadian(2.0f); 
 
 		rotation.x = 0.0f;
 		rotation.y = 0.0f;
@@ -37,8 +37,8 @@ namespace TD
 		rotationSpeed.y = (float)D3DXToRadian(0.0005f);
 		rotationSpeed.z = (float)D3DXToRadian(0.0000f);
 		
-		maxRotationSpeed.x = (float)D3DXToRadian(0.2f);
-		maxRotationSpeed.y = (float)D3DXToRadian(0.3f);
+		maxRotationSpeed.x = (float)D3DXToRadian(0.3f);
+		maxRotationSpeed.y = (float)D3DXToRadian(0.4f);
 		maxRotationSpeed.z = (float)D3DXToRadian(0.0f);
 
 		frameTime = 0.0f;

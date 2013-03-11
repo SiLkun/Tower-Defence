@@ -21,13 +21,13 @@ namespace TD
 	{
 	}
 
-	void Light::Update(float frameTime)
+	bool Light::Update(float frameTime)
 	{
 		yaw += frameTime *0.0001f;
 
 		D3DXMATRIX rotationMatrix;
 		D3DXMatrixIdentity(&rotationMatrix);
-		D3DXMatrixRotationYawPitchRoll(&rotationMatrix, yaw, 0.3 * D3DX_PI, 0);
+		D3DXMatrixRotationYawPitchRoll(&rotationMatrix, yaw, D3DX_PI  *0.3f  , 0.0f);
 
 		direction.x = 0;
 		direction.y = 0;
@@ -35,6 +35,8 @@ namespace TD
 
 		// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
 		D3DXVec3TransformCoord(&direction, &direction, &rotationMatrix);
+
+		return true;
 	}
 
 	void Light::SetAmbientColor(float red, float green, float blue, float alpha)

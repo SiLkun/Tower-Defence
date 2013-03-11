@@ -14,6 +14,11 @@ namespace TD
 		pLight = 0;
 		pLightShader = 0;
 
+		time = 0.0f;
+		previousWaveTime = -60.0f;
+		waveDelay = 60.0f;
+		int waveCount = 10;
+		
 	}
 	Game::Game(const Game&)
 	{
@@ -24,6 +29,22 @@ namespace TD
 		delete towers;
 	}
 
+	float Game::GetTime()
+	{
+		return time;
+	}
+
+	float Game::GetWaveDelay()
+	{
+		return waveDelay;
+	}
+	
+	
+	float Game::GetPreviousWaveTime()
+	{
+		return previousWaveTime;
+	}
+	
 	bool Game::Initialize(ID3D11Device * pDevice, HWND hwnd)
 	{
 		bool result;
@@ -57,20 +78,6 @@ namespace TD
 			return false;
 		}
 
-		for (int i = 0; i < 10; i++)
-		{
-			// Create the model object.
-			Creeper* pCreeper = new Creeper;
-			if(!pCreeper)
-			{
-				return false;
-			}
-			result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
-			
-			pCreeper->SetPosition(-1.0f,1.5f,128.0f -(i * 3.0f));
-
-			creepers->push_back(pCreeper);
-		}
 		
 		for (int i = 0; i < 5; i++)
 		{
@@ -109,7 +116,7 @@ namespace TD
 
 		// Initialize the light object.
 		
-		pLight->SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
+		pLight->SetAmbientColor(0.3f, 0.3f, 0.3f, 1.0f);
 		pLight->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 		pLight->SetDirection(0.0f, 0.0f, 1.0f);
 		// Initialize the model object.
@@ -186,11 +193,64 @@ namespace TD
 		return pTerrain;
 	}
 
-	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX worldMatrix,D3DXMATRIX viewMatrix,D3DXMATRIX projectionMatrix,float frameTime)
+	bool Game::Update(ID3D11Device * pDevice,float frameTime)
 	{
 		bool result;
+	
+		time += frameTime / 1000;
+		if(time > previousWaveTime + waveDelay)
+		{
+			previousWaveTime = time;
 		
-		pLight->Update(frameTime);
+			for (int i = 0; i < 10; i++)
+			{
+				// Create the model object.
+				Creeper* pCreeper = new Creeper;
+				if(!pCreeper)
+				{
+					return false;
+				}
+				result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
+			
+				pCreeper->SetPosition(-1.0f,1.5f,192.0f -(i * 4.0f));
+
+				creepers->push_back(pCreeper);
+			}
+		}
+
+		
+		if(pLight)
+		{
+			result = pLight->Update(frameTime);
+		}
+
+		if(creepers)
+		{
+			for(UINT iCreeper = 0;iCreeper < creepers->size();iCreeper++)
+			{
+				Creeper* pCreeper = creepers->at(iCreeper);
+				pCreeper->Update(frameTime);
+				pCreeper->UpdateOnMap((float)pTerrain->GetWidth(),(float)pTerrain->GetHeight());
+			}
+		}
+
+		if(towers)
+		{
+			for(UINT iTower = 0;iTower < towers->size();iTower++)
+			{
+				Tower* pTower = towers->at(iTower);
+				pTower->Update(frameTime);
+			}
+		}
+
+
+
+		return result;
+	}
+
+	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX viewMatrix,D3DXMATRIX projectionMatrix)
+	{
+		bool result;	
 		
 		// Render the terrain buffers using the terrain shader.
 		result = pTerrain->Render(pDeviceContext, pTerrainShader, viewMatrix, projectionMatrix, pLight->GetAmbientColor(), 
@@ -199,25 +259,18 @@ namespace TD
 		{
 			return false;
 		}
-
-		
+	
 
 		if(creepers)
 		{
 			for(UINT iCreeper = 0;iCreeper < creepers->size();iCreeper++)
 			{
 				Creeper* pCreeper = creepers->at(iCreeper);
-
-				pCreeper->Update(frameTime);
 				pCreeper->Render(pDeviceContext);
-				
-				D3DXMATRIX modelMatrix;
-				D3DXMatrixIdentity(&modelMatrix);
-				D3DXMatrixTranslation(&modelMatrix,pCreeper->GetPosition()->x,pCreeper->GetPosition()->y,pCreeper->GetPosition()->z);
 
 				// Render the model using the light shader.
-				result = pLightShader->Render(pDeviceContext, pCreeper->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix, 
-						   pCreeper->GetTexture(), pLight->GetDirection(), pLight->GetDiffuseColor());
+				pLightShader->Render(pDeviceContext, pCreeper->GetIndexCount(), pCreeper->GetWorldMatrix(), viewMatrix, projectionMatrix, 
+						   pCreeper->GetTexture(), pLight->GetAmbientColor(), pLight->GetDiffuseColor(), pLight->GetDirection() );
 			}
 		}
 
@@ -228,15 +281,10 @@ namespace TD
 				Tower* pTower = towers->at(iTower);
 
 				pTower->Render(pDeviceContext);
-				pTower->Update(frameTime);
-
-				D3DXMATRIX modelMatrix;
-				D3DXMatrixIdentity(&modelMatrix);
-				D3DXMatrixTranslation(&modelMatrix,pTower->GetPosition()->x,pTower->GetPosition()->y,pTower->GetPosition()->z);
 
 				// Render the model using the light shader.
-				result = pLightShader->Render(pDeviceContext, pTower->GetIndexCount(), modelMatrix, viewMatrix, projectionMatrix, 
-						   pTower->GetTexture(), pLight->GetDirection(), pLight->GetDiffuseColor());
+				pLightShader->Render(pDeviceContext, pTower->GetIndexCount(), pTower->GetWorldMatrix(), viewMatrix, projectionMatrix, 
+						   pTower->GetTexture(),pLight->GetAmbientColor(), pLight->GetDiffuseColor(),  pLight->GetDirection());
 			}
 		}
 

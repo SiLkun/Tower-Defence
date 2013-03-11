@@ -286,6 +286,21 @@ namespace TD
 			return false;
 		}
 		
+		// Update the CPU usage value in the text object.
+		result = pText->SetTime((int)pGame->GetTime(), pDirect3D->GetDeviceContext());
+		if(!result)
+		{
+			return false;
+		}
+		
+
+		int time = pGame->GetWaveDelay() - (pGame->GetTime() - pGame->GetPreviousWaveTime());
+		result = pText->SetNextWaveTime(time, pDirect3D->GetDeviceContext());
+		if(!result)
+		{
+			return false;
+		}
+
 		// Do the frame input processing.
 		result = HandleInput(pTimer->GetTime());
 		if(!result)
@@ -306,8 +321,6 @@ namespace TD
 	
 	bool Engine::HandleInput(float frameTime)
 	{
-		bool result;
-
 		// Set the frame time for calculating the updated position.
 		pCamera->SetFrameTime(frameTime);
 
@@ -386,7 +399,8 @@ namespace TD
 		pDirect3D->GetProjectionMatrix(projectionMatrix);
 		pDirect3D->GetOrthoMatrix(orthoMatrix);
 
-		pGame->Render(pDirect3D->GetDeviceContext(),worldMatrix, viewMatrix, projectionMatrix,pTimer->GetTime());
+		pGame->Update(pDirect3D->GetDevice(),pTimer->GetTime());
+		pGame->Render(pDirect3D->GetDeviceContext(), viewMatrix, projectionMatrix);
 
 		// Turn off the Z buffer to begin all 2D rendering.
 		pDirect3D->TurnZBufferOff();

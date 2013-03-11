@@ -949,4 +949,14 @@ namespace TD
 		position.y = y;
 		position.z = z;
 	}
+
+	int  Terrain::GetWidth()
+	{
+		return terrainWidth;
+	}
+
+	int  Terrain::GetHeight()
+	{
+		return terrainHeight;
+	}
 }

@@ -39,6 +39,7 @@ namespace TD
 						   //pProjectile->GetTexture(), pLight->GetDirection(), pLight->GetDiffuseColor());
 			}
 		}
+		Model::Update();
 	}
 
 	void Tower::DetermineTarget()

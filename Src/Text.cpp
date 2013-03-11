@@ -15,6 +15,8 @@ namespace TD
 		pCpuSentence = 0;
 		pVideocardName = 0;
 		pVideocardMemory = 0;
+		pTimeSentence = 0;
+		pNextWaveTimeSentence = 0;
 
 	}
 
@@ -27,6 +29,7 @@ namespace TD
 	Text::~Text()
 	{
 	}
+
 
 
 	bool Text::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight, 
@@ -97,6 +100,18 @@ namespace TD
 		{
 			return false;
 		}
+		result = InitializeSentence(&pTimeSentence, 32, device);
+		if(!result)
+		{
+			return false;
+		}
+
+		result = InitializeSentence(&pNextWaveTimeSentence, 64, device);
+		if(!result)
+		{
+			return false;
+		}
+		
 		return true;
 	}
 
@@ -164,10 +179,20 @@ namespace TD
 			return false;
 		}
 
+		result = RenderSentence(deviceContext, pTimeSentence, worldMatrix, orthoMatrix);
+		if(!result)
+		{
+			return false;
+		}
 
+		result = RenderSentence(deviceContext, pNextWaveTimeSentence, worldMatrix, orthoMatrix);
+		if(!result)
+		{
+			return false;
+		}
+		
 		return true;
 	}
-
 
 	bool Text::InitializeSentence(SentenceType** sentence, int maxLength, ID3D11Device* device)
 	{
@@ -436,7 +461,7 @@ namespace TD
 	strcat_s(memoryString, " MB");
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(pVideocardMemory, memoryString, 10, 30, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(pVideocardMemory, memoryString, 10, 25, 1.0f, 1.0f, 1.0f, deviceContext);
 	if(!result)
 	{
 		return false;
@@ -492,7 +517,7 @@ namespace TD
 		}
 
 		// Update the sentence vertex buffer with the new string information.
-		result = UpdateSentence(pFpsSentence, fpsString, 20, 20, red, green, blue, deviceContext);
+		result = UpdateSentence(pFpsSentence, fpsString, 20, 40, red, green, blue, deviceContext);
 		if(!result)
 		{
 			return false;
@@ -517,7 +542,7 @@ namespace TD
 		strcat_s(cpuString, "%");
 
 		// Update the sentence vertex buffer with the new string information.
-		result = UpdateSentence(pCpuSentence, cpuString, 20, 40, 0.0f, 1.0f, 0.0f, deviceContext);
+		result = UpdateSentence(pCpuSentence, cpuString, 20, 55, 0.0f, 1.0f, 0.0f, deviceContext);
 		if(!result)
 		{
 			return false;
@@ -525,4 +550,87 @@ namespace TD
 
 		return true;
 	}
+
+	bool Text::SetTime(int time, ID3D11DeviceContext* deviceContext)
+	{
+		char timeString[32];
+		float red, green, blue;
+		bool result;
+
+		int seconds = time % 60;
+		time /=60;
+		int minutes = time % 60;
+		time /=60;
+		int hours = time % 60;
+
+
+		
+		char tempString[3];
+
+		strcpy_s(timeString, "Time: ");
+		_itoa_s(hours, tempString, 10);
+		strcat_s(timeString, tempString);
+		strcat_s(timeString, ":");
+		_itoa_s(minutes, tempString, 10);
+		strcat_s(timeString, tempString);
+		strcat_s(timeString, ":");
+		_itoa_s(seconds, tempString, 10);
+		strcat_s(timeString, tempString);
+
+		red = 1.0f;
+		green = 1.0f;
+		blue = 1.0f;
+
+
+		// Update the sentence vertex buffer with the new string information.
+		result = UpdateSentence(pTimeSentence, timeString, 20, 70, red, green, blue, deviceContext);
+		if(!result)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	bool Text::SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext)
+	{
+		char timeString[64];
+		float red, green, blue;
+		bool result;
+
+		int seconds = time % 60;
+		time /=60;
+		int minutes = time % 60;
+		time /=60;
+		int hours = time % 60;
+
+
+		
+		char tempString[3];
+
+		strcpy_s(timeString, "Next Wave Coming in: ");
+		_itoa_s(hours, tempString, 10);
+		strcat_s(timeString, tempString);
+		strcat_s(timeString, ":");
+		_itoa_s(minutes, tempString, 10);
+		strcat_s(timeString, tempString);
+		strcat_s(timeString, ":");
+		_itoa_s(seconds, tempString, 10);
+		strcat_s(timeString, tempString);
+
+		red = 1.0f;
+		green = 1.0f;
+		blue = 1.0f;
+
+
+		// Update the sentence vertex buffer with the new string information.
+		result = UpdateSentence(pNextWaveTimeSentence, timeString, 20, 95, red, green, blue, deviceContext);
+		if(!result)
+		{
+			return false;
+		}
+
+		return true;
+	}
+	
 }

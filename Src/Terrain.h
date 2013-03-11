@@ -55,6 +55,9 @@ public:
 	
 	D3DXVECTOR3 * GetPosition();
 	void SetPosition(float,float,float);
+
+	int GetWidth();
+	int GetHeight();
 private:
 	bool LoadHeightMap(char*);
 	void NormalizeHeightMap();

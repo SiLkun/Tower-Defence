@@ -12,6 +12,7 @@ namespace TD
 		pTexture = 0;
 
 		pModel = 0;
+
 	}
 
 
@@ -67,11 +68,19 @@ namespace TD
 		return;
 	}
 
+				
+	void Model::Update()
+	{
+		D3DXMatrixIdentity(&worldMatrix);
+		D3DXMatrixTranslation(&worldMatrix,position.x,position.y,position.z);
+	}
 
 	void Model::Render(ID3D11DeviceContext* deviceContext)
 	{
-		// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
-		RenderBuffers(deviceContext);
+		if(onMap)
+		{
+			RenderBuffers(deviceContext);
+		}
 
 		return;
 	}
@@ -332,6 +341,11 @@ namespace TD
 		position.x = x;
 		position.y = y;
 		position.z = z;
+	}
+
+	D3DXMATRIX Model::GetWorldMatrix()
+	{
+		return worldMatrix;
 	}
 
 }

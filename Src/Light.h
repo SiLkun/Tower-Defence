@@ -28,7 +28,7 @@ public:
 	D3DXVECTOR4 GetDiffuseColor();
 	D3DXVECTOR3 GetDirection();
 
-	void Update(float);
+	bool Update(float);
 private:
 	D3DXVECTOR4 ambientColor;
 	D3DXVECTOR4 diffuseColor;
