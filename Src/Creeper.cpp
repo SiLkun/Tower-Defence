@@ -8,6 +8,7 @@ namespace TD
 	Creeper::Creeper()
 	{
 		onMap = false;
+		health = 1.0f;
 	}
 
 	Creeper::Creeper(const Creeper&)
@@ -48,4 +49,15 @@ namespace TD
 
 		return;
 	}
+
+	void Creeper::Hit(float damage)
+	{
+		health -= damage;
+	}
+
+	float Creeper::GetHealth()
+	{
+		return health;
+	}
+
 }

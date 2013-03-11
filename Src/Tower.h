@@ -27,7 +27,7 @@ public:
 	Tower();
 	Tower(const Tower&);
 	~Tower();
-	void Update(ID3D11Device*,float,float);
+	void Update(ID3D11Device*,float,float,vector<Creeper*>*);
 	void Render(ID3D11DeviceContext* deviceContext, LightShader *, D3DXMATRIX,D3DXMATRIX, Light *);
 
 	void DetermineTarget(vector<Creeper*>*);

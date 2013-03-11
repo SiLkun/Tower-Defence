@@ -7,10 +7,11 @@ namespace TD
 {
 	Projectile::Projectile()
 	{
-		scale.x = 0.2;
-		scale.y = 0.2;
-		scale.z = 0.2;
-
+		scale.x = 0.1f;
+		scale.y = 0.1f;
+		scale.z = 0.1f;
+		isHit = false;
+		damage = 0.03f;
 	}
 
 	Projectile::Projectile(const Projectile&)
@@ -26,15 +27,48 @@ namespace TD
 		target = targetPosition;
 	}
 
-	void Projectile::Update(float frameTime)
+	bool Projectile::IsHit()
 	{
-		float dx = position.x - target.x;
-		float dy = position.y - target.y;
-		float dz = position.z - target.z;
+		return isHit;
+	}
 
-		position.x -= (frameTime * dx * 0.001f);
-		position.y -= (frameTime * dy * 0.001f);
-		position.z -= (frameTime * dz * 0.001f);
+	void Projectile::Update(float frameTime,vector<Creeper*>* pCreepers)
+	{
+		D3DXVECTOR3 distance;
+		distance.x = position.x - target.x;
+		distance.y = position.y - target.y;
+		distance.z = position.z - target.z;
+
+		if(pCreepers)
+		{
+			for(UINT iCreeper = 0;iCreeper < pCreepers->size();iCreeper++)
+			{
+				Creeper* pCreeper = pCreepers->at(iCreeper);
+				D3DXVECTOR3 * p = pCreeper->GetPosition();
+				float distance = powf( powf(position.x - p->x,2.0f) + powf(position.z - p->z,2.0f),0.5f);
+
+				if(distance < 1.0f)
+				{
+					pCreeper->Hit(damage);
+					isHit = true;
+				}
+
+			}
+		}
+
+		if(D3DXVec3Length(&distance) < 1.0f)
+		{
+			isHit = true;
+		}
+		else
+		{
+
+			D3DXVec3Normalize(&distance,&distance);
+
+			position.x -= (frameTime * distance.x * 0.05f);
+			position.y -= (frameTime * distance.y * 0.05f);
+			position.z -= (frameTime * distance.z * 0.05f);
+		}
 
 		Model::Update();
 	}

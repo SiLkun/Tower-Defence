@@ -10,10 +10,10 @@ namespace TD
 	{
 		projectiles = new vector<Projectile*>();
 		scale.y = 2.0f;
-		reloadTime = 0.1f;
+		reloadTime = 0.05f;
 		lastAtackTime = -1.0f;
 		pTarget = 0;
-		range = 10.0f;
+		range = 20.0f;
 	}
 
 	Tower::Tower(const Tower&)
@@ -25,12 +25,30 @@ namespace TD
 	{
 	}
 
-	void Tower::Update(ID3D11Device * pDevice,float time,float frameTime)
+
+
+	void Tower::Update(ID3D11Device * pDevice,float time,float frameTime, vector<Creeper*>* pCreepers)
 	{
 		if(HasTarget() && (time - lastAtackTime) > reloadTime)
 		{
 			lastAtackTime = time;
 			Attack(pDevice);
+		}
+
+		if(projectiles)
+		{
+			for(UINT iProjectile = 0;iProjectile < projectiles->size();)
+			{
+				Projectile * pProjectile = projectiles->at(iProjectile);
+				if(pProjectile->IsHit())
+				{
+					pProjectile->Shutdown();
+					delete pProjectile;
+					pProjectile = 0;
+					projectiles->erase(projectiles->begin() + iProjectile);
+				}
+				iProjectile++;
+			}
 		}
 
 
@@ -39,7 +57,7 @@ namespace TD
 			for(UINT iProjectile = 0;iProjectile < projectiles->size();iProjectile++)
 			{
 				Projectile * pProjectile = projectiles->at(iProjectile);
-				pProjectile->Update(frameTime);
+				pProjectile->Update(frameTime,pCreepers);
 			}
 		}
 		Model::Update();
@@ -63,6 +81,15 @@ namespace TD
 
 	void Tower::DetermineTarget(vector<Creeper*>* pCreepers)
 	{
+		if(HasTarget())
+		{
+			float distance = powf( powf(position.x - pTarget->GetPosition()->x,2.0f) + powf(position.z - pTarget->GetPosition()->z,2.0f),0.5f);
+
+				if(distance >= range)
+				{
+					pTarget = 0;
+				}
+		}
 		if(pCreepers)
 		{
 			for(UINT iCreeper = 0;iCreeper < pCreepers->size();iCreeper++)
@@ -94,7 +121,7 @@ namespace TD
 		Projectile * pProjectile = new Projectile();
 		pProjectile->Initialize(pDevice, "data/cube.txt", L"data/seafloor.dds");
 		pProjectile->SetPosition(this->position.x, this->position.y, this->position.z);
-		pProjectile->SetTarget(*pTarget->GetPosition());
+		pProjectile->SetTarget((*pTarget->GetPosition()));
 		projectiles->push_back(pProjectile);
 	}
 

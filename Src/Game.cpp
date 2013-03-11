@@ -15,8 +15,8 @@ namespace TD
 		pLightShader = 0;
 
 		time = 0.0f;
-		previousWaveTime = -60.0f;
-		waveDelay = 60.0f;
+		previousWaveTime = -20.0f;
+		waveDelay = 20.0f;
 		int waveCount = 10;
 		
 	}
@@ -223,6 +223,22 @@ namespace TD
 		}
 
 		
+		if(creepers)
+		{
+			for(UINT iCreeper = 0;iCreeper < creepers->size();iCreeper++)
+			{
+				Creeper* pCreeper = creepers->at(iCreeper);
+				if(pCreeper->GetHealth() < 0.0f)
+				{
+					pCreeper->Shutdown();
+					delete pCreeper;
+					pCreeper = 0;
+					creepers->erase(creepers->begin() + iCreeper);
+				}
+			}
+		}
+
+		
 		if(pLight)
 		{
 			result = pLight->Update(frameTime);
@@ -244,7 +260,7 @@ namespace TD
 			{
 				Tower* pTower = towers->at(iTower);
 				pTower->DetermineTarget(creepers);
-				pTower->Update(pDevice,time,frameTime);
+				pTower->Update(pDevice,time,frameTime,creepers);
 			}
 		}
 

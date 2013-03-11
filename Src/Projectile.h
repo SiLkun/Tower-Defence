@@ -9,6 +9,7 @@
 ///////////////////////
 #include "stdafx.h"
 
+class Creeper;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: Projectile
@@ -17,12 +18,15 @@ class Projectile : public Model
 {
 private:
 	D3DXVECTOR3 target;
+	bool isHit;
+	float damage;
 public:
 	Projectile();
 	Projectile(const Projectile&);
 	~Projectile();
+	bool IsHit();
 	void SetTarget(D3DXVECTOR3);
-	void Update(float);
+	void Update(float,vector<Creeper*>*);
 };
 
 
