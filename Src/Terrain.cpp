@@ -445,10 +445,8 @@ namespace TD
 	{
 		ifstream fin;
 		char input;
-		int i, error;
+		int i;
 		char inputFilename[128];
-		unsigned int stringLength;
-		WCHAR textureFilename[128];
 		bool result;
 
 
@@ -487,15 +485,10 @@ namespace TD
 
 			fin >> inputFilename;
 
-			// Convert the character filename to WCHAR.
-			error = mbstowcs_s(&stringLength, textureFilename, 128, inputFilename, 128);
-			if(error != 0)
-			{
-				return false;
-			}
+
 
 			// Load the texture or alpha map.
-			result = pTextures[i].Initialize(device, textureFilename);
+			result = pTextures[i].Initialize(device, inputFilename);
 			if(!result)
 			{
 				return false;
@@ -868,7 +861,7 @@ namespace TD
 		{
 			for(i=0; i<pTextureCount; i++)
 			{
-				pTextures[i].Shutdown();
+				pTextures[i].Release();
 			}
 
 			delete [] pTextures;

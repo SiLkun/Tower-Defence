@@ -9,6 +9,7 @@ namespace TD
 	Texture::Texture()
 	{
 		pTexture = 0;
+		lock = 0;
 	}
 
 
@@ -22,32 +23,33 @@ namespace TD
 	}
 
 
-	bool Texture::Initialize(ID3D11Device* pDevice, WCHAR* filename)
+	bool Texture::Initialize(ID3D11Device* pDevice, char* fileName)
 	{
-		HRESULT result;
-
-
-		// Load the texture in.
-		result = D3DX11CreateShaderResourceViewFromFile(pDevice, filename, NULL, NULL, &pTexture, NULL);
-		if(FAILED(result))
+		this->fileName = fileName;
+		lock++;
+		if(pTexture == NULL)
 		{
-			return false;
+			HRESULT result = D3DX11CreateShaderResourceViewFromFileA(pDevice, fileName, NULL, NULL, &pTexture, NULL);
+			if(FAILED(result))
+			{
+				return false;
+			}
 		}
 
 		return true;
 	}
 
-
-	void Texture::Shutdown()
+	int Texture::Release()
 	{
+		--lock;
+
 		// Release the texture resource.
-		if(pTexture)
+		if(pTexture && lock <= 0)
 		{
 			pTexture->Release();
 			pTexture = 0;
 		}
-
-		return;
+		return lock;
 	}
 
 
@@ -55,4 +57,12 @@ namespace TD
 	{
 		return pTexture;
 	}
+
+	string Texture::GetFileName()
+	{
+		return fileName;
+	}
+
+
+
 }

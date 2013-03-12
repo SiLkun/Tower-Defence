@@ -20,7 +20,6 @@ public:
 	Creeper(const Creeper&);
 	~Creeper();
 	void Update(float);
-	void UpdateOnMap(float terrainWidth,float terrainHeight);
 	void Render(ID3D11DeviceContext* deviceContext);
 	void Hit(float);
 	float GetHealth();

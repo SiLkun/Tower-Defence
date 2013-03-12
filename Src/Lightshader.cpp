@@ -368,7 +368,11 @@ namespace TD
 		deviceContext->VSSetConstantBuffers(bufferNumber, 1, &pMatrixBuffer);
 
 		// Set shader texture resource in the pixel shader.
-		deviceContext->PSSetShaderResources(0, 1, &texture);
+
+		if(texture)
+		{
+			deviceContext->PSSetShaderResources(0, 1, &texture);
+		}
 
 		// Lock the light constant buffer so it can be written to.
 		result = deviceContext->Map(pLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

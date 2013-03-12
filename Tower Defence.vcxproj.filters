@@ -78,6 +78,9 @@
     <ClCompile Include="Src\Projectile.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Mesh.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\stdafx.h" />
@@ -143,6 +146,9 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Src\Projectile.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Mesh.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

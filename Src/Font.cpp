@@ -24,7 +24,7 @@ namespace TD
 	}
 
 
-	bool Font::Initialize(ID3D11Device* pDevice, char* fontFilename, WCHAR* textureFilename)
+	bool Font::Initialize(ID3D11Device* pDevice, char* fontFilename, char* textureFilename)
 	{
 		bool result;
 
@@ -119,7 +119,7 @@ namespace TD
 	}
 
 
-	bool Font::LoadTexture(ID3D11Device* pDevice, WCHAR* filename)
+	bool Font::LoadTexture(ID3D11Device* pDevice, char* filename)
 	{
 		bool result;
 
@@ -147,7 +147,7 @@ namespace TD
 		// Release the texture object.
 		if(pTexture)
 		{
-			pTexture->Shutdown();
+			pTexture->Release();
 			delete pTexture;
 			pTexture = 0;
 		}

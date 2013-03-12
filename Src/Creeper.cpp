@@ -7,7 +7,7 @@ namespace TD
 {
 	Creeper::Creeper()
 	{
-		onMap = false;
+		
 		health = 1.0f;
 	}
 
@@ -19,18 +19,7 @@ namespace TD
 	{
 	}
 
-	void Creeper::UpdateOnMap(float terrainWidth,float terrainHeight)
-	{
-		if(position.x > -terrainWidth/2 && position.x < terrainWidth/2 && position.z > -terrainHeight/2 && position.z < terrainHeight/2 )
-		{
-			onMap = true;
-		}
-		else
-		{
-			onMap = false;
-		}
 
-	}
 
 	
 	void Creeper::Update(float frameTime)

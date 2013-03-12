@@ -19,13 +19,16 @@ public:
 	Texture(const Texture&);
 	~Texture();
 
-	bool Initialize(ID3D11Device*, WCHAR*);
-	void Shutdown();
+	bool Initialize(ID3D11Device*, char*);
+	int Release();
+
 
 	ID3D11ShaderResourceView* GetTexture();
-
+	string GetFileName();
 private:
 	ID3D11ShaderResourceView* pTexture;
+	string fileName;
+	int lock;
 };
 
 #endif

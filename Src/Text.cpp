@@ -53,7 +53,7 @@ namespace TD
 		}
 
 		// Initialize the font object.
-		result = pFont->Initialize(device, "Data/fontdata.txt", L"Data/font.dds");
+		result = pFont->Initialize(device, "Data/fontdata.txt", "Data/font.dds");
 		if(!result)
 		{
 			MessageBox(hwnd, L"Could not initialize the font object.", L"Error", MB_OK);

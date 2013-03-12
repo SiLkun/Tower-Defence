@@ -55,6 +55,7 @@ namespace TD
 	#include "Terrain.h"
 	#include "Camera.h"
 	#include "Input.h"
+	#include "Mesh.h"
 	#include "Model.h"
 	#include "Projectile.h"
 	#include "Creeper.h"

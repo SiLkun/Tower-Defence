@@ -32,6 +32,7 @@
     <ClCompile Include="Src\Input.cpp" />
     <ClCompile Include="Src\Light.cpp" />
     <ClCompile Include="Src\Lightshader.cpp" />
+    <ClCompile Include="Src\Mesh.cpp" />
     <ClCompile Include="Src\Model.cpp" />
     <ClCompile Include="Src\Projectile.cpp" />
     <ClCompile Include="Src\stdafx.cpp">
@@ -60,6 +61,7 @@
     <ClInclude Include="Src\Input.h" />
     <ClInclude Include="Src\Light.h" />
     <ClInclude Include="Src\LightShader.h" />
+    <ClInclude Include="Src\Mesh.h" />
     <ClInclude Include="Src\Model.h" />
     <ClInclude Include="Src\Projectile.h" />
     <ClInclude Include="Src\stdafx.h" />

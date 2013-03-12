@@ -7,11 +7,8 @@ namespace TD
 {
 	Projectile::Projectile()
 	{
-		scale.x = 0.1f;
-		scale.y = 0.1f;
-		scale.z = 0.1f;
 		isHit = false;
-		damage = 0.03f;
+		damage = 0.3f;
 	}
 
 	Projectile::Projectile(const Projectile&)
@@ -24,7 +21,7 @@ namespace TD
 
 	void Projectile::SetTarget(D3DXVECTOR3 targetPosition)
 	{
-		target = targetPosition;
+		D3DXVec3Normalize(&direction,&(position - targetPosition));
 	}
 
 	bool Projectile::IsHit()
@@ -34,11 +31,6 @@ namespace TD
 
 	void Projectile::Update(float frameTime,vector<Creeper*>* pCreepers)
 	{
-		D3DXVECTOR3 distance;
-		distance.x = position.x - target.x;
-		distance.y = position.y - target.y;
-		distance.z = position.z - target.z;
-
 		if(pCreepers)
 		{
 			for(UINT iCreeper = 0;iCreeper < pCreepers->size();iCreeper++)
@@ -56,18 +48,11 @@ namespace TD
 			}
 		}
 
-		if(D3DXVec3Length(&distance) < 1.0f)
+		if(!isHit)
 		{
-			isHit = true;
-		}
-		else
-		{
-
-			D3DXVec3Normalize(&distance,&distance);
-
-			position.x -= (frameTime * distance.x * 0.05f);
-			position.y -= (frameTime * distance.y * 0.05f);
-			position.z -= (frameTime * distance.z * 0.05f);
+			position.x -= (frameTime * direction.x * 0.05f);
+			position.y -= (frameTime * direction.y * 0.05f);
+			position.z -= (frameTime * direction.z * 0.05f);
 		}
 
 		Model::Update();

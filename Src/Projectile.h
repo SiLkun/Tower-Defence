@@ -17,7 +17,7 @@ class Creeper;
 class Projectile : public Model
 {
 private:
-	D3DXVECTOR3 target;
+	D3DXVECTOR3 direction;
 	bool isHit;
 	float damage;
 public:

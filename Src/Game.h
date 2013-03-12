@@ -29,6 +29,7 @@ public:
 	float GetTime();
 	float GetWaveDelay();
 	float GetPreviousWaveTime();
+	Mesh * GetMesh(string fileName);
 
 private:
 	Terrain* pTerrain;
@@ -39,6 +40,9 @@ private:
 
 	vector<Creeper*> * creepers;
 	vector<Tower*> * towers;
+	vector<Texture*> * textures;
+	vector<Projectile*> * projectiles;
+	vector<Mesh*> * meshes;
 
 	float time;
 	float previousWaveTime;

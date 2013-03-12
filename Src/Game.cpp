@@ -9,6 +9,11 @@ namespace TD
 	{
 		creepers = new vector<Creeper*>();
 		towers = new vector<Tower*>();
+		textures = new vector<Texture*>();
+		projectiles = new vector<Projectile*>();
+		meshes = new vector<Mesh*>();
+
+
 		pTerrainShader = 0;
 		pTerrain = 0;
 		pLight = 0;
@@ -78,6 +83,20 @@ namespace TD
 			return false;
 		}
 
+
+		Mesh * pTowerMesh = new Mesh();
+		pTowerMesh->Initialize(pDevice, "Data/Model/Tower.obj",textures);
+		meshes->push_back(pTowerMesh);
+
+		Mesh * pCreeperMesh = new Mesh();
+		pCreeperMesh->Initialize(pDevice, "Data/Model/Creeper.obj",textures);
+		meshes->push_back(pCreeperMesh);
+
+		Mesh * pProjectileMesh = new Mesh();
+		pProjectileMesh->Initialize(pDevice, "Data/Model/Projectile.obj",textures);
+		meshes->push_back(pProjectileMesh);
+
+
 		
 		for (int i = 0; i < 5; i++)
 		{
@@ -86,8 +105,10 @@ namespace TD
 			{
 				return false;
 			}
-			result = pTower->Initialize(pDevice, "data/cube.txt", L"data/Tower.dds");
+			pTower->Initialize(pTowerMesh);
+			
 			pTower->SetPosition(-5.0f,2.5f,20.0f -(i * 5.0f));
+
 
 			towers->push_back(pTower);
 		}
@@ -157,7 +178,6 @@ namespace TD
 				// Release the terrain object.
 				if(pCreeper)
 				{
-					pCreeper->Shutdown();
 					delete pCreeper;
 					pCreeper = 0;
 				}
@@ -173,10 +193,8 @@ namespace TD
 			for(UINT iTower = 0;iTower < towers->size();iTower++)
 			{
 				Tower* pTower = towers->at(iTower);
-				// Release the terrain object.
 				if(pTower)
 				{
-					pTower->Shutdown();
 					delete pTower;
 					pTower = 0;
 				}
@@ -186,12 +204,57 @@ namespace TD
 			delete towers;
 			towers = 0;
 		}
+
+		
+
+		if(meshes)
+		{
+			 for(vector<Mesh*>::iterator iMesh = meshes->begin();iMesh != meshes->end();iMesh++)
+			 {
+				 Mesh * pMesh = (Mesh*)*iMesh;
+				 pMesh->Release();
+				 delete pMesh;
+			 }
+		}
+
+		if(textures)
+		{
+			for(UINT iTexture = 0;iTexture < textures->size();iTexture++)
+			{
+				Texture * pTexture = textures->at(iTexture);
+				// Release the terrain object.
+				if(pTexture)
+				{
+					pTexture->Release();
+					delete pTexture;
+					pTexture = 0;
+				}
+			}
+
+			textures->clear();
+			delete textures;
+			textures = 0;
+		}
 	}
 
 	Terrain * Game::GetTerrain()
 	{
 		return pTerrain;
 	}
+
+	 
+	Mesh * Game::GetMesh(string fileName)
+	 {
+		 for(vector<Mesh*>::iterator iMesh = meshes->begin();iMesh != meshes->end();iMesh++)
+		 {
+			 Mesh * pMesh = (Mesh*)*iMesh;
+			 if(pMesh && pMesh->GetFilename().compare(fileName) == 0)
+			 {
+				 return pMesh;
+			 }
+		 }
+		 return NULL;
+	 }
 
 	bool Game::Update(ID3D11Device * pDevice,float frameTime)
 	{
@@ -210,8 +273,8 @@ namespace TD
 				{
 					return false;
 				}
-				result = pCreeper->Initialize(pDevice, "data/cube.txt", L"data/Creeper.dds");
-			
+				pCreeper->Initialize(GetMesh("Data/Model/Creeper.obj"));
+
 				pCreeper->SetPosition(-1.0f,1.5f,192.0f -(i * 4.0f));
 
 				float scale = 1.0f;
@@ -230,7 +293,6 @@ namespace TD
 				Creeper* pCreeper = creepers->at(iCreeper);
 				if(pCreeper->GetHealth() < 0.0f)
 				{
-					pCreeper->Shutdown();
 					delete pCreeper;
 					pCreeper = 0;
 					creepers->erase(creepers->begin() + iCreeper);
@@ -260,10 +322,37 @@ namespace TD
 			{
 				Tower* pTower = towers->at(iTower);
 				pTower->DetermineTarget(creepers);
-				pTower->Update(pDevice,time,frameTime,creepers);
+				pTower->Update(pDevice,time,frameTime,pTerrain,creepers,projectiles);
 			}
 		}
 
+		if(projectiles)
+		{
+			for(UINT iProjectile = 0;iProjectile < projectiles->size();)
+			{
+				Projectile * pProjectile = projectiles->at(iProjectile);
+				if(pProjectile->IsHit() || !pProjectile->IsOnMap())
+				{
+					delete pProjectile;
+					pProjectile = 0;
+					projectiles->erase(projectiles->begin() + iProjectile);
+				}
+				iProjectile++;
+			}
+		}
+
+
+		if(projectiles)
+		{
+			for(UINT iProjectile = 0;iProjectile < projectiles->size();iProjectile++)
+			{
+				Projectile * pProjectile = projectiles->at(iProjectile);
+				pProjectile->Initialize(GetMesh("Data/Model/Projectile.obj"));
+				pProjectile->Update(frameTime,creepers);
+				pProjectile->UpdateOnMap((float)pTerrain->GetWidth(),(float)pTerrain->GetHeight());
+
+			}
+		}
 
 
 		return result;
@@ -290,8 +379,8 @@ namespace TD
 				pCreeper->Render(pDeviceContext);
 
 				// Render the model using the light shader.
-				pLightShader->Render(pDeviceContext, pCreeper->GetIndexCount(), pCreeper->GetWorldMatrix(), viewMatrix, projectionMatrix, 
-						   pCreeper->GetTexture(), pLight->GetAmbientColor(), pLight->GetDiffuseColor(), pLight->GetDirection() );
+				pLightShader->Render(pDeviceContext, pCreeper->GetMesh()->GetIndexCount(), pCreeper->GetWorldMatrix(), viewMatrix, projectionMatrix, 
+						    pCreeper->GetMesh()->GetTexture(), pLight->GetAmbientColor(), pLight->GetDiffuseColor(), pLight->GetDirection() );
 			}
 		}
 
@@ -301,11 +390,21 @@ namespace TD
 			{
 				Tower* pTower = towers->at(iTower);
 
-				pTower->Render(pDeviceContext,pLightShader,viewMatrix, projectionMatrix,pLight);
+				pTower->Render(pDeviceContext);
 
 				// Render the model using the light shader.
-				pLightShader->Render(pDeviceContext, pTower->GetIndexCount(), pTower->GetWorldMatrix(), viewMatrix, projectionMatrix, 
-						   pTower->GetTexture(),pLight->GetAmbientColor(), pLight->GetDiffuseColor(),  pLight->GetDirection());
+				pLightShader->Render(pDeviceContext, pTower->GetMesh()->GetIndexCount(), pTower->GetWorldMatrix(), viewMatrix, projectionMatrix, 
+					pTower->GetMesh()->GetTexture(),pLight->GetAmbientColor(), pLight->GetDiffuseColor(),  pLight->GetDirection());
+			}
+		}
+
+		if(projectiles)
+		{
+			for(UINT iProjectile = 0;iProjectile < projectiles->size();iProjectile++)
+			{
+				Projectile * pProjectile = projectiles->at(iProjectile);
+				pProjectile->Render(pDeviceContext);
+				pLightShader->Render(pDeviceContext, pProjectile->GetMesh()->GetIndexCount(), pProjectile->GetWorldMatrix(), viewMatrix, projectionMatrix,  pProjectile->GetMesh()->GetTexture(),pLight->GetAmbientColor(), pLight->GetDiffuseColor(), pLight->GetDirection() );
 			}
 		}
 

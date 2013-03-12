@@ -6,6 +6,8 @@
 
 #include "stdafx.h"
 
+class Texture;
+class Mesh;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: Model
@@ -16,9 +18,17 @@ private:
 	struct VertexType
 	{
 		D3DXVECTOR3 position;
-		D3DXVECTOR2 texture;
+		D3DXVECTOR2 textCoord;
 		D3DXVECTOR3 normal;
 	};
+
+	struct Material
+	{
+		D3DXVECTOR3 ambient;
+		D3DXVECTOR3 diffuse;
+		D3DXVECTOR3 specular;
+		string texture;
+	} material;
 
 	struct ModelType
 	{
@@ -26,40 +36,30 @@ private:
 		float tu, tv;
 		float nx, ny, nz;
 	};
+
+	Mesh * pMesh;
 public:
 	Model();
 	Model(const Model&);
 	~Model();
-	bool Initialize(ID3D11Device*, char*, WCHAR*);
-	void Shutdown();
+	void Initialize(Mesh * pMesh);
+
 	void Render(ID3D11DeviceContext*);
-	int GetIndexCount();
-	ID3D11ShaderResourceView* GetTexture();
+
 	D3DXVECTOR3 * GetPosition();
 	void SetPosition(float,float,float);
 	D3DXVECTOR3 * GetScale();
 	void SetScale(float,float,float);
 	void Update();
 	D3DXMATRIX GetWorldMatrix();
-private:
-	bool InitializeBuffers(ID3D11Device*);
-	void ShutdownBuffers();
-	void RenderBuffers(ID3D11DeviceContext*);
-
-	bool LoadTexture(ID3D11Device*, WCHAR*);
-	void ReleaseTexture();
-
-	bool LoadModel(char*);
-	void ReleaseModel();
+	void UpdateOnMap(float terrainWidth,float terrainHeight);
+	bool IsOnMap();
+	Mesh * GetMesh();
 protected:
-	ID3D11Buffer *pVertexBuffer, * pIndexBuffer;
-	int vertexCount, indexCount;
-	Texture* pTexture;
 	D3DXVECTOR3 position;
 	D3DXVECTOR3 scale;
-	ModelType* pModel;
 	D3DXMATRIX worldMatrix;
-	bool onMap;
+	bool isOnMap;
 };
 
 #endif
