@@ -77,7 +77,7 @@ namespace TD
 		pCamera->GetViewMatrix(baseViewMatrix);
 
 		pCamera->SetPosition(D3DXVECTOR3(60.0f, 30.0f, -60.0f));
-		pCamera->SetRotation(D3DXVECTOR3(D3DX_PI /8 , -D3DX_PI /4 , 0.0f));
+		pCamera->SetRotation(D3DXVECTOR3(D3DX_PI /8.0f , -D3DX_PI /4.0f , 0.0f));
 
 		// Create the terrain object.
 		pGame = new Game;
@@ -171,12 +171,15 @@ namespace TD
 			return false;
 		}
 	
+
+
 		return true;
 	}
 
 
 	void Engine::Shutdown()
 	{
+
 		// Release the text object.
 		if(pText)
 		{
@@ -400,7 +403,7 @@ namespace TD
 		pDirect3D->GetProjectionMatrix(projectionMatrix);
 		pDirect3D->GetOrthoMatrix(orthoMatrix);
 
-		pGame->Update(pDirect3D->GetDevice(),pTimer->GetTime());
+		pGame->Update(pDirect3D->GetDevice(),pCamera,pTimer->GetTime());
 		pGame->Render(pDirect3D->GetDeviceContext(), viewMatrix, projectionMatrix);
 
 		// Turn off the Z buffer to begin all 2D rendering.

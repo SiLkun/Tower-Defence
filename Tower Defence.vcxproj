@@ -35,6 +35,7 @@
     <ClCompile Include="Src\Mesh.cpp" />
     <ClCompile Include="Src\Model.cpp" />
     <ClCompile Include="Src\Projectile.cpp" />
+    <ClCompile Include="Src\Sound.cpp" />
     <ClCompile Include="Src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -64,6 +65,7 @@
     <ClInclude Include="Src\Mesh.h" />
     <ClInclude Include="Src\Model.h" />
     <ClInclude Include="Src\Projectile.h" />
+    <ClInclude Include="Src\Sound.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\System.h" />
     <ClInclude Include="Src\Terrain.h" />

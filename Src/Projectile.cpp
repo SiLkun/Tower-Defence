@@ -19,9 +19,32 @@ namespace TD
 	{
 	}
 
+	void Projectile::Initialize(Mesh * pMesh)
+	{
+		Model::Initialize(pMesh);
+
+		pLaunchSound->Play(this->position);
+	}
+
 	void Projectile::SetTarget(D3DXVECTOR3 targetPosition)
 	{
 		D3DXVec3Normalize(&direction,&(position - targetPosition));
+	}
+
+	void Projectile::SetLaunchSound(Sound * pSound)
+	{
+		pLaunchSound = pSound;
+	}
+
+	void Projectile::SetMoveSound(Sound * pSound)
+	{
+		pMoveSound = pSound;
+
+	}
+
+	void Projectile::SetHitSound(Sound * pSound)
+	{
+		pHitSound = pSound;
 	}
 
 	bool Projectile::IsHit()
@@ -43,6 +66,7 @@ namespace TD
 				{
 					pCreeper->Hit(damage);
 					isHit = true;
+					pHitSound->Play(this->position);
 				}
 
 			}
@@ -56,5 +80,10 @@ namespace TD
 		}
 
 		Model::Update();
+	}
+
+	void Projectile::Render(ID3D11DeviceContext* deviceContext)
+	{
+		Model::Render(deviceContext);
 	}
 }

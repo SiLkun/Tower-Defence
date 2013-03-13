@@ -12,7 +12,7 @@ namespace TD
 		textures = new vector<Texture*>();
 		projectiles = new vector<Projectile*>();
 		meshes = new vector<Mesh*>();
-
+		sounds = new vector<Sound*>();
 
 		pTerrainShader = 0;
 		pTerrain = 0;
@@ -97,7 +97,57 @@ namespace TD
 		meshes->push_back(pProjectileMesh);
 
 
+					// Create the sound object.
+		Sound * pSound = new Sound;
+		if(!pSound)
+		{
+			return false;
+		}
+ 
+		// Initialize the sound object.
+		result = pSound->Initialize("Data/Sound/rocket_fire.wav",hwnd);
+		if(!result)
+		{
+			MessageBox(hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+			return false;
+		}
+ 
+		sounds->push_back(pSound);
+
+				// Create the sound object.
+		pSound = new Sound;
+		if(!pSound)
+		{
+			return false;
+		}
+ 
+		// Initialize the sound object.
+		result = pSound->Initialize("Data/Sound/rocket_cruise.wav",hwnd);
+		if(!result)
+		{
+			MessageBox(hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+			return false;
+		}
+ 
+		sounds->push_back(pSound);
 		
+				// Create the sound object.
+		pSound = new Sound;
+		if(!pSound)
+		{
+			return false;
+		}
+ 
+		// Initialize the sound object.
+		result = pSound->Initialize("Data/Sound/rocket_explode.wav",hwnd);
+		if(!result)
+		{
+			MessageBox(hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+			return false;
+		}
+ 
+		sounds->push_back(pSound);
+
 		for (int i = 0; i < 5; i++)
 		{
 			Tower * pTower = new Tower();
@@ -107,7 +157,7 @@ namespace TD
 			}
 			pTower->Initialize(pTowerMesh);
 			
-			pTower->SetPosition(-5.0f,2.5f,20.0f -(i * 5.0f));
+			pTower->SetPosition(-5.0f,2.0f,20.0f -(i * 5.0f));
 
 
 			towers->push_back(pTower);
@@ -169,6 +219,26 @@ namespace TD
 			delete pLight;
 			pLight = 0;
 		}
+		
+		if(sounds)
+		{
+			for(vector<Sound*>::iterator iSound = sounds->begin();iSound != sounds->end();iSound++)
+			{
+				Sound* pSound = (Sound*) *iSound;
+				// Release the terrain object.
+				if(pSound)
+				{
+					pSound->Release();
+					delete pSound;
+					pSound = 0;
+				}
+			}
+
+			sounds->clear();
+			delete sounds;
+			sounds = 0;
+		}
+
 
 		if(creepers)
 		{
@@ -256,7 +326,19 @@ namespace TD
 		 return NULL;
 	 }
 
-	bool Game::Update(ID3D11Device * pDevice,float frameTime)
+	Sound * Game::GetSound(string fileName)
+	{
+		 for(vector<Sound*>::iterator iSound = sounds->begin();iSound != sounds->end();iSound++)
+		 {
+			 Sound * pSound = (Sound*)*iSound;
+			 if(pSound && pSound->GetFilename().compare(fileName) == 0)
+			 {
+				 return pSound;
+			 }
+		 }
+		 return NULL;
+	}
+	bool Game::Update(ID3D11Device * pDevice,Camera * pCamera,float frameTime)
 	{
 		bool result;
 	
@@ -285,6 +367,16 @@ namespace TD
 			}
 		}
 
+		if(sounds)
+		{
+			D3DXVECTOR3 p;
+			pCamera->GetPosition(p);
+			for(vector<Sound*>::iterator iSound = sounds->begin();iSound != sounds->end();iSound++)
+			{
+				Sound* pSound = (Sound*) *iSound;
+				pSound->Update(p);
+			}
+		}
 		
 		if(creepers)
 		{
@@ -347,7 +439,14 @@ namespace TD
 			for(UINT iProjectile = 0;iProjectile < projectiles->size();iProjectile++)
 			{
 				Projectile * pProjectile = projectiles->at(iProjectile);
-				pProjectile->Initialize(GetMesh("Data/Model/Projectile.obj"));
+				if(!pProjectile->GetMesh())
+				{
+					pProjectile->SetLaunchSound(GetSound("Data/Sound/rocket_fire.wav"));
+					pProjectile->SetMoveSound(GetSound("Data/Sound/rocket_cruise.wav"));
+					pProjectile->SetHitSound(GetSound("Data/Sound/rocket_explode.wav"));
+					pProjectile->Initialize(GetMesh("Data/Model/Projectile.obj"));
+
+				}
 				pProjectile->Update(frameTime,creepers);
 				pProjectile->UpdateOnMap((float)pTerrain->GetWidth(),(float)pTerrain->GetHeight());
 

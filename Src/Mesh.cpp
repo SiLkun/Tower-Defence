@@ -52,6 +52,13 @@ namespace TD
 		}
 
 		modelFilename += "/";
+
+		int lastSlash = materialFile.find_last_of("/");
+		if(lastSlash >= 0)
+		{
+			materialFile = materialFile.substr(lastSlash + 1,materialFile.length() - lastSlash - 1);
+		}
+
 		modelFilename += materialFile;
 
 		// Load the texture for this model.
@@ -366,8 +373,6 @@ namespace TD
 	{
 		char input;
 
-
-
 		ifstream fin;
 		fin.open(mtl);
 		// Check if it was successful in opening the file.
@@ -402,9 +407,9 @@ namespace TD
 		
 			if(tag.compare("map_Kd") == 0)
 			{
-				material.texture = mtl;
-				material.texture = material.texture.substr(0,material.texture.find_last_of("/"));
-				material.texture += "/";
+				//material.texture = mtl;
+				//material.texture = material.texture.substr(0,material.texture.find_last_of("/"));
+				material.texture = "Data/Texture/";
 				fin.get(input);
 
 				string filename = "";

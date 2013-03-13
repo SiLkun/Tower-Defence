@@ -79,7 +79,7 @@ namespace TD
 	void Tower::Attack(ID3D11Device * pDevice,vector<Projectile*>* pProjectiles)
 	{
 		Projectile * pProjectile = new Projectile();
-		pProjectile->SetPosition(this->position.x, this->position.y, this->position.z);
+		pProjectile->SetPosition(this->position.x, this->position.y + 2.0f, this->position.z);
 		pProjectile->SetTarget((*pTarget->GetPosition()));
 		pProjectiles->push_back(pProjectile);
 	}

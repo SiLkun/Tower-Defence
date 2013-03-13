@@ -48,6 +48,7 @@ private:
 	Cpu* pCpu;
 	FontShader* pFontShader;
 	Text* pText;
+
 };
 
 #endif

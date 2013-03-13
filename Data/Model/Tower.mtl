@@ -1,11 +1,72 @@
 # Blender MTL File: 'None'
-# Material Count: 1
+# Material Count: 7
 
-newmtl None
-Ns 0
+newmtl 04_-_Default
+Ns 0.000000
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.480000 0.480000 0.480000
+Ks 0.900000 0.900000 0.900000
+Ni 1.000000
+d 1.000000
 illum 2
-map_Kd D:\Visual studio projects\Tower-Defence\Data\Tower.dds
+map_Kd Torre2.jpg
+
+newmtl 05_-_Default
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.480000 0.480000 0.480000
+Ks 0.900000 0.900000 0.900000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd TorreBordo.jpg
+
+newmtl 06_-_Default
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.480000 0.480000 0.480000
+Ks 0.900000 0.900000 0.900000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd iron.JPG
+
+newmtl 07_-_Default
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.480000 0.480000 0.480000
+Ks 0.900000 0.900000 0.900000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd scale.jpg
+
+newmtl 08_-_Default
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.480000 0.480000 0.480000
+Ks 0.900000 0.900000 0.900000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd pavimento.jpg
+
+newmtl 09_-_Default
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.480000 0.480000 0.480000
+Ks 0.900000 0.900000 0.900000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd OLDWOOD.JPG
+
+newmtl Door
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.480000 0.480000 0.480000
+Ks 0.900000 0.900000 0.900000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Door.jpg

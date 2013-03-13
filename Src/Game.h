@@ -24,13 +24,13 @@ public:
 	bool Initialize(ID3D11Device*,HWND);
 	void Shutdown();
 	Terrain * GetTerrain();
-	bool Update(ID3D11Device * pDevice,float frameTime);
+	bool Update(ID3D11Device * pDevice,Camera * pCamera,float frameTime);
 	bool Render(ID3D11DeviceContext*,D3DXMATRIX,D3DXMATRIX);
 	float GetTime();
 	float GetWaveDelay();
 	float GetPreviousWaveTime();
 	Mesh * GetMesh(string fileName);
-
+	Sound * GetSound(string fileName);
 private:
 	Terrain* pTerrain;
 	TerrainShader* pTerrainShader;
@@ -43,6 +43,7 @@ private:
 	vector<Texture*> * textures;
 	vector<Projectile*> * projectiles;
 	vector<Mesh*> * meshes;
+	vector<Sound*>	* sounds;
 
 	float time;
 	float previousWaveTime;

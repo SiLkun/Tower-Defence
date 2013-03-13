@@ -81,6 +81,9 @@
     <ClCompile Include="Src\Mesh.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Sound.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\stdafx.h" />
@@ -150,6 +153,9 @@
     </ClInclude>
     <ClInclude Include="Src\Mesh.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Sound.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

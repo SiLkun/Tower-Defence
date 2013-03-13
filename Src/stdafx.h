@@ -21,12 +21,15 @@
 #include <dinput.h>
 #include <pdh.h>
 #include <mmsystem.h>
+#include <dsound.h>
+#include <stdio.h>
 
 using namespace std;
 
 /////////////
 // LINKING //
 /////////////
+#pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dx11.lib")
@@ -35,6 +38,10 @@ using namespace std;
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "pdh.lib")
 #pragma comment(lib, "winmm.lib")
+
+
+
+
 
 namespace TD
 {
@@ -48,7 +55,7 @@ namespace TD
 	#include "Fps.h"
 	#include "Timer.h"
 	#include "Colorshader.h"
-
+	#include "Sound.h"
 	#include "Lightshader.h"
 	#include "Light.h"
 	#include "Terrainshader.h"

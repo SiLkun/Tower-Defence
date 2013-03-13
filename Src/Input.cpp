@@ -59,7 +59,7 @@ namespace TD
 		}
 
 		// Set the cooperative level of the pKeyboard to not share with other programs.
-		result = pKeyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+		result = pKeyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 		if(FAILED(result))
 		{
 			return false;
