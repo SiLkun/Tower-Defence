@@ -89,7 +89,7 @@ namespace TD
 		meshes->push_back(pTowerMesh);
 
 		Mesh * pCreeperMesh = new Mesh();
-		pCreeperMesh->Initialize(pDevice, "Data/Model/Creeper.obj",textures);
+		pCreeperMesh->Initialize(pDevice, "Data/Model/Hawk.obj",textures);
 		meshes->push_back(pCreeperMesh);
 
 		Mesh * pProjectileMesh = new Mesh();
@@ -157,7 +157,7 @@ namespace TD
 			}
 			pTower->Initialize(pTowerMesh);
 			
-			pTower->SetPosition(-5.0f,2.0f,20.0f -(i * 5.0f));
+			pTower->SetPosition(-5.0f,0.0f,20.0f -(i * 5.0f));
 
 
 			towers->push_back(pTower);
@@ -355,9 +355,9 @@ namespace TD
 				{
 					return false;
 				}
-				pCreeper->Initialize(GetMesh("Data/Model/Creeper.obj"));
+				pCreeper->Initialize(GetMesh("Data/Model/Hawk.obj"));
 
-				pCreeper->SetPosition(-1.0f,1.5f,192.0f -(i * 4.0f));
+				pCreeper->SetPosition(-1.0f,0.0f,192.0f -(i * 4.0f));
 
 				float scale = 1.0f;
 				scale += ((rand() % 20) - 10.0f) * 0.01f;
