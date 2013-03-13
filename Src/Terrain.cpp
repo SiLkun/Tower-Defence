@@ -704,10 +704,16 @@ namespace TD
 					{
 						found = true;
 					}
+					else if(pMaterialCount == index +1)
+					{
+						found = true;
+					}
 					else
 					{
 						index++;
 					}
+
+					
 				}
 
 				// Set the index position in the vertex and index array to the count.
