@@ -32,14 +32,17 @@ namespace TD
 
 	void Creeper::Update(float frameTime)
 	{
-		if(fast){
-			position.z -=  0.03f * frameTime ;
-			position.z +=  (rand() % 3) * 0.03f ;
-		}
-		else
+		if(health > 0)
 		{
-			position.z -=  0.01f * frameTime ;
-			position.z +=  (rand() % 3) * 0.01f ;
+			if(fast){
+				position.z -=  0.015f * frameTime ;
+				position.z +=  (rand() % 3) * 0.01f ;
+			}
+			else
+			{
+				position.z -=  0.01f * frameTime ;
+				position.z +=  (rand() % 3) * 0.01f ;
+			}
 		}
 		Model::Update();
 	}

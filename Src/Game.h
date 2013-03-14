@@ -26,14 +26,16 @@ public:
 	Terrain * GetTerrain();
 	bool Update(ID3D11Device * pDevice,Camera * pCamera,float frameTime);
 	Creeper * GetWaveType();
-	bool Render(ID3D11DeviceContext*,D3DXMATRIX,D3DXMATRIX);
+	bool Render(ID3D11DeviceContext*,D3DXMATRIX&,D3DXMATRIX&);
 	float GetTime();
-	float GetLevel();
-	float GetGold();
+	int GetLevel();
+	int GetGold();
 	float GetWaveDelay();
 	float GetPreviousWaveTime();
 	Mesh * GetMesh(string fileName);
 	Sound * GetSound(string fileName);
+	void MouseLeftMove(bool,float,float, D3DXVECTOR3&,D3DXMATRIX&);
+	D3DXVECTOR3 Intersection(float mouseX, float mouseY, D3DXVECTOR3&,D3DXMATRIX&);
 private:
 	Terrain* pTerrain;
 	TerrainShader* pTerrainShader;
@@ -43,10 +45,13 @@ private:
 
 	vector<Creeper*> * creepers;
 	vector<Tower*> * towers;
+	Tower * pTowerPlacement;
+
 	vector<Texture*> * textures;
 	vector<Projectile*> * projectiles;
 	vector<Mesh*> * meshes;
 	vector<Sound*>	* sounds;
+
 
 	float time;
 	float previousWaveTime;

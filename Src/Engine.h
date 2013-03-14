@@ -34,6 +34,8 @@ public:
 	bool Initialize(HINSTANCE, HWND, int, int);
 	void Shutdown();
 	bool Frame();
+
+
 private:
 	bool HandleInput(float);
 	bool RenderGraphics();
@@ -48,7 +50,7 @@ private:
 	Cpu* pCpu;
 	FontShader* pFontShader;
 	Text* pText;
-
+	int screenWidth, screenHeight;
 };
 
 #endif

@@ -958,4 +958,9 @@ namespace TD
 	{
 		return terrainHeight;
 	}
+
+	D3DXMATRIX Terrain::GetWorldMatrix()
+	{
+		return worldMatrix;
+	}
 }

@@ -34,6 +34,9 @@ namespace TD
 		char videoCard[128];
 		int videoMemory;
 
+
+		this->screenWidth = screenWidth;
+		this->screenHeight = screenHeight;
 		// Create the input object.  The input object will be used to handle reading the pKeyboard and pMouse input from the user.
 		pInput = new Input;
 		if(!pInput)
@@ -260,7 +263,7 @@ namespace TD
 
 		// Read the user input.
 		result = pInput->Frame();
-		if(!result)
+		/*if(!result)
 		{
 			return false;
 		}
@@ -269,7 +272,7 @@ namespace TD
 		if(pInput->IsKeyPressed(DIK_ESCAPE) == true)
 		{
 			return false;
-		}
+		}*/
 
 		// Update the system stats.
 		pTimer->Frame();
@@ -357,6 +360,32 @@ namespace TD
 		if(pInput->IsKeyPressed(DIK_DOWN)|| pInput->IsKeyPressed(DIK_S))
 			move.z = -1.0f;
 	
+
+		//if(pInput->IsMouseLeftPressed())
+		{
+			int mouseX, mouseY;
+			pInput->GetMouseLocation(mouseX, mouseY);
+
+			
+			// Move the mouse cursor coordinates into the -1 to +1 range.
+			float pointX = ((2.0f * (float)mouseX) / (float)screenWidth) - 1.0f;
+			float pointY = (((2.0f * (float)mouseY) / (float)screenHeight) - 1.0f) * -1.0f;
+		
+			D3DXMATRIX viewMatrix,projectionMatrix;
+			pCamera->GetViewMatrix(viewMatrix);
+			pDirect3D->GetProjectionMatrix(projectionMatrix);
+
+			// Adjust the points using the projection matrix to account for the aspect ratio of the viewport.
+			pointX = pointX / projectionMatrix._11;
+			pointY = pointY / projectionMatrix._22;
+
+			D3DXVECTOR3 p;
+			pCamera->GetPosition(p);
+			pGame->MouseLeftMove(pInput->IsMouseLeftPressed(),pointX,pointY,p,viewMatrix);
+		}
+
+		
+
 		if(pInput->IsMouseRightPressed())
 		{
 			int pMouseRightDownX, pMouseRightDownY,pMouseX, pMouseY;
@@ -371,29 +400,6 @@ namespace TD
 		}
 		pCamera->Move(move);
 		pCamera->Rotate(rotate);
-
-/*
-		D3DXVECTOR3 position(0,0,0);
-		D3DXVECTOR3 rotation(0,0,0);
-
-		// Set the position of the camera.
-		pCamera->GetPosition(position);
-		pCamera->GetRotation(rotation);
-
-		// Update the position values in the text object.
-		result = pText->SetCameraPosition(position.x, position.y, position.z, pDirect3D->GetDeviceContext());
-		if(!result)
-		{
-			return false;
-		}
-
-		// Update the rotation values in the text object.
-		result = pText->SetCameraRotation(rotation.x, rotation.y, rotation.z, pDirect3D->GetDeviceContext());
-		if(!result)
-		{
-			return false;
-		}
-		*/
 		return true;
 	}
 
@@ -443,5 +449,7 @@ namespace TD
 
 		return true;
 	}
+
+
 
 }

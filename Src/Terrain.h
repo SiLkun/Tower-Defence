@@ -58,6 +58,7 @@ public:
 
 	int GetWidth();
 	int GetHeight();
+	D3DXMATRIX GetWorldMatrix();
 private:
 	bool LoadHeightMap(char*);
 	void NormalizeHeightMap();

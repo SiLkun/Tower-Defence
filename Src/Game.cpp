@@ -14,6 +14,7 @@ namespace TD
 		meshes = new vector<Mesh*>();
 		sounds = new vector<Sound*>();
 
+		pTowerPlacement= 0;
 		pTerrainShader = 0;
 		pTerrain = 0;
 		pLight = 0;
@@ -40,12 +41,12 @@ namespace TD
 		return time;
 	}
 
-	float Game::GetLevel()
+	int Game::GetLevel()
 	{
 		return level;
 	}
 
-	float Game::GetGold()
+	int Game::GetGold()
 	{
 		return gold;
 	}
@@ -161,20 +162,7 @@ namespace TD
  
 		sounds->push_back(pSound);
 
-		for (int i = 0; i < 5; i++)
-		{
-			Tower * pTower = new Tower();
-			if(!pTower)
-			{
-				return false;
-			}
-			pTower->Initialize(pTowerMesh);
-			
-			pTower->SetPosition(-5.0f,0.0f,20.0f -(i * 5.0f));
 
-
-			towers->push_back(pTower);
-		}
 		// Create the light shader object.
 		pLightShader = new LightShader;
 		if(!pLightShader)
@@ -286,6 +274,12 @@ namespace TD
 			towers->clear();
 			delete towers;
 			towers = 0;
+		}
+
+		if(pTowerPlacement)
+		{
+			delete pTowerPlacement;
+			pTowerPlacement = 0;
 		}
 
 		
@@ -453,6 +447,11 @@ namespace TD
 			}
 		}
 
+		if(pTowerPlacement)
+		{
+			pTowerPlacement->Update(pDevice,time,frameTime,pTerrain,creepers,projectiles);
+		}
+
 		if(projectiles)
 		{
 			for(UINT iProjectile = 0;iProjectile < projectiles->size();)
@@ -493,7 +492,7 @@ namespace TD
 	}
 
 	Creeper * Game::GetWaveType(){
-		float healthmodifier = level;
+		int healthmodifier = level;
 		bool flying = false;
 		bool fast = false;
 		bool boss = false;
@@ -514,12 +513,12 @@ namespace TD
 		healthmodifier = level;
 
 		if(boss)
-			healthmodifier = level * 10;
+			healthmodifier = level * 5;
 
 		return new Creeper(healthmodifier, flying, fast, boss);
 	}
 
-	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX viewMatrix,D3DXMATRIX projectionMatrix)
+	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX& viewMatrix,D3DXMATRIX& projectionMatrix)
 	{
 		bool result;	
 		
@@ -559,6 +558,15 @@ namespace TD
 			}
 		}
 
+		if(pTowerPlacement)
+		{
+			pTowerPlacement->Render(pDeviceContext);
+
+			// Render the model using the light shader.
+			pLightShader->Render(pDeviceContext, pTowerPlacement->GetMesh()->GetIndexCount(), pTowerPlacement->GetWorldMatrix(), viewMatrix, projectionMatrix, 
+				pTowerPlacement->GetMesh()->GetTexture(),pLight->GetAmbientColor(), pLight->GetDiffuseColor(),  pLight->GetDirection());
+		}
+
 		if(projectiles)
 		{
 			for(UINT iProjectile = 0;iProjectile < projectiles->size();iProjectile++)
@@ -570,5 +578,88 @@ namespace TD
 		}
 
 		return result;
+	}
+
+	void Game::MouseLeftMove(bool leftDown,float mouseX,float mouseY, D3DXVECTOR3& cameraPosition,D3DXMATRIX& viewMatrix)
+	{
+		if(leftDown)
+		{
+			D3DXVECTOR3 p = Intersection(mouseX, mouseY,cameraPosition,viewMatrix);
+
+			if(pTowerPlacement == NULL)
+			{
+				pTowerPlacement = new Tower();
+				pTowerPlacement->Initialize(GetMesh("Data/Model/Tower.obj"));	
+				if(!pTowerPlacement)
+				{
+					return;
+				}
+			}
+			pTowerPlacement->SetPosition(p.x,p.y,p.z);
+			
+		}
+		else if(pTowerPlacement != NULL)
+		{
+			if(gold >= 5)
+			{
+				towers->push_back(pTowerPlacement);
+				pTowerPlacement = NULL;
+				gold-= 5;
+			}
+			else
+			{
+				delete pTowerPlacement;
+				pTowerPlacement = NULL;
+			}
+		}
+	}
+
+	D3DXVECTOR3 Game::Intersection(float pointX, float pointY, D3DXVECTOR3& cameraPosition,D3DXMATRIX& viewMatrix)
+	{
+		D3DXMATRIX inverseViewMatrix, worldMatrix, translateMatrix, inverseWorldMatrix;
+		D3DXVECTOR3 direction, origin, rayOrigin, rayDirection;
+
+
+		D3DXMatrixInverse(&inverseViewMatrix, NULL, &viewMatrix);
+
+		// Calculate the direction of the picking ray in view space.
+		direction.x = (pointX * inverseViewMatrix._11) + (pointY * inverseViewMatrix._21) + inverseViewMatrix._31;
+		direction.y = (pointX * inverseViewMatrix._12) + (pointY * inverseViewMatrix._22) + inverseViewMatrix._32;
+		direction.z = (pointX * inverseViewMatrix._13) + (pointY * inverseViewMatrix._23) + inverseViewMatrix._33;
+
+
+
+		// Get the world matrix and translate to the location of the sphere.
+		worldMatrix = pTerrain->GetWorldMatrix();
+
+		// Now get the inverse of the translated world matrix.
+		D3DXMatrixInverse(&inverseWorldMatrix, NULL, &worldMatrix);
+
+		// Now transform the ray origin and the ray direction from view space to world space.
+		D3DXVec3TransformCoord(&rayOrigin, &cameraPosition, &inverseWorldMatrix);
+		D3DXVec3TransformNormal(&rayDirection, &direction, &inverseWorldMatrix);
+
+		// Normalize the ray direction.
+		D3DXVec3Normalize(&rayDirection, &rayDirection);
+
+
+		D3DXVECTOR3 topLeft(-pTerrain->GetWidth()/2.0f,0,pTerrain->GetHeight()/2.0f);
+		D3DXVECTOR3 topRight(pTerrain->GetWidth()/2.0f,0,pTerrain->GetHeight()/2.0f);
+		D3DXVECTOR3 bottomLeft(-pTerrain->GetWidth()/2.0f,0,-pTerrain->GetHeight()/2.0f);
+		D3DXVECTOR3 bottomRight(pTerrain->GetWidth()/2.0f,0,-pTerrain->GetHeight()/2.0f);
+
+
+		D3DXVECTOR3 intersectionPoint;
+		float u,v,dist;
+		if(!D3DXIntersectTri(&topLeft, &topRight, &bottomRight,&rayOrigin,&rayDirection,&u,&v,&dist))
+		{
+			if(!D3DXIntersectTri(&topLeft, &bottomRight,&bottomLeft,&rayOrigin,&rayDirection,&u,&v,&dist))
+			{
+				return D3DXVECTOR3(0,0,0);
+			}
+		}
+
+		intersectionPoint = rayOrigin + (rayDirection * dist);
+		return intersectionPoint;
 	}
 }

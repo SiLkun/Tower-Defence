@@ -8,9 +8,13 @@ namespace TD
 
 	Input::Input()
 	{
+		mouseLeftDown = false;
 		pDirectInput = 0;
 		pKeyboard = 0;
 		pMouse = 0;
+
+		mouseX = 0;
+		mouseY = 0;
 	}
 
 
@@ -32,10 +36,6 @@ namespace TD
 		// Store the screen size which will be used for positioning the pMouse cursor.
 		this->screenWidth = screenWidth;
 		this->screenHeight = screenHeight;
-
-		// Initialize the location of the pMouse on the screen.
-		mouseX = 0;
-		mouseY = 0;
 
 		// Initialize the main direct input interface.
 		result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&pDirectInput, NULL);
@@ -151,9 +151,10 @@ namespace TD
 		{
 			return false;
 		}
-
-		// Process the changes in the pMouse and pKeyboard.
-		ProcessInput();
+		else
+		{
+			ProcessInput();
+		}
 
 		return true;
 	}
@@ -209,16 +210,31 @@ namespace TD
 
 	void Input::ProcessInput()
 	{
+
 		// Update the location of the pMouse cursor based on the change of the pMouse location during the frame.
 		mouseX += mouseState.lX;
 		mouseY += mouseState.lY;
 
-		// Ensure the pMouse location doesn't exceed the screen width or height.
-		if(mouseX < 0)  { mouseX = 0; }
-		if(mouseY < 0)  { mouseY = 0; }
+		// Ensure the mouse location doesn't exceed the screen width or height.
+		if(mouseX < 0)  
+		{ 
+			mouseX = 0; 
+		}
+		
+		if(mouseY < 0)  
+		{ 
+			mouseY = 0; 
+		}
 	
-		if(mouseX > screenWidth)  { mouseX = screenWidth; }
-		if(mouseY > screenHeight) { mouseY = screenHeight; }
+		if(mouseX > screenWidth)  
+		{ 
+			mouseX = screenWidth; 
+		}
+
+		if(mouseY > screenHeight) 
+		{ 
+			mouseY = screenHeight; 
+		}
 	
 		if(mouseLeftDown)
 		{
