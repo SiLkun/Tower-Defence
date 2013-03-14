@@ -630,7 +630,7 @@ namespace TD
 		_itoa_s(level, tempString, 10);
 		strcat_s(levelString, tempString);
 		
-		red = 1.0f;
+		red = 0.0f;
 		green = 1.0f;
 		blue = 1.0f;
 
@@ -659,7 +659,7 @@ namespace TD
 		
 		red = 1.0f;
 		green = 1.0f;
-		blue = 1.0f;
+		blue = 0.0f;
 
 
 		// Update the sentence vertex buffer with the new string information.

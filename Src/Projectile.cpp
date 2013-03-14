@@ -74,9 +74,9 @@ namespace TD
 
 		if(!isHit)
 		{
-			position.x -= (frameTime * direction.x * 0.05f);
-			position.y -= (frameTime * direction.y * 0.05f);
-			position.z -= (frameTime * direction.z * 0.05f);
+			position.x -= (frameTime * direction.x * 0.03f);
+			position.y -= (frameTime * direction.y * 0.03f);
+			position.z -= (frameTime * direction.z * 0.03f);
 		}
 
 		Model::Update();

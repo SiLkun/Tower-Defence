@@ -27,9 +27,9 @@ public:
 	void Render(ID3D11DeviceContext* deviceContext);
 	void Hit(float);
 	float GetHealth();
-	float GetFlying();
-	float GetFast();
-	float GetBoss();
+	bool IsFlying();
+	bool IsFast();
+	bool IsBoss();
 };
 
 #endif

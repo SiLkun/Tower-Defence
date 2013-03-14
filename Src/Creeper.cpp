@@ -33,8 +33,8 @@ namespace TD
 	void Creeper::Update(float frameTime)
 	{
 		if(fast){
-			position.z -=  0.05f * frameTime ;
-			position.z +=  (rand() % 3) * 0.05f ;
+			position.z -=  0.03f * frameTime ;
+			position.z +=  (rand() % 3) * 0.03f ;
 		}
 		else
 		{
@@ -64,13 +64,13 @@ namespace TD
 		return health;
 	}
 
-	float Creeper::GetFlying(){
+	bool Creeper::IsFlying(){
 		return flying;
 	}
-	float Creeper::GetFast(){
+	bool Creeper::IsFast(){
 		return fast;
 	}
-	float Creeper::GetBoss(){
+	bool Creeper::IsBoss(){
 		return boss;
 	}
 }

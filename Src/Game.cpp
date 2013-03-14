@@ -65,7 +65,7 @@ namespace TD
 	{
 		bool result;
 		level = 1;
-		gold = 0;
+		gold = 10;
 		// Create the terrain object.
 		pTerrain = new Terrain;
 		if(!pTerrain)
@@ -104,10 +104,11 @@ namespace TD
 		pCreeperMesh->Initialize(pDevice, "Data/Model/Hawk.obj",textures);
 		meshes->push_back(pCreeperMesh);
 
+		
 		Mesh * pProjectileMesh = new Mesh();
 		pProjectileMesh->Initialize(pDevice, "Data/Model/Projectile.obj",textures);
 		meshes->push_back(pProjectileMesh);
-
+		
 
 					// Create the sound object.
 		Sound * pSound = new Sound;
@@ -362,7 +363,7 @@ namespace TD
 
 			Creeper * creeperType = GetWaveType();
 
-			if(creeperType->GetBoss())
+			if(creeperType->IsBoss())
 				waveCount = 3;
 			else
 				waveCount = 10;
@@ -370,23 +371,24 @@ namespace TD
 			for (int i = 0; i < waveCount; i++)
 			{
 				// Create the model object.
-				Creeper* pCreeper = new Creeper(creeperType->GetHealth(), creeperType->GetFlying(), creeperType->GetFast(), creeperType->GetBoss());
+				Creeper* pCreeper = new Creeper(creeperType->GetHealth(), creeperType->IsFlying(), creeperType->IsFast(), creeperType->IsBoss());
 
 				if(!pCreeper)
 				{
 					return false;
 				}
+
 				pCreeper->Initialize(GetMesh("Data/Model/Hawk.obj"));
 
 				float scale = 1.0f;
 				scale += ((rand() % 20) - 10.0f) * 0.01f;
 
-				if(creeperType->GetFlying()) {
-					pCreeper->SetPosition(-1.0f,10.0f,192.0f -(i * 4.0f));
+				if(creeperType->IsFlying()) {
+					pCreeper->SetPosition(-1.0f,6.0f,192.0f -(i * 4.0f));
 				}
-				else if(creeperType->GetBoss())	{
+				else if(creeperType->IsBoss())	{
 					scale += 1 + ((rand() % 20) - 10.0f) * 0.01f;
-					pCreeper->SetPosition(-1.0f,0.0f,192.0f -(i * 10.0f));
+					pCreeper->SetPosition(-1.0f,0.0f,192.0f -(i * 25.0f));
 					
 				}
 				else {
