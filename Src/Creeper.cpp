@@ -8,7 +8,18 @@ namespace TD
 	Creeper::Creeper()
 	{
 		
-		health = 1.0f;
+		health = 0.5f;
+		flying = false;
+		fast = false;
+		boss = false;
+	}
+
+	Creeper::Creeper(float healthModifier, bool flying, bool fast, bool boss)
+	{
+		this->health = healthModifier * 0.5f;
+		this->flying = flying;
+		this->fast = fast;
+		this->boss = boss;
 	}
 
 	Creeper::Creeper(const Creeper&)
@@ -19,13 +30,17 @@ namespace TD
 	{
 	}
 
-
-
-	
 	void Creeper::Update(float frameTime)
 	{
-		position.z -=  0.01f * frameTime ;
-		position.z +=  (rand() % 3) * 0.01f ;
+		if(fast){
+			position.z -=  0.05f * frameTime ;
+			position.z +=  (rand() % 3) * 0.05f ;
+		}
+		else
+		{
+			position.z -=  0.01f * frameTime ;
+			position.z +=  (rand() % 3) * 0.01f ;
+		}
 		Model::Update();
 	}
 
@@ -49,4 +64,13 @@ namespace TD
 		return health;
 	}
 
+	float Creeper::GetFlying(){
+		return flying;
+	}
+	float Creeper::GetFast(){
+		return fast;
+	}
+	float Creeper::GetBoss(){
+		return boss;
+	}
 }

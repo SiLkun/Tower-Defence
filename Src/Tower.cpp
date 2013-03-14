@@ -23,8 +23,6 @@ namespace TD
 	{
 	}
 
-
-
 	void Tower::Update(ID3D11Device * pDevice,float time,float frameTime, Terrain * pTerrain,vector<Creeper*>* pCreepers,vector<Projectile*>* pProjectile)
 	{
 		if(HasTarget() && (time - lastAtackTime) > reloadTime)
@@ -33,11 +31,8 @@ namespace TD
 			Attack(pDevice,pProjectile);
 		}
 
-
 		Model::Update();
 	}
-
-
 
 	void Tower::DetermineTarget(vector<Creeper*>* pCreepers)
 	{

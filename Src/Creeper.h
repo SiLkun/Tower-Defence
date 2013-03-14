@@ -15,14 +15,21 @@ class Creeper : public Model
 private:
 	bool onMap;
 	float health;
+	bool flying;
+	bool fast;
+	bool boss;
 public:
 	Creeper();
+	Creeper(float healthModifier, bool flying, bool fast, bool boss);
 	Creeper(const Creeper&);
 	~Creeper();
 	void Update(float);
 	void Render(ID3D11DeviceContext* deviceContext);
 	void Hit(float);
 	float GetHealth();
+	float GetFlying();
+	float GetFast();
+	float GetBoss();
 };
 
 #endif

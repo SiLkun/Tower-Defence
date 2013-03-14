@@ -15,6 +15,8 @@ namespace TD
 		pCpuSentence = 0;
 		pVideocardName = 0;
 		pVideocardMemory = 0;
+		pGoldSentence = 0;
+		pLevelSentence = 0;
 		pTimeSentence = 0;
 		pNextWaveTimeSentence = 0;
 
@@ -106,6 +108,18 @@ namespace TD
 			return false;
 		}
 
+		result = InitializeSentence(&pGoldSentence, 32, device);
+		if(!result)
+		{
+			return false;
+		}
+
+		result = InitializeSentence(&pLevelSentence, 32, device);
+		if(!result)
+		{
+			return false;
+		}
+
 		result = InitializeSentence(&pNextWaveTimeSentence, 64, device);
 		if(!result)
 		{
@@ -180,6 +194,18 @@ namespace TD
 		}
 
 		result = RenderSentence(deviceContext, pTimeSentence, worldMatrix, orthoMatrix);
+		if(!result)
+		{
+			return false;
+		}
+
+		result = RenderSentence(deviceContext, pLevelSentence, worldMatrix, orthoMatrix);
+		if(!result)
+		{
+			return false;
+		}
+
+		result = RenderSentence(deviceContext, pGoldSentence, worldMatrix, orthoMatrix);
 		if(!result)
 		{
 			return false;
@@ -592,6 +618,60 @@ namespace TD
 		return true;
 	}
 
+	bool Text::SetLevel(int level, ID3D11DeviceContext* deviceContext)
+	{
+		char levelString[32];
+		float red, green, blue;
+		bool result;
+
+		char tempString[3];
+
+		strcpy_s(levelString, "Level: ");
+		_itoa_s(level, tempString, 10);
+		strcat_s(levelString, tempString);
+		
+		red = 1.0f;
+		green = 1.0f;
+		blue = 1.0f;
+
+
+		// Update the sentence vertex buffer with the new string information.
+		result = UpdateSentence(pLevelSentence, levelString, 20, 85, red, green, blue, deviceContext);
+		if(!result)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	bool Text::SetGold(int gold, ID3D11DeviceContext* deviceContext)
+	{
+		char goldString[32];
+		float red, green, blue;
+		bool result;
+
+		char tempString[16];
+
+		strcpy_s(goldString, "Gold: ");
+		_itoa_s(gold, tempString, 10);
+		strcat_s(goldString, tempString);
+		
+		red = 1.0f;
+		green = 1.0f;
+		blue = 1.0f;
+
+
+		// Update the sentence vertex buffer with the new string information.
+		result = UpdateSentence(pGoldSentence, goldString, 20, 105, red, green, blue, deviceContext);
+		if(!result)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
 	bool Text::SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext)
 	{
 		char timeString[64];
@@ -624,7 +704,7 @@ namespace TD
 
 
 		// Update the sentence vertex buffer with the new string information.
-		result = UpdateSentence(pNextWaveTimeSentence, timeString, 20, 95, red, green, blue, deviceContext);
+		result = UpdateSentence(pNextWaveTimeSentence, timeString, 20, 135, red, green, blue, deviceContext);
 		if(!result)
 		{
 			return false;

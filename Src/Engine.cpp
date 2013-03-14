@@ -296,7 +296,20 @@ namespace TD
 		{
 			return false;
 		}
-		
+
+		// Update the CPU usage value in the text object.
+		result = pText->SetLevel((int)pGame->GetLevel() - 1, pDirect3D->GetDeviceContext());
+		if(!result)
+		{
+			return false;
+		}
+
+		// Update the CPU usage value in the text object.
+		result = pText->SetGold((int)pGame->GetGold(), pDirect3D->GetDeviceContext());
+		if(!result)
+		{
+			return false;
+		}
 
 		int time = pGame->GetWaveDelay() - (pGame->GetTime() - pGame->GetPreviousWaveTime());
 		result = pText->SetNextWaveTime(time, pDirect3D->GetDeviceContext());

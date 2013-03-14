@@ -41,6 +41,8 @@ public:
 	bool SetCpu(int, ID3D11DeviceContext*);
 	bool SetVideoCardInfo(char*, int, ID3D11DeviceContext*);
 	bool SetTime(int time, ID3D11DeviceContext* deviceContext);
+	bool SetLevel(int level, ID3D11DeviceContext* deviceContext);
+	bool SetGold(int gold, ID3D11DeviceContext* deviceContext);
 	bool SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext);
 
 	
@@ -59,6 +61,8 @@ private:
 	SentenceType* pCpuSentence;
 	SentenceType* pVideocardName;
 	SentenceType* pVideocardMemory;
+	SentenceType* pGoldSentence;
+	SentenceType* pLevelSentence;
 	SentenceType* pTimeSentence;
 	SentenceType* pNextWaveTimeSentence;
 

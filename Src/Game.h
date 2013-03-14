@@ -25,8 +25,11 @@ public:
 	void Shutdown();
 	Terrain * GetTerrain();
 	bool Update(ID3D11Device * pDevice,Camera * pCamera,float frameTime);
+	Creeper * GetWaveType();
 	bool Render(ID3D11DeviceContext*,D3DXMATRIX,D3DXMATRIX);
 	float GetTime();
+	float GetLevel();
+	float GetGold();
 	float GetWaveDelay();
 	float GetPreviousWaveTime();
 	Mesh * GetMesh(string fileName);
@@ -49,6 +52,8 @@ private:
 	float previousWaveTime;
 	float waveDelay;
 	int waveCount;
+	int level;
+	int gold;
 };
 
 #endif

@@ -23,7 +23,8 @@ namespace TD
 		previousWaveTime = -20.0f;
 		waveDelay = 20.0f;
 		int waveCount = 10;
-		
+		int level = 1;
+		int gold = 0;
 	}
 	Game::Game(const Game&)
 	{
@@ -37,6 +38,16 @@ namespace TD
 	float Game::GetTime()
 	{
 		return time;
+	}
+
+	float Game::GetLevel()
+	{
+		return level;
+	}
+
+	float Game::GetGold()
+	{
+		return gold;
 	}
 
 	float Game::GetWaveDelay()
@@ -53,7 +64,8 @@ namespace TD
 	bool Game::Initialize(ID3D11Device * pDevice, HWND hwnd)
 	{
 		bool result;
-
+		level = 1;
+		gold = 0;
 		// Create the terrain object.
 		pTerrain = new Terrain;
 		if(!pTerrain)
@@ -338,6 +350,7 @@ namespace TD
 		 }
 		 return NULL;
 	}
+
 	bool Game::Update(ID3D11Device * pDevice,Camera * pCamera,float frameTime)
 	{
 		bool result;
@@ -346,25 +359,44 @@ namespace TD
 		if(time > previousWaveTime + waveDelay)
 		{
 			previousWaveTime = time;
-		
-			for (int i = 0; i < 10; i++)
+
+			Creeper * creeperType = GetWaveType();
+
+			if(creeperType->GetBoss())
+				waveCount = 3;
+			else
+				waveCount = 10;
+
+			for (int i = 0; i < waveCount; i++)
 			{
 				// Create the model object.
-				Creeper* pCreeper = new Creeper;
+				Creeper* pCreeper = new Creeper(creeperType->GetHealth(), creeperType->GetFlying(), creeperType->GetFast(), creeperType->GetBoss());
+
 				if(!pCreeper)
 				{
 					return false;
 				}
 				pCreeper->Initialize(GetMesh("Data/Model/Creeper.obj"));
 
-				pCreeper->SetPosition(-1.0f,1.5f,192.0f -(i * 4.0f));
-
 				float scale = 1.0f;
 				scale += ((rand() % 20) - 10.0f) * 0.01f;
+
+				if(creeperType->GetFlying()) {
+					pCreeper->SetPosition(-1.0f,10.0f,192.0f -(i * 4.0f));
+				}
+				else if(creeperType->GetBoss())	{
+					scale += 1 + ((rand() % 20) - 10.0f) * 0.01f;
+					pCreeper->SetPosition(-1.0f,1.5f,192.0f -(i * 10.0f));
+					
+				}
+				else {
+					pCreeper->SetPosition(-1.0f,1.5f,192.0f -(i * 4.0f));	
+				}
 
 				pCreeper->SetScale(scale,scale,scale);
 				creepers->push_back(pCreeper);
 			}
+			level++;
 		}
 
 		if(sounds)
@@ -385,6 +417,7 @@ namespace TD
 				Creeper* pCreeper = creepers->at(iCreeper);
 				if(pCreeper->GetHealth() < 0.0f)
 				{
+					gold += level -1;
 					delete pCreeper;
 					pCreeper = 0;
 					creepers->erase(creepers->begin() + iCreeper);
@@ -455,6 +488,33 @@ namespace TD
 
 
 		return result;
+	}
+
+	Creeper * Game::GetWaveType(){
+		float healthmodifier = level;
+		bool flying = false;
+		bool fast = false;
+		bool boss = false;
+
+		// BOSS LEVEL
+		if(level % 10 == 0) {
+			boss = true;
+		}
+		// FLYING
+		else if(level % 8 == 0) {
+			flying = true;
+		}
+		// FAST
+		else if(level % 5 == 0) {
+			fast = true;
+		}
+
+		healthmodifier = level;
+
+		if(boss)
+			healthmodifier = level * 10;
+
+		return new Creeper(healthmodifier, flying, fast, boss);
 	}
 
 	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX viewMatrix,D3DXMATRIX projectionMatrix)
