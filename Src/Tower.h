@@ -11,6 +11,8 @@
 #include "stdafx.h"
 
 
+class Model;
+class Creeper;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: Tower
@@ -22,6 +24,7 @@ private:
 	float reloadTime;
 	float lastAtackTime;
 	float range;
+	float projectileSpeed;
 public:
 	Tower();
 	Tower(const Tower&);

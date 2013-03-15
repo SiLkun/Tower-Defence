@@ -11,11 +11,25 @@ namespace TD
 		position.y = 0;
 		position.z = 0;
 
+		direction.x = 0;
+		direction.y = 0;
+		direction.z = 0;
+
+		acceleration.x = 0;
+		acceleration.y = 0;
+		acceleration.z = 0;
+
 		scale.x = 1;
 		scale.y = 1;
 		scale.z = 1;
 
+		speed = 0.0f; 
+
+
 		pMesh = 0;
+
+
+
 	}
 
 
@@ -33,8 +47,10 @@ namespace TD
 		this->pMesh = pMesh;
 	}
 
-	void Model::Update()
+	void Model::Update(float frameTime)
 	{
+		acceleration += direction * speed * frameTime;
+		position += acceleration;
 		D3DXMatrixIdentity(&worldMatrix);
 		D3DXMatrixTranslation(&worldMatrix,position.x,position.y,position.z);
 		D3DXMATRIX scaleMatrix;
@@ -52,28 +68,54 @@ namespace TD
 		return;
 	}
 
-	D3DXVECTOR3 * Model::GetPosition()
+	D3DXVECTOR3 Model::GetPosition()
 	{
-		return &position;
+		return position;
 	}
 
-	void Model::SetPosition(float x,float y,float z)
+	void Model::SetPosition(D3DXVECTOR3 p)
 	{
-		position.x = x;
-		position.y = y;
-		position.z = z;
+		position = p;
 	}
 	
-	D3DXVECTOR3 * Model::GetScale()
+	D3DXVECTOR3 Model::GetDirection()
 	{
-		return &scale;
+		return direction;
 	}
 
-	void Model::SetScale(float x,float y,float z)
+	void Model::SetDirection(D3DXVECTOR3 p)
 	{
-		scale.x = x;
-		scale.y = y;
-		scale.z = z;
+		D3DXVec3Normalize(&direction,&p);
+	}
+
+	D3DXVECTOR3 Model::GetAcceleration()
+	{
+		return acceleration;
+	}
+
+	void Model::SetAcceleration(D3DXVECTOR3 a)
+	{
+		acceleration = a;
+	}
+
+	D3DXVECTOR3 Model::GetScale()
+	{
+		return scale;
+	}
+
+	void Model::SetScale(D3DXVECTOR3 s)
+	{
+		this->scale = s;
+	}
+
+	float Model::GetSpeed()
+	{
+		return speed;
+	}
+
+	void Model::SetSpeed(float speed)
+	{
+		this->speed = speed;
 	}
 
 	D3DXMATRIX Model::GetWorldMatrix()

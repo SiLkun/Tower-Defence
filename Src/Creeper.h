@@ -23,7 +23,6 @@ public:
 	Creeper(float healthModifier, bool flying, bool fast, bool boss);
 	Creeper(const Creeper&);
 	~Creeper();
-	void Update(float);
 	void Render(ID3D11DeviceContext* deviceContext);
 	void Hit(float);
 	float GetHealth();

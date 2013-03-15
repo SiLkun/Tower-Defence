@@ -29,6 +29,7 @@ namespace TD
 	void Projectile::SetTarget(D3DXVECTOR3 targetPosition)
 	{
 		D3DXVec3Normalize(&direction,&(position - targetPosition));
+		acceleration = -direction * speed;
 	}
 
 	void Projectile::SetLaunchSound(Sound * pSound)
@@ -56,11 +57,11 @@ namespace TD
 	{
 		if(pCreepers)
 		{
-			for(UINT iCreeper = 0;iCreeper < pCreepers->size();iCreeper++)
+			for(vector<Creeper*>::iterator iCreeper = pCreepers->begin();iCreeper != pCreepers->end();iCreeper++)
 			{
-				Creeper* pCreeper = pCreepers->at(iCreeper);
-				D3DXVECTOR3 * p = pCreeper->GetPosition();
-				float distance = powf( powf(position.x - p->x,2.0f) + powf(position.z - p->z,2.0f),0.5f);
+				Creeper* pCreeper = (Creeper*) *iCreeper;
+				D3DXVECTOR3 p = pCreeper->GetPosition();
+				float distance = powf( powf(position.x - p.x,2.0f) + powf(position.z - p.z,2.0f),0.5f);
 
 				if(distance < 1.0f)
 				{
@@ -72,14 +73,14 @@ namespace TD
 			}
 		}
 
-		if(!isHit)
+		if(isHit)
 		{
-			position.x -= (frameTime * direction.x * 0.03f);
-			position.y -= (frameTime * direction.y * 0.03f);
-			position.z -= (frameTime * direction.z * 0.03f);
+			acceleration.x = 0;
+			acceleration.y = 0;
+			acceleration.z = 0;
 		}
 
-		Model::Update();
+		Model::Update(frameTime);
 	}
 
 	void Projectile::Render(ID3D11DeviceContext* deviceContext)

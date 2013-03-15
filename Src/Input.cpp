@@ -88,17 +88,13 @@ namespace TD
 
 		// Set the cooperative level of the pMouse to share with other programs.
 		result = pMouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-		if(FAILED(result))
+		if(SUCCEEDED(result))
 		{
-			return false;
+			result = pMouse->Acquire();
+
 		}
 
-		// Acquire the pMouse.
-		result = pMouse->Acquire();
-		if(FAILED(result))
-		{
-			return false;
-		}
+
 
 		return true;
 	}
@@ -151,10 +147,6 @@ namespace TD
 		{
 			return false;
 		}
-		else
-		{
-			ProcessInput();
-		}
 
 		return true;
 	}
@@ -203,15 +195,7 @@ namespace TD
 				return false;
 			}
 		}
-
-		return true;
-	}
-
-
-	void Input::ProcessInput()
-	{
-
-		// Update the location of the pMouse cursor based on the change of the pMouse location during the frame.
+				// Update the location of the pMouse cursor based on the change of the pMouse location during the frame.
 		mouseX += mouseState.lX;
 		mouseY += mouseState.lY;
 
@@ -267,8 +251,7 @@ namespace TD
 		{
 			mouseRightDown = false;
 		}
-		
-		return;
+		return true;
 	}
 
 	bool Input::IsMouseLeftPressed()

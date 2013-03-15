@@ -46,18 +46,33 @@ public:
 
 	void Render(ID3D11DeviceContext*);
 
-	D3DXVECTOR3 * GetPosition();
-	void SetPosition(float,float,float);
-	D3DXVECTOR3 * GetScale();
-	void SetScale(float,float,float);
-	void Update();
+	D3DXVECTOR3 GetPosition();
+	void SetPosition(D3DXVECTOR3);
+
+	D3DXVECTOR3 GetDirection();
+	void SetDirection(D3DXVECTOR3);
+
+	D3DXVECTOR3 GetAcceleration();
+	void SetAcceleration(D3DXVECTOR3);
+	
+	D3DXVECTOR3 GetScale();
+	void SetScale(D3DXVECTOR3);
+
+	float GetSpeed();
+	void SetSpeed(float);
+
+	void Update(float frameTime);
 	D3DXMATRIX GetWorldMatrix();
 	void UpdateOnMap(float terrainWidth,float terrainHeight);
 	bool IsOnMap();
 	Mesh * GetMesh();
 protected:
 	D3DXVECTOR3 position;
+	D3DXVECTOR3 direction;
+	D3DXVECTOR3 acceleration;
 	D3DXVECTOR3 scale;
+	float speed; 
+
 	D3DXMATRIX worldMatrix;
 	bool isOnMap;
 };

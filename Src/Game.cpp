@@ -21,8 +21,8 @@ namespace TD
 		pLightShader = 0;
 
 		time = 0.0f;
-		previousWaveTime = -20.0f;
-		waveDelay = 20.0f;
+		previousWaveTime = -00.0f;
+		waveDelay = 30.0f;
 		int waveCount = 10;
 		int level = 1;
 		int gold = 0;
@@ -374,22 +374,56 @@ namespace TD
 
 				pCreeper->Initialize(GetMesh("Data/Model/Hawk.obj"));
 
+				D3DXVECTOR3 p(0,0,0);
+				D3DXVECTOR3 a(0,0,0);
+				float speed;
 				float scale = 1.0f;
-				scale += ((rand() % 20) - 10.0f) * 0.01f;
+				
+				scale *=   ( 1.0f + ((rand() % 10)) * 0.01f);  //  max 10% difference
 
-				if(creeperType->IsFlying()) {
-					pCreeper->SetPosition(-1.0f,6.0f,192.0f -(i * 4.0f));
+				if(creeperType->IsFlying()) 
+				{
+					p.x = -1.0f;
+					p.y = 6.0f;
+					p.z = pTerrain->GetHeight()/2 + (i * 4.0f);
+
+					a.z = -0.1f ;
+					speed = 0.1f;
 				}
-				else if(creeperType->IsBoss())	{
-					scale += 1 + ((rand() % 20) - 10.0f) * 0.01f;
-					pCreeper->SetPosition(-1.0f,0.0f,192.0f -(i * 25.0f));
-					
+				else if(creeperType->IsBoss())	
+				{
+					p.x = -1.0f;
+					p.y = 0.0f;
+					p.z = pTerrain->GetHeight()/2 + (i * 25.0f);		
+
+					a.z = -0.1f ;
+					speed = 0.1f;
+
 				}
-				else {
-					pCreeper->SetPosition(-1.0f,0.0f,192.0f -(i * 4.0f));	
+				else if(creeperType->IsFast())	
+				{
+					p.x = -1.0f;
+					p.y = 0.0f;
+					p.z = pTerrain->GetHeight()/2 + (i * 4.0f);	
+
+					a.z = -0.15f ;
+					speed = 0.15f;
+
+				}
+				else
+				{
+					p.x = -1.0f;
+					p.y = 0.0f;
+					p.z = pTerrain->GetHeight()/2 + (i * 4.0f);	
+
+					a.z = -0.1f ;
+					speed = 0.1f;
 				}
 
-				pCreeper->SetScale(scale,scale,scale);
+				pCreeper->SetPosition(p);
+				pCreeper->SetAcceleration(a);
+				pCreeper->SetSpeed(0.1);
+				pCreeper->SetScale(D3DXVECTOR3(scale,scale,scale));
 				creepers->push_back(pCreeper);
 			}
 			level++;
@@ -595,7 +629,7 @@ namespace TD
 					return;
 				}
 			}
-			pTowerPlacement->SetPosition(p.x,p.y,p.z);
+			pTowerPlacement->SetPosition(p);
 			
 		}
 		else if(pTowerPlacement != NULL)

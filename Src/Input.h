@@ -39,8 +39,6 @@ public:
 private:
 	bool ReadKeyboard();
 	bool ReadMouse();
-	void ProcessInput();
-
 private:
 	IDirectInput8* pDirectInput;
 	IDirectInputDevice8* pKeyboard;

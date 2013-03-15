@@ -44,6 +44,7 @@ public:
 	bool SetLevel(int level, ID3D11DeviceContext* deviceContext);
 	bool SetGold(int gold, ID3D11DeviceContext* deviceContext);
 	bool SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext);
+	bool SetMousePosition(int x,int y, ID3D11DeviceContext* deviceContext);
 
 	
 private:
@@ -65,6 +66,8 @@ private:
 	SentenceType* pLevelSentence;
 	SentenceType* pTimeSentence;
 	SentenceType* pNextWaveTimeSentence;
+	SentenceType* pMousePosition;
+
 
 	
 };

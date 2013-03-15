@@ -79,8 +79,8 @@ namespace TD
 		pCamera->Render();
 		pCamera->GetViewMatrix(baseViewMatrix);
 
-		pCamera->SetPosition(D3DXVECTOR3(60.0f, 30.0f, -60.0f));
-		pCamera->SetRotation(D3DXVECTOR3(D3DX_PI /8.0f , -D3DX_PI /4.0f , 0.0f));
+		pCamera->SetPosition(D3DXVECTOR3(30.0f, 15.0f, -30.0f));
+		pCamera->SetRotation(D3DXVECTOR3((float)D3DX_PI /8.0f , (float)-D3DX_PI /4.0f , 0.0f));
 
 		// Create the terrain object.
 		pGame = new Game;
@@ -263,7 +263,7 @@ namespace TD
 
 		// Read the user input.
 		result = pInput->Frame();
-		/*if(!result)
+		if(!result)
 		{
 			return false;
 		}
@@ -272,7 +272,7 @@ namespace TD
 		if(pInput->IsKeyPressed(DIK_ESCAPE) == true)
 		{
 			return false;
-		}*/
+		}
 
 		// Update the system stats.
 		pTimer->Frame();
@@ -361,15 +361,16 @@ namespace TD
 			move.z = -1.0f;
 	
 
-		//if(pInput->IsMouseLeftPressed())
 		{
 			int mouseX, mouseY;
-			pInput->GetMouseLocation(mouseX, mouseY);
 
+			POINT point;
+			GetCursorPos(&point);
+			pText->SetMousePosition(point.x,point.y, pDirect3D->GetDeviceContext());
 			
 			// Move the mouse cursor coordinates into the -1 to +1 range.
-			float pointX = ((2.0f * (float)mouseX) / (float)screenWidth) - 1.0f;
-			float pointY = (((2.0f * (float)mouseY) / (float)screenHeight) - 1.0f) * -1.0f;
+			float pointX = ((2.0f * (float)point.x) / (float)screenWidth) - 1.0f;
+			float pointY = (((2.0f * (float)point.y) / (float)screenHeight) - 1.0f) * -1.0f;
 		
 			D3DXMATRIX viewMatrix,projectionMatrix;
 			pCamera->GetViewMatrix(viewMatrix);
@@ -384,7 +385,7 @@ namespace TD
 			pGame->MouseLeftMove(pInput->IsMouseLeftPressed(),pointX,pointY,p,viewMatrix);
 		}
 
-		
+
 
 		if(pInput->IsMouseRightPressed())
 		{

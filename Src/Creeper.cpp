@@ -30,23 +30,6 @@ namespace TD
 	{
 	}
 
-	void Creeper::Update(float frameTime)
-	{
-		if(health > 0)
-		{
-			if(fast){
-				position.z -=  0.015f * frameTime ;
-				position.z +=  (rand() % 3) * 0.01f ;
-			}
-			else
-			{
-				position.z -=  0.01f * frameTime ;
-				position.z +=  (rand() % 3) * 0.01f ;
-			}
-		}
-		Model::Update();
-	}
-
 	void Creeper::Render(ID3D11DeviceContext* deviceContext)
 	{
 		if(onMap)
