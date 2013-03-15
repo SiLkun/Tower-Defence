@@ -90,7 +90,7 @@ namespace TD
 		result = pMouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 		if(SUCCEEDED(result))
 		{
-			result = pMouse->Acquire();
+			pMouse->Acquire();
 
 		}
 

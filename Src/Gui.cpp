@@ -6,7 +6,7 @@
 namespace TD
 {
 
-	Text::Text()
+	Gui::Gui()
 	{
 		pFont = 0;
 		pFontShader = 0;
@@ -20,29 +20,32 @@ namespace TD
 		pTimeSentence = 0;
 		pNextWaveTimeSentence = 0;
 
+		pVertexBuffer = 0;
+		pIndexBuffer = 0;
+		pTexture = 0;
 	}
 
 
-	Text::Text(const Text& other)
+	Gui::Gui(const Gui& other)
 	{
 	}
 
 
-	Text::~Text()
+	Gui::~Gui()
 	{
 	}
 
 
 
-	bool Text::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight, 
+	bool Gui::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight, 
 							   D3DXMATRIX baseViewMatrix)
 	{
 		bool result;
 
 
 		// Store the screen width and height.
-		pScreenWidth = screenWidth;
-		pScreenHeight = screenHeight;
+		this->screenWidth = screenWidth;
+		this->screenHeight = screenHeight;
 
 		// Store the base view matrix.
 		pBaseViewMatrix = baseViewMatrix;
@@ -132,12 +135,131 @@ namespace TD
 			return false;
 		}
 		
-		
+
+		VertexType* vertices;
+		unsigned long* indices;
+		D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+		D3D11_SUBRESOURCE_DATA vertexData, indexData;
+		int i;
+
+		// Set the number of vertices in the vertex array.
+		vertexCount = 6;
+
+		// Set the number of indices in the index array.
+		indexCount = vertexCount;
+
+		// Create the vertex array.
+		vertices = new VertexType[vertexCount];
+		if(!vertices)
+		{
+			return false;
+		}
+
+		// Calculate the screen coordinates of the left side of the bitmap.
+		float left = (float)((screenWidth / 2) * -1) ;
+
+		// Calculate the screen coordinates of the right side of the bitmap.
+		float right = left + 1920.0f;
+
+		// Calculate the screen coordinates of the top of the bitmap.
+		float top = (float)(screenHeight / 2);
+
+		// Calculate the screen coordinates of the bottom of the bitmap.
+		float bottom = top - 1080.0f;
+
+		// Load the vertex array with data.
+		// First triangle.
+		vertices[0].position = D3DXVECTOR3(left, top, 0.0f);  // Top left.
+		vertices[0].texture = D3DXVECTOR2(0.0f, 0.0f);
+
+		vertices[1].position = D3DXVECTOR3(right, bottom, 0.0f);  // Bottom right.
+		vertices[1].texture = D3DXVECTOR2(1.0f, 1.0f);
+
+		vertices[2].position = D3DXVECTOR3(left, bottom, 0.0f);  // Bottom left.
+		vertices[2].texture = D3DXVECTOR2(0.0f, 1.0f);
+
+		// Second triangle.
+		vertices[3].position = D3DXVECTOR3(left, top, 0.0f);  // Top left.
+		vertices[3].texture = D3DXVECTOR2(0.0f, 0.0f);
+
+		vertices[4].position = D3DXVECTOR3(right, top, 0.0f);  // Top right.
+		vertices[4].texture = D3DXVECTOR2(1.0f, 0.0f);
+
+		vertices[5].position = D3DXVECTOR3(right, bottom, 0.0f);  // Bottom right.
+		vertices[5].texture = D3DXVECTOR2(1.0f, 1.0f);
+
+
+		// Create the index array.
+		indices = new unsigned long[indexCount];
+		if(!indices)
+		{
+			return false;
+		}
+
+		// Initialize vertex array to zeros at first.
+		//memset(vertices, 0, (sizeof(VertexType) * vertexCount));
+
+		// Load the index array with data.
+		for(i=0; i<indexCount; i++)
+		{
+			indices[i] = i;
+		}
+
+		// Set up the description of the static vertex buffer.
+		vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertexCount;
+		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		vertexBufferDesc.MiscFlags = 0;
+		vertexBufferDesc.StructureByteStride = 0;
+
+		// Give the subresource structure a pointer to the vertex data.
+		vertexData.pSysMem = vertices;
+		vertexData.SysMemPitch = 0;
+		vertexData.SysMemSlicePitch = 0;
+
+		// Now create the vertex buffer.
+		result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &pVertexBuffer);
+		if(FAILED(result))
+		{
+			return false;
+		}
+
+		// Set up the description of the static index buffer.
+		indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		indexBufferDesc.ByteWidth = sizeof(unsigned long) * indexCount;
+		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		indexBufferDesc.CPUAccessFlags = 0;
+		indexBufferDesc.MiscFlags = 0;
+		indexBufferDesc.StructureByteStride = 0;
+
+		// Give the subresource structure a pointer to the index data.
+		indexData.pSysMem = indices;
+		indexData.SysMemPitch = 0;
+		indexData.SysMemSlicePitch = 0;
+
+		// Create the index buffer.
+		result = device->CreateBuffer(&indexBufferDesc, &indexData, &pIndexBuffer);
+		if(FAILED(result))
+		{
+			return false;
+		}
+
+		pTexture = new Texture();
+		pTexture->Initialize(device,"Data/Texture/Interface.png");
+
+		// Release the arrays now that the vertex and index buffers have been created and loaded.
+		delete [] vertices;
+		vertices = 0;
+
+		delete [] indices;
+		indices = 0;
+	
 		return true;
 	}
 
 
-	void Text::Shutdown()
+	void Gui::Shutdown()
 	{
 		// Release the first sentence.
 		ReleaseSentence(&pFpsSentence);
@@ -176,14 +298,61 @@ namespace TD
 			pFont = 0;
 		}
 
+		if(pIndexBuffer)
+		{
+			pIndexBuffer->Release();
+			pIndexBuffer = 0;
+		}
+
+		// Release the vertex buffer.
+		if(pVertexBuffer)
+		{
+			pVertexBuffer->Release();
+			pVertexBuffer = 0;
+		}
+
+
+		if(pTexture)
+		{
+			pTexture->Release();
+			delete pTexture;
+			pTexture = 0;
+		}
 		return;
 	}
 
 
-	bool Text::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
+	bool Gui::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
 	{
 		bool result;
 
+		unsigned int stride;
+		unsigned int offset;
+
+
+		// Set vertex buffer stride and offset.
+		stride = sizeof(VertexType); 
+		offset = 0;
+    
+		// Set the vertex buffer to active in the input assembler so it can be rendered.
+		deviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
+
+		// Set the index buffer to active in the input assembler so it can be rendered.
+		deviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		// Create a pixel color vector with the input sentence color.
+		D3DXVECTOR4 pixelColor = D3DXVECTOR4(1.0f,1.0f,1.0f, 1.0f);
+
+		// Render the text using the font shader.
+		result = pFontShader->Render(deviceContext, indexCount, worldMatrix, pBaseViewMatrix, orthoMatrix, pTexture->GetTexture(), pixelColor);
+
+		if(!result)
+		{
+			false;
+		}
 
 		// Draw the first sentence.
 		result = RenderSentence(deviceContext, pCpuSentence, worldMatrix, orthoMatrix);
@@ -245,7 +414,7 @@ namespace TD
 		return true;
 	}
 
-	bool Text::InitializeSentence(SentenceType** sentence, int maxLength, ID3D11Device* device)
+	bool Gui::InitializeSentence(SentenceType** sentence, int maxLength, ID3D11Device* device)
 	{
 		VertexType* vertices;
 		unsigned long* indices;
@@ -350,7 +519,7 @@ namespace TD
 	}
 
 
-	bool Text::UpdateSentence(SentenceType* sentence, char* text, int positionX, int positionY, float red, float green, float blue,
+	bool Gui::UpdateSentence(SentenceType* sentence, char* text, int positionX, int positionY, float red, float green, float blue,
 								   ID3D11DeviceContext* deviceContext)
 	{
 		int numLetters;
@@ -386,8 +555,8 @@ namespace TD
 		memset(vertices, 0, (sizeof(VertexType) * sentence->vertexCount));
 
 		// Calculate the X and Y pixel position on the screen to start drawing to.
-		drawX = (float)(((pScreenWidth / 2) * -1) + positionX);
-		drawY = (float)((pScreenHeight / 2) - positionY);
+		drawX = (float)(((screenWidth / 2) * -1) + positionX);
+		drawY = (float)((screenHeight / 2) - positionY);
 
 		// Use the font class to build the vertex array from the sentence text and sentence draw location.
 		pFont->BuildVertexArray((void*)vertices, text, drawX, drawY);
@@ -416,7 +585,7 @@ namespace TD
 	}
 
 
-	void Text::ReleaseSentence(SentenceType** sentence)
+	void Gui::ReleaseSentence(SentenceType** sentence)
 	{
 		if(*sentence)
 		{
@@ -443,7 +612,7 @@ namespace TD
 	}
 
 
-	bool Text::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sentence, D3DXMATRIX worldMatrix, 
+	bool Gui::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sentence, D3DXMATRIX worldMatrix, 
 								   D3DXMATRIX orthoMatrix)
 	{
 		unsigned int stride, offset;
@@ -478,7 +647,7 @@ namespace TD
 		return true;
 	}
 
-	bool Text::SetVideoCardInfo(char* videoCardName, int videoCardMemory, ID3D11DeviceContext* deviceContext)
+	bool Gui::SetVideoCardInfo(char* videoCardName, int videoCardMemory, ID3D11DeviceContext* deviceContext)
 {
 	char dataString[150];
 	bool result;
@@ -522,7 +691,7 @@ namespace TD
 }
 
 
-	bool Text::SetFps(int fps, ID3D11DeviceContext* deviceContext)
+	bool Gui::SetFps(int fps, ID3D11DeviceContext* deviceContext)
 	{
 		char tempString[16];
 		char fpsString[16];
@@ -577,7 +746,7 @@ namespace TD
 		return true;
 	}
 
-	bool Text::SetCpu(int cpu, ID3D11DeviceContext* deviceContext)
+	bool Gui::SetCpu(int cpu, ID3D11DeviceContext* deviceContext)
 	{
 		char tempString[16];
 		char cpuString[16];
@@ -602,7 +771,7 @@ namespace TD
 		return true;
 	}
 
-	bool Text::SetTime(int time, ID3D11DeviceContext* deviceContext)
+	bool Gui::SetTime(int time, ID3D11DeviceContext* deviceContext)
 	{
 		char timeString[32];
 		float red, green, blue;
@@ -643,7 +812,7 @@ namespace TD
 		return true;
 	}
 
-	bool Text::SetLevel(int level, ID3D11DeviceContext* deviceContext)
+	bool Gui::SetLevel(int level, ID3D11DeviceContext* deviceContext)
 	{
 		char levelString[32];
 		float red, green, blue;
@@ -670,7 +839,7 @@ namespace TD
 		return true;
 	}
 
-	bool Text::SetGold(int gold, ID3D11DeviceContext* deviceContext)
+	bool Gui::SetGold(int gold, ID3D11DeviceContext* deviceContext)
 	{
 		char goldString[32];
 		float red, green, blue;
@@ -697,7 +866,7 @@ namespace TD
 		return true;
 	}
 
-	bool Text::SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext)
+	bool Gui::SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext)
 	{
 		char timeString[64];
 		float red, green, blue;
@@ -738,7 +907,7 @@ namespace TD
 		return true;
 	}
 
-	bool Text::SetMousePosition(int x,int y, ID3D11DeviceContext* deviceContext)
+	bool Gui::SetMousePosition(int x,int y, ID3D11DeviceContext* deviceContext)
 	{
 		char timeString[64];
 		float red, green, blue;

@@ -8,7 +8,7 @@ namespace TD
 
 	Engine::Engine()
 	{
-		pText = 0;
+		pGui = 0;
 		pGame = 0;
 		pDirect3D = 0;
 		pInput = 0;
@@ -148,14 +148,14 @@ namespace TD
 		}
 
 		// Create the text object.
-		pText = new Text;
-		if(!pText)
+		pGui = new Gui;
+		if(!pGui)
 		{
 			return false;
 		}
 
 		// Initialize the text object.
-		result = pText->Initialize(pDirect3D->GetDevice(), pDirect3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+		result = pGui->Initialize(pDirect3D->GetDevice(), pDirect3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
 		if(!result)
 		{
 			MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
@@ -167,7 +167,7 @@ namespace TD
 
 		
 		// Set the video card information in the text object.
-		result = pText->SetVideoCardInfo(videoCard, videoMemory, pDirect3D->GetDeviceContext());
+		result = pGui->SetVideoCardInfo(videoCard, videoMemory, pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			MessageBox(hwnd, L"Could not set video card info in the text object.", L"Error", MB_OK);
@@ -184,11 +184,11 @@ namespace TD
 	{
 
 		// Release the text object.
-		if(pText)
+		if(pGui)
 		{
-			pText->Shutdown();
-			delete pText;
-			pText = 0;
+			pGui->Shutdown();
+			delete pGui;
+			pGui = 0;
 		}
 
 		// Release the font shader object.
@@ -280,42 +280,42 @@ namespace TD
 		pCpu->Frame();
 
 		// Update the FPS value in the text object.
-		result = pText->SetFps(pFps->GetFps(), pDirect3D->GetDeviceContext());
+		result = pGui->SetFps(pFps->GetFps(), pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			return false;
 		}
 	
 		// Update the CPU usage value in the text object.
-		result = pText->SetCpu(pCpu->GetCpuPercentage(), pDirect3D->GetDeviceContext());
+		result = pGui->SetCpu(pCpu->GetCpuPercentage(), pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			return false;
 		}
 		
 		// Update the CPU usage value in the text object.
-		result = pText->SetTime((int)pGame->GetTime(), pDirect3D->GetDeviceContext());
+		result = pGui->SetTime((int)pGame->GetTime(), pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			return false;
 		}
 
 		// Update the CPU usage value in the text object.
-		result = pText->SetLevel((int)pGame->GetLevel() - 1, pDirect3D->GetDeviceContext());
+		result = pGui->SetLevel((int)pGame->GetLevel() - 1, pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			return false;
 		}
 
 		// Update the CPU usage value in the text object.
-		result = pText->SetGold((int)pGame->GetGold(), pDirect3D->GetDeviceContext());
+		result = pGui->SetGold((int)pGame->GetGold(), pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			return false;
 		}
 
 		int time = pGame->GetWaveDelay() - (pGame->GetTime() - pGame->GetPreviousWaveTime());
-		result = pText->SetNextWaveTime(time, pDirect3D->GetDeviceContext());
+		result = pGui->SetNextWaveTime(time, pDirect3D->GetDeviceContext());
 		if(!result)
 		{
 			return false;
@@ -366,7 +366,7 @@ namespace TD
 
 			POINT point;
 			GetCursorPos(&point);
-			pText->SetMousePosition(point.x,point.y, pDirect3D->GetDeviceContext());
+			pGui->SetMousePosition(point.x,point.y, pDirect3D->GetDeviceContext());
 			
 			// Move the mouse cursor coordinates into the -1 to +1 range.
 			float pointX = ((2.0f * (float)point.x) / (float)screenWidth) - 1.0f;
@@ -433,7 +433,7 @@ namespace TD
 		pDirect3D->TurnOnAlphaBlending();
 
 		// Render the text user interface elements.
-		result = pText->Render(pDirect3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+		result = pGui->Render(pDirect3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 		if(!result)
 		{
 			return false;

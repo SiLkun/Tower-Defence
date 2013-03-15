@@ -7,12 +7,12 @@
 
 #include "stdafx.h"
 
-
+class Texture;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: Text
+// Class name: Gui
 ////////////////////////////////////////////////////////////////////////////////
-class Text
+class Gui
 {
 private:
 	struct SentenceType
@@ -22,6 +22,7 @@ private:
 		float red, green, blue;
 	};
 
+
 	struct VertexType
 	{
 		D3DXVECTOR3 position;
@@ -29,9 +30,9 @@ private:
 	};
 
 public:
-	Text();
-	Text(const Text&);
-	~Text();
+	Gui();
+	Gui(const Gui&);
+	~Gui();
 
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, D3DXMATRIX);
 	void Shutdown();
@@ -56,7 +57,7 @@ private:
 private:
 	Font* pFont;
 	FontShader* pFontShader;
-	int pScreenWidth, pScreenHeight;
+	int screenWidth, screenHeight;
 	D3DXMATRIX pBaseViewMatrix;
 	SentenceType* pFpsSentence;
 	SentenceType* pCpuSentence;
@@ -68,7 +69,9 @@ private:
 	SentenceType* pNextWaveTimeSentence;
 	SentenceType* pMousePosition;
 
-
+	ID3D11Buffer *pVertexBuffer, *pIndexBuffer;
+	int vertexCount, indexCount;
+	Texture* pTexture;
 	
 };
 

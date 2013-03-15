@@ -37,7 +37,7 @@ float4 FontPixelShader(PixelInputType input) : SV_TARGET
 	color = shaderTexture.Sample(SampleType, input.tex);
 	
 	// If the color is black on the texture then treat this pixel as transparent.
-	if(color.r == 0.0f)
+	if(color.r == 0.0f && color.g == 0.0f && color.b == 0.0f)
 	{
 		color.a = 0.0f;
 	}
@@ -45,7 +45,7 @@ float4 FontPixelShader(PixelInputType input) : SV_TARGET
 	// If the color is other than black on the texture then this is a pixel in the font so draw it using the font pixel color.
 	else
 	{
-		color.rgb = pixelColor.rgb;
+		//color.rgb = pixelColor.rgb;
 		color.a = 1.0f;
 	}
 

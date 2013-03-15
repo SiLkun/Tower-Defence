@@ -50,7 +50,7 @@ namespace TD
 	#include "Texture.h"
 	#include "Font.h"
 	#include "Fontshader.h"
-	#include "Text.h"
+	#include "Gui.h"
 	#include "Cpu.h"
 	#include "Fps.h"
 	#include "Timer.h"

@@ -24,9 +24,6 @@
     <ClCompile Include="Src\D3D.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Text.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Texture.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -84,6 +81,9 @@
     <ClCompile Include="Src\Sound.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Gui.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\stdafx.h" />
@@ -101,9 +101,6 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Src\D3D.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Text.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Src\Texture.h">
@@ -155,6 +152,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Src\Sound.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Gui.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

@@ -49,7 +49,7 @@ private:
 	Fps* pFps;
 	Cpu* pCpu;
 	FontShader* pFontShader;
-	Text* pText;
+	Gui* pGui;
 	int screenWidth, screenHeight;
 };
 

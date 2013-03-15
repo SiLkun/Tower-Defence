@@ -42,7 +42,7 @@
     <ClCompile Include="Src\System.cpp" />
     <ClCompile Include="Src\Terrain.cpp" />
     <ClCompile Include="Src\Terrainshader.cpp" />
-    <ClCompile Include="Src\Text.cpp" />
+    <ClCompile Include="Src\Gui.cpp" />
     <ClCompile Include="Src\Texture.cpp" />
     <ClCompile Include="Src\Timer.cpp" />
     <ClCompile Include="Src\Tower.cpp" />
@@ -70,7 +70,7 @@
     <ClInclude Include="Src\System.h" />
     <ClInclude Include="Src\Terrain.h" />
     <ClInclude Include="Src\Terrainshader.h" />
-    <ClInclude Include="Src\Text.h" />
+    <ClInclude Include="Src\Gui.h" />
     <ClInclude Include="Src\Texture.h" />
     <ClInclude Include="Src\Timer.h" />
     <ClInclude Include="Src\Tower.h" />

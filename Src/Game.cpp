@@ -21,8 +21,8 @@ namespace TD
 		pLightShader = 0;
 
 		time = 0.0f;
-		previousWaveTime = -00.0f;
-		waveDelay = 30.0f;
+		previousWaveTime = -10.0f;
+		waveDelay = 20.0f;
 		int waveCount = 10;
 		int level = 1;
 		int gold = 0;
