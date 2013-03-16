@@ -52,20 +52,22 @@ public:
 
 	bool IsInitialized();
 	string GetFilename();
+	static Mesh * GetMesh(vector<Mesh*> * pMeshes,string fileName);
 
 private:
 	bool LoadObj(const char* obj);
 	bool LoadMaterial(const char* );
 
 	bool InitializeBuffers(ID3D11Device*);
-	bool InitializeMaterial(ID3D11Device*,vector<Texture*> *);
+	bool InitializeMaterial(ID3D11Device*,vector<Texture*>*);
 
 	void RenderBuffers(ID3D11DeviceContext*);
 
-	void ShutdownBuffers();
+	void ReleaseBuffers();
 
 	void ReleaseMaterial();
 	void ReleaseModel();
+
 protected:
 	ID3D11Buffer *pVertexBuffer, * pIndexBuffer;
 	int vertexCount, faceCount;

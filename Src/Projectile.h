@@ -21,7 +21,7 @@ class Projectile : public Model
 private:
 	D3DXVECTOR3 direction;
 	bool isHit;
-	float damage;
+	int damage;
 	Sound * pLaunchSound;
 	Sound * pMoveSound;
 	Sound * pHitSound;
@@ -33,6 +33,7 @@ public:
 	void Initialize(Mesh * pMesh);
 	bool IsHit();
 	void SetTarget(D3DXVECTOR3);
+	void SetDamage(int damage);
 	void SetLaunchSound(Sound * pSound);
 	void SetMoveSound(Sound * pSound);
 	void SetHitSound(Sound * pSound);

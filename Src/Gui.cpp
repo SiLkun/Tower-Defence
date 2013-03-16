@@ -13,8 +13,6 @@ namespace TD
 
 		pFpsSentence = 0;
 		pCpuSentence = 0;
-		pVideocardName = 0;
-		pVideocardMemory = 0;
 		pGoldSentence = 0;
 		pLevelSentence = 0;
 		pTimeSentence = 0;
@@ -58,7 +56,7 @@ namespace TD
 		}
 
 		// Initialize the font object.
-		result = pFont->Initialize(device, "Data/fontdata.txt", "Data/font.dds");
+		result = pFont->Initialize(device, "Data/Config/font.cfg", "Data/Texture/font.dds");
 		if(!result)
 		{
 			MessageBox(hwnd, L"Could not initialize the font object.", L"Error", MB_OK);
@@ -94,17 +92,6 @@ namespace TD
 			return false;
 		}
 
-		result = InitializeSentence(&pVideocardName, 1024, device);
-		if(!result)
-		{
-			return false;
-		}
-
-		result = InitializeSentence(&pVideocardMemory, 1024, device);
-		if(!result)
-		{
-			return false;
-		}
 		result = InitializeSentence(&pTimeSentence, 32, device);
 		if(!result)
 		{
@@ -129,13 +116,6 @@ namespace TD
 			return false;
 		}
 		
-		result = InitializeSentence(&pMousePosition, 64, device);
-		if(!result)
-		{
-			return false;
-		}
-		
-
 		VertexType* vertices;
 		unsigned long* indices;
 		D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
@@ -219,12 +199,7 @@ namespace TD
 		vertexData.SysMemSlicePitch = 0;
 
 		// Now create the vertex buffer.
-		result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &pVertexBuffer);
-		if(FAILED(result))
-		{
-			return false;
-		}
-
+		device->CreateBuffer(&vertexBufferDesc, &vertexData, &pVertexBuffer);
 		// Set up the description of the static index buffer.
 		indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		indexBufferDesc.ByteWidth = sizeof(unsigned long) * indexCount;
@@ -239,11 +214,7 @@ namespace TD
 		indexData.SysMemSlicePitch = 0;
 
 		// Create the index buffer.
-		result = device->CreateBuffer(&indexBufferDesc, &indexData, &pIndexBuffer);
-		if(FAILED(result))
-		{
-			return false;
-		}
+		device->CreateBuffer(&indexBufferDesc, &indexData, &pIndexBuffer);
 
 		pTexture = new Texture();
 		pTexture->Initialize(device,"Data/Texture/Interface.png");
@@ -259,7 +230,7 @@ namespace TD
 	}
 
 
-	void Gui::Shutdown()
+	void Gui::Release()
 	{
 		// Release the first sentence.
 		ReleaseSentence(&pFpsSentence);
@@ -267,9 +238,6 @@ namespace TD
 		// Release the second sentence.
 		ReleaseSentence(&pCpuSentence);
 
-		ReleaseSentence(&pVideocardName);
-
-		ReleaseSentence(&pVideocardMemory);
 
 		ReleaseSentence(&pGoldSentence);
 		ReleaseSentence(&pLevelSentence);
@@ -279,13 +247,11 @@ namespace TD
 
 		ReleaseSentence(&pNextWaveTimeSentence);
 
-		ReleaseSentence(&pMousePosition);
-
 		
 		// Release the font shader object.
 		if(pFontShader)
 		{
-			pFontShader->Shutdown();
+			pFontShader->Release();
 			delete pFontShader;
 			pFontShader = 0;
 		}
@@ -293,7 +259,7 @@ namespace TD
 		// Release the font object.
 		if(pFont)
 		{
-			pFont->Shutdown();
+			pFont->Release();
 			delete pFont;
 			pFont = 0;
 		}
@@ -368,17 +334,6 @@ namespace TD
 			return false;
 		}
 
-		result = RenderSentence(deviceContext, pVideocardName, worldMatrix, orthoMatrix);
-		if(!result)
-		{
-			return false;
-		}
-
-		result = RenderSentence(deviceContext, pVideocardMemory, worldMatrix, orthoMatrix);
-		if(!result)
-		{
-			return false;
-		}
 
 		result = RenderSentence(deviceContext, pTimeSentence, worldMatrix, orthoMatrix);
 		if(!result)
@@ -404,13 +359,6 @@ namespace TD
 			return false;
 		}
 		
-		result = RenderSentence(deviceContext, pMousePosition, worldMatrix, orthoMatrix);
-		if(!result)
-		{
-			return false;
-		}
-		
-
 		return true;
 	}
 
@@ -647,49 +595,6 @@ namespace TD
 		return true;
 	}
 
-	bool Gui::SetVideoCardInfo(char* videoCardName, int videoCardMemory, ID3D11DeviceContext* deviceContext)
-{
-	char dataString[150];
-	bool result;
-	char tempString[16];
-	char memoryString[32];
-
-
-	// Setup the video card name string.
-	strcpy_s(dataString, "Video Card: ");
-	strcat_s(dataString, videoCardName);
-
-	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(pVideocardName, dataString, 10, 10, 1.0f, 1.0f, 1.0f, deviceContext);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Truncate the memory value to prevent buffer over flow.
-	if(videoCardMemory > 9999999)
-	{
-		videoCardMemory = 9999999;
-	}
-
-	// Convert the video memory integer value to a string format.
-	_itoa_s(videoCardMemory, tempString, 10);
-
-	// Setup the video memory string.
-	strcpy_s(memoryString, "Video Memory: ");
-	strcat_s(memoryString, tempString);
-	strcat_s(memoryString, " MB");
-
-	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(pVideocardMemory, memoryString, 10, 25, 1.0f, 1.0f, 1.0f, deviceContext);
-	if(!result)
-	{
-		return false;
-	}
-
-	return true;
-}
-
 
 	bool Gui::SetFps(int fps, ID3D11DeviceContext* deviceContext)
 	{
@@ -907,34 +812,4 @@ namespace TD
 		return true;
 	}
 
-	bool Gui::SetMousePosition(int x,int y, ID3D11DeviceContext* deviceContext)
-	{
-		char timeString[64];
-		float red, green, blue;
-		bool result;
-		
-		char tempString[64];
-
-		strcpy_s(timeString, "Mouse Position X:");
-		_itoa_s(x, tempString, 10);
-		strcat_s(timeString, tempString);
-		strcat_s(timeString, " Y:");
-		_itoa_s(y, tempString, 10);
-		strcat_s(timeString, tempString);
-
-
-		red = 1.0f;
-		green = 1.0f;
-		blue = 1.0f;
-
-
-		// Update the sentence vertex buffer with the new string information.
-		result = UpdateSentence(pMousePosition, timeString, 20, 150, red, green, blue, deviceContext);
-		if(!result)
-		{
-			return false;
-		}
-
-		return true;
-	}
 }

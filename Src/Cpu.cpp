@@ -50,7 +50,7 @@ namespace TD
 	}
 
 
-	void Cpu::Shutdown()
+	void Cpu::Release()
 	{
 		if(canReadCpu)
 		{

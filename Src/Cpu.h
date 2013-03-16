@@ -18,7 +18,7 @@ public:
 	~Cpu();
 
 	void Initialize();
-	void Shutdown();
+	void Release();
 	void Frame();
 	int GetCpuPercentage();
 

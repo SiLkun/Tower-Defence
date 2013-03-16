@@ -12,22 +12,49 @@
 ////////////////////////////////////////////////////////////////////////////////
 class Creeper : public Model
 {
+public:
+	struct Config
+	{
+	public:
+		char name[32];
+		char mesh[256];
+		bool flying;
+		float speed;
+		int health;
+		bool boss;
+		int gold;
+
+		Config()
+		{
+		}
+
+		Config(Config & other)
+		{
+			strcpy(name,other.name);
+			strcpy(mesh,other.mesh);
+			flying = other.flying;
+			speed = other.speed;
+			health = other.health;
+			boss = other.boss;
+			gold = other.gold;
+		}
+	}config;
 private:
 	bool onMap;
-	float health;
-	bool flying;
-	bool fast;
-	bool boss;
 public:
+	static vector<Config*> * LoadCfg(char*);
+
 	Creeper();
-	Creeper(float healthModifier, bool flying, bool fast, bool boss);
 	Creeper(const Creeper&);
 	~Creeper();
+	void Initialize(ID3D11Device * pDevice, vector<Mesh *> * pMeshes,vector<Texture *> * pTextures, Config * config);
 	void Render(ID3D11DeviceContext* deviceContext);
-	void Hit(float);
-	float GetHealth();
+	void Hit(int);
+	int GetHealth();
+	void SetHealth(int);
+	float GetSpeed();
+	void SetSpeed(float);
 	bool IsFlying();
-	bool IsFast();
 	bool IsBoss();
 };
 

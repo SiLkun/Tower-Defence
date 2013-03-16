@@ -23,7 +23,7 @@ public:
 	~D3D();
 
 	bool Initialize(int, int, bool, HWND, bool, float, float);
-	void Shutdown();
+	void Release();
 	
 	void BeginScene(float, float, float, float);
 	void EndScene();

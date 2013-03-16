@@ -35,6 +35,18 @@ namespace TD
 
 	Model::Model(const Model& other)
 	{
+		position = other.position;
+
+		direction = other.direction;
+
+		acceleration = other.acceleration;
+
+		scale = other.scale;
+
+		speed = other.speed; 
+
+
+		pMesh = other.pMesh;
 	}
 
 
@@ -60,11 +72,7 @@ namespace TD
 
 	void Model::Render(ID3D11DeviceContext* deviceContext)
 	{
-		if(isOnMap)
-		{
-			pMesh->Render(deviceContext);
-		}
-
+		pMesh->Render(deviceContext);
 		return;
 	}
 

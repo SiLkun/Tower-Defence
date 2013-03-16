@@ -42,12 +42,12 @@ public:
 	~LightShader();
 
 	bool Initialize(ID3D11Device*, HWND);
-	void Shutdown();
+	void Release();
 	bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, ID3D11ShaderResourceView*,D3DXVECTOR4, D3DXVECTOR4, D3DXVECTOR3);
 
 private:
 	bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
-	void ShutdownShader();
+	void ReleaseShader();
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 	bool SetShaderParameters(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, ID3D11ShaderResourceView*,D3DXVECTOR4, D3DXVECTOR4, D3DXVECTOR3);

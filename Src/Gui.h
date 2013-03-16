@@ -35,17 +35,15 @@ public:
 	~Gui();
 
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, D3DXMATRIX);
-	void Shutdown();
+	void Release();
 	bool Render(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX);
 
 	bool SetFps(int, ID3D11DeviceContext*);
 	bool SetCpu(int, ID3D11DeviceContext*);
-	bool SetVideoCardInfo(char*, int, ID3D11DeviceContext*);
 	bool SetTime(int time, ID3D11DeviceContext* deviceContext);
 	bool SetLevel(int level, ID3D11DeviceContext* deviceContext);
 	bool SetGold(int gold, ID3D11DeviceContext* deviceContext);
 	bool SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext);
-	bool SetMousePosition(int x,int y, ID3D11DeviceContext* deviceContext);
 
 	
 private:
@@ -61,13 +59,10 @@ private:
 	D3DXMATRIX pBaseViewMatrix;
 	SentenceType* pFpsSentence;
 	SentenceType* pCpuSentence;
-	SentenceType* pVideocardName;
-	SentenceType* pVideocardMemory;
 	SentenceType* pGoldSentence;
 	SentenceType* pLevelSentence;
 	SentenceType* pTimeSentence;
 	SentenceType* pNextWaveTimeSentence;
-	SentenceType* pMousePosition;
 
 	ID3D11Buffer *pVertexBuffer, *pIndexBuffer;
 	int vertexCount, indexCount;

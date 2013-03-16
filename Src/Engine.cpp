@@ -31,9 +31,6 @@ namespace TD
 	{
 		bool result;
 		D3DXMATRIX baseViewMatrix;
-		char videoCard[128];
-		int videoMemory;
-
 
 		this->screenWidth = screenWidth;
 		this->screenHeight = screenHeight;
@@ -162,31 +159,17 @@ namespace TD
 			return false;
 		}
 
-		// Retrieve the video card information.
-		pDirect3D->GetVideoCardInfo(videoCard, videoMemory);
-
-		
-		// Set the video card information in the text object.
-		result = pGui->SetVideoCardInfo(videoCard, videoMemory, pDirect3D->GetDeviceContext());
-		if(!result)
-		{
-			MessageBox(hwnd, L"Could not set video card info in the text object.", L"Error", MB_OK);
-			return false;
-		}
-	
-
-
 		return true;
 	}
 
 
-	void Engine::Shutdown()
+	void Engine::Release()
 	{
 
 		// Release the text object.
 		if(pGui)
 		{
-			pGui->Shutdown();
+			pGui->Release();
 			delete pGui;
 			pGui = 0;
 		}
@@ -194,7 +177,7 @@ namespace TD
 		// Release the font shader object.
 		if(pFontShader)
 		{
-			pFontShader->Shutdown();
+			pFontShader->Release();
 			delete pFontShader;
 			pFontShader = 0;
 		}
@@ -202,7 +185,7 @@ namespace TD
 		// Release the cpu object.
 		if(pCpu)
 		{
-			pCpu->Shutdown();
+			pCpu->Release();
 			delete pCpu;
 			pCpu = 0;
 		}
@@ -224,7 +207,7 @@ namespace TD
 		// Release the terrain object.
 		if(pGame)
 		{
-			pGame->Shutdown();
+			pGame->Release();
 			delete pGame;
 			pGame = 0;
 		}
@@ -239,7 +222,7 @@ namespace TD
 		// Release the Direct3D object.
 		if(pDirect3D)
 		{
-			pDirect3D->Shutdown();
+			pDirect3D->Release();
 			delete pDirect3D;
 			pDirect3D = 0;
 		}
@@ -247,7 +230,7 @@ namespace TD
 		// Release the input object.
 		if(pInput)
 		{
-			pInput->Shutdown();
+			pInput->Release();
 			delete pInput;
 			pInput = 0;
 		}
@@ -361,29 +344,26 @@ namespace TD
 			move.z = -1.0f;
 	
 
-		{
-			int mouseX, mouseY;
-
-			POINT point;
-			GetCursorPos(&point);
-			pGui->SetMousePosition(point.x,point.y, pDirect3D->GetDeviceContext());
-			
-			// Move the mouse cursor coordinates into the -1 to +1 range.
-			float pointX = ((2.0f * (float)point.x) / (float)screenWidth) - 1.0f;
-			float pointY = (((2.0f * (float)point.y) / (float)screenHeight) - 1.0f) * -1.0f;
+	
+		POINT point;
+		GetCursorPos(&point);
 		
-			D3DXMATRIX viewMatrix,projectionMatrix;
-			pCamera->GetViewMatrix(viewMatrix);
-			pDirect3D->GetProjectionMatrix(projectionMatrix);
+		// Move the mouse cursor coordinates into the -1 to +1 range.
+		float pointX = ((2.0f * (float)point.x) / (float)screenWidth) - 1.0f;
+		float pointY = (((2.0f * (float)point.y) / (float)screenHeight) - 1.0f) * -1.0f;
+		
+		D3DXMATRIX viewMatrix,projectionMatrix;
+		pCamera->GetViewMatrix(viewMatrix);
+		pDirect3D->GetProjectionMatrix(projectionMatrix);
 
-			// Adjust the points using the projection matrix to account for the aspect ratio of the viewport.
-			pointX = pointX / projectionMatrix._11;
-			pointY = pointY / projectionMatrix._22;
+		// Adjust the points using the projection matrix to account for the aspect ratio of the viewport.
+		pointX = pointX / projectionMatrix._11;
+		pointY = pointY / projectionMatrix._22;
 
-			D3DXVECTOR3 p;
-			pCamera->GetPosition(p);
-			pGame->MouseLeftMove(pInput->IsMouseLeftPressed(),pointX,pointY,p,viewMatrix);
-		}
+		D3DXVECTOR3 p;
+		pCamera->GetPosition(p);
+		pGame->MouseLeftMove(pInput->IsMouseLeftPressed(),pointX,pointY,p,viewMatrix);
+	
 
 
 

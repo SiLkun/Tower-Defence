@@ -41,7 +41,7 @@ public:
 	~TerrainShader();
 
 	bool Initialize(ID3D11Device*, HWND);
-	void Shutdown();
+	void Release();
 
 	bool SetShaderParameters(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, D3DXVECTOR4, D3DXVECTOR4, D3DXVECTOR3);
 	bool SetShaderTextures(ID3D11DeviceContext*, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, bool);
@@ -49,7 +49,7 @@ public:
 
 private:
 	bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
-	void ShutdownShader();
+	void ReleaseShader();
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 private:

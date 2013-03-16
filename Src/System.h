@@ -20,7 +20,7 @@ public:
 	~System();
 
 	bool Initialize();
-	void Shutdown();
+	void Release();
 	void Run();
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
@@ -28,7 +28,7 @@ public:
 private:
 	bool Frame();
 	void InitializeWindows(int&, int&);
-	void ShutdownWindows();
+	void ReleaseWindows();
 
 private:
 	LPCWSTR applicationName;

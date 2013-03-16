@@ -29,13 +29,14 @@ namespace TD
 	}
 
 
-	bool Terrain::Initialize(ID3D11Device* device, char* heightMapFilename, char* materialsFilename, char* materialMapFilename, char* colorMapFilename)
+	bool Terrain::Initialize(ID3D11Device* device, char* filename)
 	{
 		bool result;
 
+		config = LoadCfg(filename);
 
 		// Load in the height map for the terrain.
-		result = LoadHeightMap(heightMapFilename);
+		result = LoadHeightMap(config.heightmap);
 		if(!result)
 		{
 			return false;
@@ -52,14 +53,14 @@ namespace TD
 		}
 
 		// Load in the color map for the terrain.
-		result = LoadColorMap(colorMapFilename);
+		result = LoadColorMap(config.colormap);
 		if(!result)
 		{
 			return false;
 		}
 
 		// Initialize the material groups for the terrain.
-		result = LoadMaterialFile(materialsFilename, materialMapFilename, device);
+		result = LoadMaterialFile(config.legend, config.materialmap, device);
 		if(!result)
 		{
 			return false;
@@ -74,14 +75,51 @@ namespace TD
 
 
 
-	void Terrain::Shutdown()
+	void Terrain::Release()
 	{
 		// Release the materials for the terrain.
 		ReleaseMaterials();
 
 		// Release the height map data.
-		ShutdownHeightMap();
+		ReleaseHeightMap();
 		return;
+	}
+
+	Terrain::Config Terrain::LoadCfg(char * filename)
+	{
+		Config config;
+
+		ifstream fin;
+
+		fin.open(filename);
+		if(fin.fail())
+		{
+			return config;
+		}
+
+		char input[256];
+		while(!fin.eof())
+		{
+			fin >> input;
+			if(strcmp(input,"legend") == 0)
+			{
+				fin >> config.legend;
+			}
+			else if(strcmp(input,"heightmap") == 0)
+			{
+				fin >> config.heightmap;
+			}
+			else if(strcmp(input,"materialmap") == 0)
+			{
+				fin >> config.materialmap;
+			}
+			else if(strcmp(input,"colormap") == 0)
+			{
+				fin >> config.colormap;
+			}
+		}
+
+		return config;
 	}
 
 	bool Terrain::LoadHeightMap(char* filename)
@@ -337,7 +375,7 @@ namespace TD
 	}
 
 
-	void Terrain::ShutdownHeightMap()
+	void Terrain::ReleaseHeightMap()
 	{
 		if(pHeightMap)
 		{

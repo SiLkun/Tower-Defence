@@ -295,6 +295,8 @@ namespace TD
 				indices[i*3+j] = i*3+j;		
 			}
 		}
+		delete [] faces;
+		faces = 0;
 
 		delete [] positions;
 		positions = 0;
@@ -469,8 +471,8 @@ namespace TD
 		// Release the model texture.
 		ReleaseMaterial();
 
-		// Shutdown the vertex and index buffers.
-		ShutdownBuffers();
+		// Release the vertex and index buffers.
+		ReleaseBuffers();
 
 		// Release the model data.
 		ReleaseModel();
@@ -510,7 +512,7 @@ namespace TD
 	}
 
 
-	void Mesh::ShutdownBuffers()
+	void Mesh::ReleaseBuffers()
 	{
 		// Release the index buffer.
 		if(pIndexBuffer)
@@ -590,5 +592,16 @@ namespace TD
 		return modelFilename;
 	}
 
-
+	Mesh * Mesh::GetMesh(vector<Mesh*> * pMeshes, string fileName)
+	 {
+		 for(vector<Mesh*>::iterator iMesh = pMeshes->begin();iMesh != pMeshes->end();iMesh++)
+		 {
+			 Mesh * pMesh = (Mesh*)*iMesh;
+			 if(pMesh && pMesh->GetFilename().compare(fileName) == 0)
+			 {
+				 return pMesh;
+			 }
+		 }
+		 return NULL;
+	 }
 }

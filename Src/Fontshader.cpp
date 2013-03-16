@@ -33,7 +33,7 @@ namespace TD
 
 
 		// Initialize the vertex and pixel shaders.
-		result = InitializeShader(device, hwnd, L"Data/font.vs", L"Data/font.ps");
+		result = InitializeShader(device, hwnd, L"Data/Shader/font.vs", L"Data/Shader/font.ps");
 		if(!result)
 		{
 			return false;
@@ -43,10 +43,10 @@ namespace TD
 	}
 
 
-	void FontShader::Shutdown()
+	void FontShader::Release()
 	{
-		// Shutdown the vertex and pixel shaders as well as the related objects.
-		ShutdownShader();
+		// Release the vertex and pixel shaders as well as the related objects.
+		ReleaseShader();
 
 		return;
 	}
@@ -236,7 +236,7 @@ namespace TD
 	}
 
 
-	void FontShader::ShutdownShader()
+	void FontShader::ReleaseShader()
 	{
 		// Release the pixel constant buffer.
 		if(pPixelBuffer)

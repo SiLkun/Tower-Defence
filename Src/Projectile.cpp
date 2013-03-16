@@ -8,7 +8,8 @@ namespace TD
 	Projectile::Projectile()
 	{
 		isHit = false;
-		damage = 0.3f;
+		damage = 0;
+		speed = 0.0;
 	}
 
 	Projectile::Projectile(const Projectile&)
@@ -32,6 +33,11 @@ namespace TD
 		acceleration = -direction * speed;
 	}
 
+	void Projectile::SetDamage(int damage)
+	{
+		this->damage = damage;
+	}
+
 	void Projectile::SetLaunchSound(Sound * pSound)
 	{
 		pLaunchSound = pSound;
@@ -53,6 +59,7 @@ namespace TD
 		return isHit;
 	}
 
+
 	void Projectile::Update(float frameTime,vector<Creeper*>* pCreepers)
 	{
 		if(pCreepers)
@@ -63,11 +70,13 @@ namespace TD
 				D3DXVECTOR3 p = pCreeper->GetPosition();
 				float distance = powf( powf(position.x - p.x,2.0f) + powf(position.z - p.z,2.0f),0.5f);
 
+
 				if(distance < 1.0f)
 				{
 					pCreeper->Hit(damage);
 					isHit = true;
 					pHitSound->Play(this->position);
+					break;
 				}
 
 			}

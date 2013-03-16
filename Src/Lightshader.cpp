@@ -33,7 +33,7 @@ namespace TD
 
 
 		// Initialize the vertex and pixel shaders.
-		result = InitializeShader(device, hwnd, L"Data/light.vs", L"Data/light.ps");
+		result = InitializeShader(device, hwnd, L"Data/Shader/light.vs", L"Data/Shader/light.ps");
 		if(!result)
 		{
 			return false;
@@ -43,10 +43,10 @@ namespace TD
 	}
 
 
-	void LightShader::Shutdown()
+	void LightShader::Release()
 	{
-		// Shutdown the vertex and pixel shaders as well as the related objects.
-		ShutdownShader();
+		// Release the vertex and pixel shaders as well as the related objects.
+		ReleaseShader();
 
 		return;
 	}
@@ -243,7 +243,7 @@ namespace TD
 	}
 
 
-	void LightShader::ShutdownShader()
+	void LightShader::ReleaseShader()
 	{
 		// Release the light constant buffer.
 		if(pLightBuffer)

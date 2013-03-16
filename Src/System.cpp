@@ -53,18 +53,18 @@ namespace TD
 	}
 
 
-	void TD::System::Shutdown()
+	void TD::System::Release()
 	{
 		// Release the application wrapper object.
 		if(pEngine)
 		{
-			pEngine->Shutdown();
+			pEngine->Release();
 			delete pEngine;
 			pEngine = 0;
 		}
 
-		// Shutdown the window.
-		ShutdownWindows();
+		// Release the window.
+		ReleaseWindows();
 	
 		return;
 	}
@@ -215,7 +215,7 @@ namespace TD
 	}
 
 
-	void TD::System::ShutdownWindows()
+	void TD::System::ReleaseWindows()
 	{
 		// Show the pMouse cursor.
 		ShowCursor(true);

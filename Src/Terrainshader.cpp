@@ -34,7 +34,7 @@ namespace TD
 
 
 		// Initialize the vertex and pixel shaders.
-		result = InitializeShader(device, hwnd, L"Data/terrain.vs", L"Data/terrain.ps");
+		result = InitializeShader(device, hwnd, L"Data/Shader/terrain.vs", L"Data/Shader/terrain.ps");
 		if(!result)
 		{
 			return false;
@@ -44,10 +44,10 @@ namespace TD
 	}
 
 
-	void TerrainShader::Shutdown()
+	void TerrainShader::Release()
 	{
-		// Shutdown the vertex and pixel shaders as well as the related objects.
-		ShutdownShader();
+		// Release the vertex and pixel shaders as well as the related objects.
+		ReleaseShader();
 
 		return;
 	}
@@ -247,7 +247,7 @@ namespace TD
 	}
 
 
-	void TerrainShader::ShutdownShader()
+	void TerrainShader::ReleaseShader()
 	{
 		// Release the texture info constant buffer.
 		if(pTextureInfoBuffer)

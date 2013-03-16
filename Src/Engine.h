@@ -32,7 +32,7 @@ public:
 	~Engine();
 
 	bool Initialize(HINSTANCE, HWND, int, int);
-	void Shutdown();
+	void Release();
 	bool Frame();
 
 

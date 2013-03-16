@@ -23,6 +23,8 @@
 #include <mmsystem.h>
 #include <dsound.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <crtdbg.h>
 
 using namespace std;
 

@@ -55,10 +55,10 @@ namespace TD
 	void Sound::Release()
 	{
 		// Release the secondary buffer.
-		ShutdownWaveFile(&pSecondaryBuffer,&pSecondary3DBuffer);
+		ReleaseWaveFile(&pSecondaryBuffer,&pSecondary3DBuffer);
 
-		// Shutdown the Direct Sound API.
-		ShutdownDirectSound();
+		// Release the Direct Sound API.
+		ReleaseDirectSound();
 
 		return;
 	}
@@ -133,7 +133,7 @@ namespace TD
 	}
 
 
-	void Sound::ShutdownDirectSound()
+	void Sound::ReleaseDirectSound()
 	{
 		// Release the listener interface.
 		if(pListener)
@@ -332,7 +332,7 @@ namespace TD
 }
 
 
-	void Sound::ShutdownWaveFile(IDirectSoundBuffer8** secondaryBuffer, IDirectSound3DBuffer8** secondary3DBuffer)
+	void Sound::ReleaseWaveFile(IDirectSoundBuffer8** secondaryBuffer, IDirectSound3DBuffer8** secondary3DBuffer)
 	{
 			// Release the 3D interface to the secondary sound buffer.
 		if(*secondary3DBuffer)

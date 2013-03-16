@@ -32,7 +32,7 @@ namespace TD
 
 
 		// Initialize the vertex and pixel shaders.
-		result = InitializeShader(pDevice, hwnd, L"Data/color.vs", L"Data/color.ps");
+		result = InitializeShader(pDevice, hwnd, L"Data/Shader/color.vs", L"Data/Shader/color.ps");
 		if(!result)
 		{
 			return false;
@@ -42,10 +42,10 @@ namespace TD
 	}
 
 
-	void ColorShader::Shutdown()
+	void ColorShader::Release()
 	{
-		// Shutdown the vertex and pixel shaders as well as the related objects.
-		ShutdownShader();
+		// Release the vertex and pixel shaders as well as the related objects.
+		ReleaseShader();
 
 		return;
 	}
@@ -194,7 +194,7 @@ namespace TD
 	}
 
 
-	void ColorShader::ShutdownShader()
+	void ColorShader::ReleaseShader()
 	{
 		// Release the matrix constant buffer.
 		if(pMatrixBuffer)

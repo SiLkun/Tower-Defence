@@ -416,7 +416,7 @@ namespace TD
 	}
 
 
-	void D3D::Shutdown()
+	void D3D::Release()
 	{
 		// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 		if(pSwapChain)

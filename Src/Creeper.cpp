@@ -5,29 +5,84 @@
 
 namespace TD
 {
+	 vector<Creeper::Config*> * Creeper::LoadCfg(char * filename)
+	{
+		ifstream fin;
+
+		fin.open(filename);
+		if(fin.fail())
+		{
+			return false;
+		}
+
+		char input[256];
+		int numberoftowers = 0;
+		vector<Config*> * configs = new vector<Config*>();
+		
+		Config * config = NULL;
+
+		while(!fin.eof())
+		{
+			fin >> input;
+			if(strcmp(input,"Creeper") == 0)
+			{
+				config = new Config();
+				fin >> config->name;
+				configs->push_back(config);
+			}
+			else if(strcmp(input,"mesh") == 0)
+			{
+				fin >> config->mesh;
+			}
+			else if(strcmp(input,"flying") == 0)
+			{
+				fin >> config->flying;
+			}
+			else if(strcmp(input,"speed") == 0)
+			{
+				fin >> config->speed;
+			}
+			else if(strcmp(input,"health") == 0)
+			{
+				fin >> config->health;
+			}
+			else if(strcmp(input,"boss") == 0)
+			{
+				fin >> config->boss;
+			}
+			else if(strcmp(input,"gold") == 0)
+			{
+				fin >> config->gold;
+			}
+		}
+
+		return configs;
+	}
+
 	Creeper::Creeper()
 	{
-		
-		health = 0.5f;
-		flying = false;
-		fast = false;
-		boss = false;
+		onMap = false;
 	}
 
-	Creeper::Creeper(float healthModifier, bool flying, bool fast, bool boss)
+	Creeper::Creeper(const Creeper& other)  : Model(other)
 	{
-		this->health = healthModifier * 0.5f;
-		this->flying = flying;
-		this->fast = fast;
-		this->boss = boss;
-	}
-
-	Creeper::Creeper(const Creeper&)
-	{
+		config = other.config;
 	}
 
 	Creeper::~Creeper()
 	{
+	}
+
+	void Creeper::Initialize(ID3D11Device * pDevice,vector<Mesh *> * pMeshes,vector<Texture *> * pTextures,  Config * config)
+	{
+		this->config = *config;
+
+		Mesh * pMesh = new Mesh();
+		pMesh->Initialize(pDevice, this->config.mesh,pTextures);
+		pMeshes->push_back(pMesh);
+
+		SetSpeed(config->speed);
+		Model::Initialize(pMesh);
 	}
 
 	void Creeper::Render(ID3D11DeviceContext* deviceContext)
@@ -40,23 +95,38 @@ namespace TD
 		return;
 	}
 
-	void Creeper::Hit(float damage)
+	void Creeper::Hit(int damage)
 	{
-		health -= damage;
+		config.health -= damage;
 	}
 
-	float Creeper::GetHealth()
+	int Creeper::GetHealth()
 	{
-		return health;
+		return config.health;
 	}
 
-	bool Creeper::IsFlying(){
-		return flying;
+	void Creeper::SetHealth(int health)
+	{
+		config.health = health;
 	}
-	bool Creeper::IsFast(){
-		return fast;
+	
+	float Creeper::GetSpeed()
+	{
+		return config.speed;
 	}
-	bool Creeper::IsBoss(){
-		return boss;
+
+	void Creeper::SetSpeed(float speed)
+	{
+		config.speed = speed;
+	}
+
+	bool Creeper::IsFlying()
+	{
+		return config.flying;
+	}
+
+	bool Creeper::IsBoss()
+	{
+		return config.boss;
 	}
 }

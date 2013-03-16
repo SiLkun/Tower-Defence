@@ -31,7 +31,7 @@ public:
 	~Font();
 
 	bool Initialize(ID3D11Device*, char*, char*);
-	void Shutdown();
+	void Release();
 
 	ID3D11ShaderResourceView* GetTexture();
 

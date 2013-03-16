@@ -47,7 +47,7 @@ namespace TD
 	}
 
 
-	void Font::Shutdown()
+	void Font::Release()
 	{
 		// Release the font texture.
 		ReleaseTexture();

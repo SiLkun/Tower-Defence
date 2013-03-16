@@ -100,7 +100,7 @@ namespace TD
 	}
 
 
-	void Input::Shutdown()
+	void Input::Release()
 	{
 		// Release the pMouse.
 		if(pMouse)

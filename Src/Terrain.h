@@ -12,6 +12,15 @@
 class Terrain
 {
 private:
+	struct Config
+	{
+	public:
+		char legend[256];
+		char heightmap[256];
+		char materialmap[256];
+		char colormap[256];
+	}config;
+
 	struct VertexType
 	{
 		D3DXVECTOR3 position;
@@ -48,9 +57,10 @@ public:
 	Terrain(const Terrain&);
 	~Terrain();
 
-	bool Initialize(ID3D11Device*, char*, char*, char*, char*);
-	void Shutdown();
+	bool Initialize(ID3D11Device*, char*);
+	void Release();
 
+	Config LoadCfg(char * filename);
 	bool Render(ID3D11DeviceContext*, TerrainShader*, D3DXMATRIX, D3DXMATRIX, D3DXVECTOR4, D3DXVECTOR4, D3DXVECTOR3);
 	
 	D3DXVECTOR3 * GetPosition();
@@ -63,7 +73,7 @@ private:
 	bool LoadHeightMap(char*);
 	void NormalizeHeightMap();
 	bool CalculateNormals();
-	void ShutdownHeightMap();
+	void ReleaseHeightMap();
 
 	bool LoadColorMap(char*);
 

@@ -43,10 +43,10 @@ public:
 	string GetFilename();
 private:
 	bool InitializeDirectSound(HWND);
-	void ShutdownDirectSound();
+	void ReleaseDirectSound();
 
 	bool LoadWaveFile(char*, IDirectSoundBuffer8**, IDirectSound3DBuffer8** secondary3DBuffer);
-	void ShutdownWaveFile(IDirectSoundBuffer8**, IDirectSound3DBuffer8** secondary3DBuffer);
+	void ReleaseWaveFile(IDirectSoundBuffer8**, IDirectSound3DBuffer8** secondary3DBuffer);
 
 
 private:

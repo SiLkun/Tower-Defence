@@ -27,7 +27,7 @@ namespace TD
 
 		D3DXMATRIX rotationMatrix;
 		D3DXMatrixIdentity(&rotationMatrix);
-		D3DXMatrixRotationYawPitchRoll(&rotationMatrix, yaw, D3DX_PI  *0.3f  , 0.0f);
+		D3DXMatrixRotationYawPitchRoll(&rotationMatrix, yaw, (float)D3DX_PI  *0.3f  , 0.0f);
 
 		direction.x = 0;
 		direction.y = 0;
