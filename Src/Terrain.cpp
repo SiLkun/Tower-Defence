@@ -1007,12 +1007,14 @@ namespace TD
 		x += terrainWidth/2;
 		z += terrainHeight/2;
 
-		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		float value = 0.0f;
+
+		if(0 <= x && x < terrainWidth && 0 <= z && z < terrainHeight)
 		{
-			return 0.0f;
+			int index = (terrainHeight * z) + x;
+			value = pHeightMap[index].y;
 		}
-		int index = (terrainHeight * z) + x;
-		return pHeightMap[index].y;
+		return value;
 	}
 
 	bool Terrain::GetOccupied(int x,int z)
@@ -1020,13 +1022,13 @@ namespace TD
 		x += terrainWidth/2;
 		z += terrainHeight/2;
 
-		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		bool value = false;
+		if(0 <= x && x < terrainWidth && 0 <= z && z < terrainHeight)
 		{
-			return false;
+			int index = (terrainHeight * z) + x;
+			value = pHeightMap[index].occupied;
 		}
-
-		int index = (terrainHeight * z) + x;
-		return pHeightMap[index].occupied;
+		return value;
 	}
 
 	void Terrain::SetOccupied(int x,int z,bool occupied)
@@ -1034,12 +1036,11 @@ namespace TD
 		x += terrainWidth/2;
 		z += terrainHeight/2;
 
-		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		if(0 <= x && x < terrainWidth && 0 <= z && z < terrainHeight)
 		{
-			return;
+			int index = (terrainHeight * z) + x;
+			pHeightMap[index].occupied = occupied;
 		}
-		int index = (terrainHeight * z) + x;
-		pHeightMap[index].occupied = occupied;
 	}
 
 	
@@ -1048,12 +1049,13 @@ namespace TD
 		x += terrainWidth/2;
 		z += terrainHeight/2;
 
-		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		bool value = false;
+		if(0 <= x && x < terrainWidth && 0 <= z && z < terrainHeight)
 		{
-			return 0.0f;
+			int index = (terrainHeight * z) + x;
+			value = pHeightMap[index].buildable;
 		}
-		int index = (terrainHeight * z) + x;
-		return pHeightMap[index].buildable;
+		return value;
 	}
 	
 	bool Terrain::GetWalkable(int x,int z)
@@ -1061,12 +1063,13 @@ namespace TD
 		x += terrainWidth/2;
 		z += terrainHeight/2;
 
-		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		bool value = false;
+		if(0 <= x && x < terrainWidth && 0 <= z && z < terrainHeight)
 		{
-			return 0.0f;
+			int index = (terrainHeight * z) + x;
+			value = pHeightMap[index].walkable;
 		}
-		int index = (terrainHeight * z) + x;
-		return pHeightMap[index].walkable;
+		return value;
 	}
 	D3DXMATRIX Terrain::GetWorldMatrix()
 	{

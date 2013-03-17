@@ -436,15 +436,17 @@ namespace TD
 				}
 
 				D3DXVECTOR3 p(0,0,0);
+				D3DXVECTOR3 d(0,0,-1.0f);
 				D3DXVECTOR3 a(0,0,0);
 				float scale = 1.0f;
 				
 				scale *=   ( 1.0f + ((rand() % 10)) * 0.01f);  //  max 10% difference
 
-				a.z = - pCreeper->GetSpeed() ;
+				a.x = d.x * pCreeper->GetSpeed() ;
+				a.y = d.y * pCreeper->GetSpeed() ;
+				a.z = d.z * pCreeper->GetSpeed() ;
 
 				p.x = -1.0f;
-
 				p.x +=  1.0f - (rand() % 3);	
 
 				if(pCreeper->IsFlying()) 
