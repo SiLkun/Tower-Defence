@@ -201,13 +201,18 @@ namespace TD
 		{
 			for(i=0; i<terrainWidth; i++)
 			{
-				height = bitmapImage[k];
+				height = bitmapImage[k] / 20.0f;
 			
 				index = (terrainHeight * j) + i;
 
 				pHeightMap[index].x = (float)i - terrainWidth/2;
 				pHeightMap[index].y = (float)height;
 				pHeightMap[index].z = (float)j  - terrainHeight/2;
+
+				pHeightMap[index].buildable = 1;
+				pHeightMap[index].walkable = 1;
+				pHeightMap[index].occupied = 0;
+
 
 				k+=3;
 			}
@@ -997,6 +1002,72 @@ namespace TD
 		return terrainHeight;
 	}
 
+	float Terrain::GetHeight(int x,int z)
+	{
+		x += terrainWidth/2;
+		z += terrainHeight/2;
+
+		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		{
+			return 0.0f;
+		}
+		int index = (terrainHeight * z) + x;
+		return pHeightMap[index].y;
+	}
+
+	bool Terrain::GetOccupied(int x,int z)
+	{
+		x += terrainWidth/2;
+		z += terrainHeight/2;
+
+		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		{
+			return false;
+		}
+
+		int index = (terrainHeight * z) + x;
+		return pHeightMap[index].occupied;
+	}
+
+	void Terrain::SetOccupied(int x,int z,bool occupied)
+	{
+		x += terrainWidth/2;
+		z += terrainHeight/2;
+
+		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		{
+			return;
+		}
+		int index = (terrainHeight * z) + x;
+		pHeightMap[index].occupied = occupied;
+	}
+
+	
+	bool Terrain::GetBuildable(int x,int z)
+	{
+		x += terrainWidth/2;
+		z += terrainHeight/2;
+
+		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		{
+			return 0.0f;
+		}
+		int index = (terrainHeight * z) + x;
+		return pHeightMap[index].buildable;
+	}
+	
+	bool Terrain::GetWalkable(int x,int z)
+	{
+		x += terrainWidth/2;
+		z += terrainHeight/2;
+
+		if(x < 0 || x > terrainWidth || z < 0 || z > terrainHeight)
+		{
+			return 0.0f;
+		}
+		int index = (terrainHeight * z) + x;
+		return pHeightMap[index].walkable;
+	}
 	D3DXMATRIX Terrain::GetWorldMatrix()
 	{
 		return worldMatrix;

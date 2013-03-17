@@ -67,10 +67,6 @@ namespace TD
 
 		// Now acquire the pKeyboard.
 		result = pKeyboard->Acquire();
-		if(FAILED(result))
-		{
-			return false;
-		}
 
 		// Initialize the direct input interface for the pMouse.
 		result = pDirectInput->CreateDevice(GUID_SysMouse, &pMouse, NULL);

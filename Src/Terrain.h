@@ -35,6 +35,10 @@ private:
 		float nx, ny, nz;
 		float r, g, b;
 		int rIndex, gIndex, bIndex;
+		bool occupied;
+		bool buildable;
+		bool walkable;
+
 	};
 
 	struct VectorType 
@@ -68,6 +72,11 @@ public:
 
 	int GetWidth();
 	int GetHeight();
+	float GetHeight(int x,int z);
+	bool GetOccupied(int x,int z);
+	void SetOccupied(int x,int z,bool);
+	bool GetWalkable(int x,int z);
+	bool GetBuildable(int x,int z);
 	D3DXMATRIX GetWorldMatrix();
 private:
 	bool LoadHeightMap(char*);

@@ -48,6 +48,7 @@ public:
 	Creeper(const Creeper&);
 	~Creeper();
 	void Initialize(ID3D11Device * pDevice, vector<Mesh *> * pMeshes,vector<Texture *> * pTextures, Config * config);
+	void Update(Terrain * pTerrain,float frameTime);
 	void Render(ID3D11DeviceContext* deviceContext);
 	void Hit(int);
 	int GetHealth();

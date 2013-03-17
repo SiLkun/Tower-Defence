@@ -445,14 +445,13 @@ namespace TD
 
 				p.x = -1.0f;
 
+				p.x +=  1.0f - (rand() % 3);	
+
 				if(pCreeper->IsFlying()) 
 				{
-					p.y = 6.0f;
+					p.y += 6.0f;
 				}
-				else
-				{
-					p.y = 0.0f;
-				}
+
 					
 				if(pCreeper->IsBoss())	
 				{
@@ -471,7 +470,7 @@ namespace TD
 				pCreeper->SetSpeed(0.1f);
 				pCreeper->SetScale(D3DXVECTOR3(scale,scale,scale));
 				
-				pCreeper->SetHealth(pCreeper->GetHealth() *  (1  + ((level - waveId)/10)));
+				pCreeper->SetHealth(pCreeper->GetHealth() *  (1  + (    pow((level - waveId)/10,2)   )));
 				creepersInGame.push_back(pCreeper);
 			}
 			level++;
@@ -497,7 +496,8 @@ namespace TD
 		for(vector<Creeper*>::iterator i = creepersInGame.begin(); i != creepersInGame.end();i++)
 		{
 			Creeper* pCreeper = (Creeper*)*i;
-			pCreeper->Update(frameTime);
+			pCreeper->Update(pTerrain, frameTime);
+			
 			pCreeper->UpdateOnMap((float)pTerrain->GetWidth(),(float)pTerrain->GetHeight());
 		}
 
@@ -560,28 +560,6 @@ namespace TD
 
 		return result;
 	}
-
-
-/*
-
-		// BOSS LEVEL
-		if(level % 10 == 0) {
-			boss = true;
-		}
-		// FLYING
-		else if(level % 8 == 0) {
-			flying = true;
-		}
-		// FAST
-		else if(level % 5 == 0) {
-			fast = true;
-		}
-
-		healthmodifier = level;
-
-		if(boss)
-			healthmodifier = level * 5;
-			*/
 
 	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX& viewMatrix,D3DXMATRIX& projectionMatrix)
 	{
@@ -646,6 +624,12 @@ namespace TD
 		{
 			D3DXVECTOR3 p = Intersection(mouseX, mouseY,cameraPosition,viewMatrix);
 
+			p.x = floorf(p.x);
+			p.z = floorf(p.z);
+
+			p.y = pTerrain->GetHeight(p.x,p.z);
+
+
 			if(pTowerPlacement == NULL)
 			{
 				pTowerPlacement = new Tower(*towerList.at(0));
@@ -659,9 +643,14 @@ namespace TD
 		}
 		else if(pTowerPlacement != NULL)
 		{
-			if(gold >= pTowerPlacement->config.costs)
+			D3DXVECTOR3 p = pTowerPlacement->GetPosition();
+			int x = floorf(p.x);
+			int z = floorf(p.z);
+
+			if(pTowerPlacement->IsOnMap() && gold >= pTowerPlacement->config.costs && pTerrain->GetBuildable(x,z) && !pTerrain->GetOccupied(x,z))
 			{
 				gold-= pTowerPlacement->config.costs;
+				pTerrain->SetOccupied(pTowerPlacement->GetPosition().x,pTowerPlacement->GetPosition().z,true);
 				towersInGame.push_back(pTowerPlacement);
 				pTowerPlacement = NULL;
 			}
@@ -714,7 +703,7 @@ namespace TD
 		{
 			if(!D3DXIntersectTri(&topLeft, &bottomRight,&bottomLeft,&rayOrigin,&rayDirection,&u,&v,&dist))
 			{
-				return D3DXVECTOR3(0,0,0);
+
 			}
 		}
 

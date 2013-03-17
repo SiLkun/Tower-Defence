@@ -85,6 +85,23 @@ namespace TD
 		Model::Initialize(pMesh);
 	}
 
+	void Creeper::Update(Terrain * pTerrain,float frameTime)
+	{
+		/*D3DXVECTOR3 p = position + acceleration + (direction * speed * frameTime);
+		if(pTerrain->GetOccupied(floorf(p.x),floorf(p.z)))
+		{
+			acceleration.x = 0.0f;
+			acceleration.y = 0.0f;
+			acceleration.z = 0.0f;
+		}*/
+
+		
+		
+
+		Model::Update(frameTime);
+		position.y = pTerrain->GetHeight(floorf(position.x),floorf(position.z));
+	}
+
 	void Creeper::Render(ID3D11DeviceContext* deviceContext)
 	{
 		if(onMap)
