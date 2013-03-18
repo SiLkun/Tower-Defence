@@ -115,6 +115,13 @@ namespace TD
 		{
 			return false;
 		}
+
+		result = InitializeSentence(&pLivesSentence, 64, device);
+		if(!result)
+		{
+			return false;
+		}
+		
 		
 		VertexType* vertices;
 		unsigned long* indices;
@@ -246,6 +253,7 @@ namespace TD
 		ReleaseSentence(&pTimeSentence);
 
 		ReleaseSentence(&pNextWaveTimeSentence);
+		ReleaseSentence(&pLivesSentence);
 
 		
 		// Release the font shader object.
@@ -359,6 +367,13 @@ namespace TD
 			return false;
 		}
 		
+		result = RenderSentence(deviceContext, pLivesSentence, worldMatrix, orthoMatrix);
+		if(!result)
+		{
+			return false;
+		}
+		
+
 		return true;
 	}
 
@@ -785,7 +800,7 @@ namespace TD
 
 
 		
-		char tempString[3];
+		char tempString[4];
 
 		strcpy_s(timeString, "Next Wave Coming in: ");
 		_itoa_s(hours, tempString, 10);
@@ -804,6 +819,33 @@ namespace TD
 
 		// Update the sentence vertex buffer with the new string information.
 		result = UpdateSentence(pNextWaveTimeSentence, timeString, 20, 135, red, green, blue, deviceContext);
+		if(!result)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	bool Gui::SetLivesLeft(int livesLeft, ID3D11DeviceContext* deviceContext)
+	{
+		char timeString[64];
+		float red, green, blue;
+		bool result;
+		
+		char tempString[3];
+
+		strcpy_s(timeString, "Lives Left:");
+		_itoa_s(livesLeft, tempString, 10);
+		strcat_s(timeString, tempString);
+
+		red = 1.0f;
+		green = 1.0f;
+		blue = 1.0f;
+
+
+		// Update the sentence vertex buffer with the new string information.
+		result = UpdateSentence(pLivesSentence, timeString, 20, 150, red, green, blue, deviceContext);
 		if(!result)
 		{
 			return false;

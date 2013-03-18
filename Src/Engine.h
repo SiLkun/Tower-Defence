@@ -32,6 +32,7 @@ public:
 	~Engine();
 
 	bool Initialize(HINSTANCE, HWND, int, int);
+	static unsigned int __stdcall ThreadLoadProject(void *pvParam);
 	void Release();
 	bool Frame();
 
@@ -39,7 +40,7 @@ public:
 private:
 	bool HandleInput(float);
 	bool RenderGraphics();
-
+	HWND hwnd;
 private:
 	Game* pGame;
 	D3D* pDirect3D;

@@ -17,6 +17,7 @@
 #include <d3dx11async.h>
 #include <fstream>
 #include <vector>
+#include <list>
 #include <windows.h>
 #include <dinput.h>
 #include <pdh.h>
@@ -25,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <crtdbg.h>
+#include <process.h>
 
 using namespace std;
 

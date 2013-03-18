@@ -51,7 +51,7 @@ public:
 	int GetGold();
 	float GetWaveDelay();
 	float GetPreviousWaveTime();
-	
+	int GetLivesLeft();
 
 
 
@@ -88,6 +88,8 @@ private:
 	int waveCount;
 	int level;
 	int gold;
+	int lives;
+	int loaded;
 };
 
 #endif

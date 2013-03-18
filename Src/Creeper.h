@@ -39,8 +39,19 @@ public:
 			gold = other.gold;
 		}
 	}config;
+
+	struct PathNode
+	{
+		int x,z;
+		int moveCost;
+		int EstimateCost;
+	};
+
 private:
 	bool onMap;
+	bool reachedEnding;
+	D3DXVECTOR3 destination;
+	list<PathNode*> path;
 public:
 	static vector<Config*> * LoadCfg(char*);
 
@@ -55,8 +66,12 @@ public:
 	void SetHealth(int);
 	float GetSpeed();
 	void SetSpeed(float);
+	void SetDestination(D3DXVECTOR3);
+	bool ReachedEnding();
 	bool IsFlying();
 	bool IsBoss();
+	bool FindPath (Terrain * pTerrain,list<PathNode *> * path,int posX,int posY,int destX,int destY);
+
 };
 
 #endif

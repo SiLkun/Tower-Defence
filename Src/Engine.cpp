@@ -79,21 +79,7 @@ namespace TD
 		pCamera->SetPosition(D3DXVECTOR3(30.0f, 15.0f, -30.0f));
 		pCamera->SetRotation(D3DXVECTOR3((float)D3DX_PI /8.0f , (float)-D3DX_PI /4.0f , 0.0f));
 
-		// Create the terrain object.
-		pGame = new Game;
-		if(!pGame)
-		{
-			return false;
-		}
-
-		// Initialize the game object.
-		result = pGame->Initialize(pDirect3D->GetDevice(),hwnd);
-		if(!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the game object.", L"Error", MB_OK);
-			return false;
-		}
-		
+	
 		// Create the timer object.
 		pTimer = new Timer;
 		if(!pTimer)
@@ -159,9 +145,34 @@ namespace TD
 			return false;
 		}
 
+		this->hwnd = hwnd;
+
+		unsigned ret;
+		_beginthreadex(0,0,::TD::Engine::ThreadLoadProject,this, 0,&ret);
+
 		return true;
 	}
 
+	unsigned int __stdcall Engine::ThreadLoadProject(void *pvParam)
+	{
+		bool result;
+		Engine * pEngine = (Engine * )pvParam;
+
+		pEngine->pGame = new Game;
+		if(!pEngine->pGame)
+		{
+			return false;
+		}
+
+
+		// Initialize the game object.
+		result = pEngine->pGame->Initialize(pEngine->pDirect3D->GetDevice(),pEngine->hwnd);
+		if(!result)
+		{
+			return 1;
+		}
+		return 0;
+	}
 
 	void Engine::Release()
 	{
@@ -276,32 +287,43 @@ namespace TD
 			return false;
 		}
 		
-		// Update the CPU usage value in the text object.
-		result = pGui->SetTime((int)pGame->GetTime(), pDirect3D->GetDeviceContext());
-		if(!result)
+		if(pGame)
 		{
-			return false;
-		}
+			// Update the CPU usage value in the text object.
+			result = pGui->SetTime((int)pGame->GetTime(), pDirect3D->GetDeviceContext());
+			if(!result)
+			{
+				return false;
+			}
 
-		// Update the CPU usage value in the text object.
-		result = pGui->SetLevel((int)pGame->GetLevel() - 1, pDirect3D->GetDeviceContext());
-		if(!result)
-		{
-			return false;
-		}
+			// Update the CPU usage value in the text object.
+			result = pGui->SetLevel((int)pGame->GetLevel() - 1, pDirect3D->GetDeviceContext());
+			if(!result)
+			{
+				return false;
+			}
 
-		// Update the CPU usage value in the text object.
-		result = pGui->SetGold((int)pGame->GetGold(), pDirect3D->GetDeviceContext());
-		if(!result)
-		{
-			return false;
-		}
+			// Update the CPU usage value in the text object.
+			result = pGui->SetGold((int)pGame->GetGold(), pDirect3D->GetDeviceContext());
+			if(!result)
+			{
+				return false;
+			}
 
-		int time = pGame->GetWaveDelay() - (pGame->GetTime() - pGame->GetPreviousWaveTime());
-		result = pGui->SetNextWaveTime(time, pDirect3D->GetDeviceContext());
-		if(!result)
-		{
-			return false;
+			result = pGui->SetLivesLeft((int)pGame->GetLivesLeft(), pDirect3D->GetDeviceContext());
+			if(!result)
+			{
+				return false;
+			}
+		
+
+
+			int time = pGame->GetWaveDelay() - (pGame->GetTime() - pGame->GetPreviousWaveTime());
+			result = pGui->SetNextWaveTime(time, pDirect3D->GetDeviceContext());
+			if(!result)
+			{
+				return false;
+			}
 		}
 
 		// Do the frame input processing.
@@ -362,7 +384,11 @@ namespace TD
 
 		D3DXVECTOR3 p;
 		pCamera->GetPosition(p);
-		pGame->MouseLeftMove(pInput->IsMouseLeftPressed(),pointX,pointY,p,viewMatrix);
+
+		if(pGame)
+		{
+			pGame->MouseLeftMove(pInput->IsMouseLeftPressed(),pointX,pointY,p,viewMatrix);
+		}
 	
 
 
@@ -403,9 +429,11 @@ namespace TD
 		pDirect3D->GetProjectionMatrix(projectionMatrix);
 		pDirect3D->GetOrthoMatrix(orthoMatrix);
 
-		pGame->Update(pDirect3D->GetDevice(),pCamera,pTimer->GetTime());
-		pGame->Render(pDirect3D->GetDeviceContext(), viewMatrix, projectionMatrix);
-
+		if(pGame)
+		{
+			pGame->Update(pDirect3D->GetDevice(),pCamera,pTimer->GetTime());
+			pGame->Render(pDirect3D->GetDeviceContext(), viewMatrix, projectionMatrix);
+		}
 		// Turn off the Z buffer to begin all 2D rendering.
 		pDirect3D->TurnZBufferOff();
 		

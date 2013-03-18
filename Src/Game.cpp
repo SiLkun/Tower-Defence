@@ -19,6 +19,8 @@ namespace TD
 		int waveCount = 10;
 		int level = 0;
 		int gold = 0;
+		lives = 0;
+		loaded = false;
 	}
 	Game::Game(const Game&)
 	{
@@ -33,7 +35,7 @@ namespace TD
 		bool result;
 		level = 0;
 		gold = 10;
-
+		lives = 10;
 
 		config = LoadCfg("Data/Config/Game.cfg");
 
@@ -179,6 +181,8 @@ namespace TD
 		pLight->SetAmbientColor(0.3f, 0.3f, 0.3f, 1.0f);
 		pLight->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 		pLight->SetDirection(0.0f, 0.0f, 1.0f);
+
+		loaded = true;
 		// Initialize the model object.
 		return true;
 	}
@@ -244,6 +248,19 @@ namespace TD
 
 		creepersInGame.clear();
 
+
+		for(UINT iCreeper = 0;iCreeper < creeperList.size();iCreeper++)
+		{
+			Creeper* pCreeper = creeperList.at(iCreeper);
+			// Release the terrain object.
+			if(pCreeper)
+			{
+				delete pCreeper;
+				pCreeper = 0;
+			}
+		}
+
+		creeperList.clear();
 
 
 		for(UINT iTower = 0;iTower < towersInGame.size();iTower++)
@@ -357,6 +374,12 @@ namespace TD
 	}
 	
 
+	int Game::GetLivesLeft()
+	{
+		return lives;
+	}
+
+
 
 	Game::GameConfig Game::LoadCfg(char * filename)
 	{
@@ -416,66 +439,73 @@ namespace TD
 
 	bool Game::Update(ID3D11Device * pDevice,Camera * pCamera,float frameTime)
 	{
-		bool result;
-	
-		time += frameTime / 1000;
-		if(time > previousWaveTime + waveDelay)
+		bool result = false;
+		if(!loaded)
 		{
-			previousWaveTime = time;
-			waveCount = 1;
+			return result;
+		}
+		time += frameTime / 1000;
 
-			for (int i = 0; i < waveCount; i++)
+		if(lives > 0)
+		{
+			if(time > previousWaveTime + waveDelay)
 			{
-				int waveId = level % creeperList.size();
+				previousWaveTime = time;
+				waveCount = 1;
 
-				// Create the model object.
-				Creeper* pCreeper = new Creeper(*creeperList.at(waveId));
-				if(!pCreeper)
+				for (int i = 0; i < waveCount; i++)
 				{
-					return false;
-				}
+					int waveId = level % creeperList.size();
 
-				D3DXVECTOR3 p(0,0,0);
-				D3DXVECTOR3 d(0,0,-1.0f);
-				D3DXVECTOR3 a(0,0,0);
-				float scale = 1.0f;
+					// Create the model object.
+					Creeper* pCreeper = new Creeper(*creeperList.at(waveId));
+					if(!pCreeper)
+					{
+						return false;
+					}
+
+					D3DXVECTOR3 p(0,0,0);
+					D3DXVECTOR3 d(0,0,-1.0f);
+					D3DXVECTOR3 a(0,0,0);
+					float scale = 1.0f;
 				
-				scale *=   ( 1.0f + ((rand() % 10)) * 0.01f);  //  max 10% difference
+					scale *=   ( 1.0f + ((rand() % 10)) * 0.01f);  //  max 10% difference
 
-				a.x = d.x * pCreeper->GetSpeed() ;
-				a.y = d.y * pCreeper->GetSpeed() ;
-				a.z = d.z * pCreeper->GetSpeed() ;
+					a.x = 0 ; //d.x * pCreeper->GetSpeed() ;
+					a.y = 0 ; //d.y * pCreeper->GetSpeed() ;
+					a.z = 0 ; //d.z * pCreeper->GetSpeed() ;
 
-				p.x = -1.0f;
-				p.x +=  1.0f - (rand() % 3);	
+					p.x = -1.0f;
 
-				if(pCreeper->IsFlying()) 
-				{
-					p.y += 6.0f;
-				}
+					if(pCreeper->IsFlying()) 
+					{
+						p.y += 6.0f;
+					}
 
 					
-				if(pCreeper->IsBoss())	
-				{
-					p.z = pTerrain->GetHeight()/2 + (i * 25.0f);		
-					waveCount = 3;
-				}
-				else
-				{
-					p.z = pTerrain->GetHeight()/2 + (i * 4.0f);
-					waveCount = 10;
-				}
+					if(pCreeper->IsBoss())	
+					{
+						p.z = pTerrain->GetHeight()/2 - (i * 5.0f);		
+						waveCount = 3;
+					}
+					else
+					{
+						p.z = pTerrain->GetHeight()/2 - (i * 2.0f);
+						waveCount = 10;
+					}
 
 
-				pCreeper->SetPosition(p);
-				pCreeper->SetAcceleration(a);
-				pCreeper->SetSpeed(0.1f);
-				pCreeper->SetScale(D3DXVECTOR3(scale,scale,scale));
+					pCreeper->SetPosition(p);
+					pCreeper->SetAcceleration(a);
+					pCreeper->SetDestination(D3DXVECTOR3(-1,0,-pTerrain->GetHeight()/2));
+					pCreeper->SetSpeed(0.1f);
+					pCreeper->SetScale(D3DXVECTOR3(scale,scale,scale));
 				
-				pCreeper->SetHealth(pCreeper->GetHealth() *  (1  + (    pow((level - waveId)/10,2)   )));
-				creepersInGame.push_back(pCreeper);
+					pCreeper->SetHealth(pCreeper->GetHealth() *  (1  + (    pow((level - waveId)/10,2)   )));
+					creepersInGame.push_back(pCreeper);
+				}
+				level++;
 			}
-			level++;
 		}
 
 		D3DXVECTOR3 p;
@@ -486,37 +516,37 @@ namespace TD
 			pSound->Update(p);
 		}
 		
-
-
-		
 		if(pLight)
 		{
 			result = pLight->Update(frameTime);
 		}
 
 	
-		for(vector<Creeper*>::iterator i = creepersInGame.begin(); i != creepersInGame.end();i++)
+		if(lives > 0)
 		{
-			Creeper* pCreeper = (Creeper*)*i;
-			pCreeper->Update(pTerrain, frameTime);
+			for(vector<Creeper*>::iterator i = creepersInGame.begin(); i != creepersInGame.end();i++)
+			{
+				Creeper* pCreeper = (Creeper*)*i;
+				pCreeper->Update(pTerrain, frameTime);
 			
-			pCreeper->UpdateOnMap((float)pTerrain->GetWidth(),(float)pTerrain->GetHeight());
+				pCreeper->UpdateOnMap((float)pTerrain->GetWidth(),(float)pTerrain->GetHeight());
+			}
+
+
+
+			for(vector<Tower*>::iterator i = towersInGame.begin();i != towersInGame.end();i++)
+			{
+				Tower* pTower = (Tower*)*i;
+				pTower->DetermineTarget(&creepersInGame);
+				pTower->Update(pDevice,time,frameTime,pTerrain,&creepersInGame,&projectilesInGame);
+			}
+
+
+			if(pTowerPlacement)
+			{
+				pTowerPlacement->Update(pDevice,time,frameTime,pTerrain,&creepersInGame,&projectilesInGame);
+			}
 		}
-
-
-		for(vector<Tower*>::iterator i = towersInGame.begin();i != towersInGame.end();i++)
-		{
-			Tower* pTower = (Tower*)*i;
-			pTower->DetermineTarget(&creepersInGame);
-			pTower->Update(pDevice,time,frameTime,pTerrain,&creepersInGame,&projectilesInGame);
-		}
-
-
-		if(pTowerPlacement)
-		{
-			pTowerPlacement->Update(pDevice,time,frameTime,pTerrain,&creepersInGame,&projectilesInGame);
-		}
-
 
 		for(vector<Projectile*>::iterator i = projectilesInGame.begin();i != projectilesInGame.end();)
 		{
@@ -546,27 +576,41 @@ namespace TD
 
 		}
 
-		for(UINT iCreeper = 0;iCreeper < creepersInGame.size();iCreeper++)
+		for(vector<Creeper*>::iterator i = creepersInGame.begin();i != creepersInGame.end();)
 		{
-			Creeper* pCreeper = creepersInGame.at(iCreeper);
+			Creeper* pCreeper = (Creeper*) *i;
 			if(pCreeper->GetHealth() <= 0)
 			{
 				gold += pCreeper->config.gold;
 				delete pCreeper;
 				pCreeper = 0;
-				creepersInGame.erase(creepersInGame.begin() + iCreeper);
+				i = creepersInGame.erase(i);
+			}
+			else if(pCreeper->ReachedEnding())
+			{
+				delete pCreeper;
+				pCreeper = 0;
+				i = creepersInGame.erase(i);
+				lives--;
+			}
+			else
+			{
+				i++;
 			}
 		}
 		
-
-
 		return result;
 	}
 
 	bool Game::Render(ID3D11DeviceContext* pDeviceContext,D3DXMATRIX& viewMatrix,D3DXMATRIX& projectionMatrix)
 	{
-		bool result;	
+		bool result = false;	
 		
+		if(!loaded)
+		{
+			return result;
+		}
+
 		// Render the terrain buffers using the terrain shader.
 		result = pTerrain->Render(pDeviceContext, pTerrainShader, viewMatrix, projectionMatrix, pLight->GetAmbientColor(), 
 					   pLight->GetDiffuseColor(), pLight->GetDirection());
@@ -575,7 +619,6 @@ namespace TD
 			return false;
 		}
 	
-
 
 		for(vector<Creeper*>::iterator i = creepersInGame.begin();i != creepersInGame.end();i++)
 		{

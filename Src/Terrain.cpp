@@ -1071,6 +1071,8 @@ namespace TD
 		}
 		return value;
 	}
+
+
 	D3DXMATRIX Terrain::GetWorldMatrix()
 	{
 		return worldMatrix;

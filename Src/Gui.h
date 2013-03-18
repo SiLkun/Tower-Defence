@@ -44,7 +44,7 @@ public:
 	bool SetLevel(int level, ID3D11DeviceContext* deviceContext);
 	bool SetGold(int gold, ID3D11DeviceContext* deviceContext);
 	bool SetNextWaveTime(int time, ID3D11DeviceContext* deviceContext);
-
+	bool SetLivesLeft(int livesLeft, ID3D11DeviceContext* deviceContext);
 	
 private:
 	bool InitializeSentence(SentenceType**, int, ID3D11Device*);
@@ -63,6 +63,8 @@ private:
 	SentenceType* pLevelSentence;
 	SentenceType* pTimeSentence;
 	SentenceType* pNextWaveTimeSentence;
+	SentenceType* pLivesSentence;
+
 
 	ID3D11Buffer *pVertexBuffer, *pIndexBuffer;
 	int vertexCount, indexCount;
