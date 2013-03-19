@@ -36,9 +36,6 @@
     <ClCompile Include="Src\Camera.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Colorshader.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Cpu.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -115,9 +112,6 @@
     <ClInclude Include="Src\Camera.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Colorshader.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Cpu.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -159,31 +153,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Data\color.ps">
+    <FxCompile Include="Data\Shader\Shader.vs">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Data\color.vs">
+    <FxCompile Include="Data\Shader\font.ps">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Data\font.ps">
+    <FxCompile Include="Data\Shader\light.ps">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Data\font.vs">
+    <FxCompile Include="Data\Shader\terrain.ps">
       <Filter>Shaders</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\light.ps">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Data\light.vs">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Data\terrain.ps">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Data\terrain.vs">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

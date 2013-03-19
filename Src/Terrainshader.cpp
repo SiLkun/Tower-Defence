@@ -34,7 +34,7 @@ namespace TD
 
 
 		// Initialize the vertex and pixel shaders.
-		result = InitializeShader(device, hwnd, L"Data/Shader/terrain.vs", L"Data/Shader/terrain.ps");
+		result = InitializeShader(device, hwnd, L"Data/Shader/Shader.vs", L"Data/Shader/terrain.ps");
 		if(!result)
 		{
 			return false;
@@ -73,7 +73,7 @@ namespace TD
 		pixelShaderBuffer = 0;
 
 		// Compile the vertex shader code.
-		result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "TerrainVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
+		result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "VS", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
 									   &vertexShaderBuffer, &errorMessage, NULL);
 		if(FAILED(result))
 		{
@@ -92,7 +92,7 @@ namespace TD
 		}
 
 		// Compile the pixel shader code.
-		result = D3DX11CompileFromFile(psFilename, NULL, NULL, "TerrainPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
+		result = D3DX11CompileFromFile(psFilename, NULL, NULL, "PS", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
 									   &pixelShaderBuffer, &errorMessage, NULL);
 		if(FAILED(result))
 		{

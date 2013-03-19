@@ -52,8 +52,8 @@ public:
 	float GetWaveDelay();
 	float GetPreviousWaveTime();
 	int GetLivesLeft();
-
-
+	bool IsLoaded();
+	bool IsLost();
 
 	Sound * GetSound(string fileName);
 	void MouseLeftMove(bool,float,float, D3DXVECTOR3&,D3DXMATRIX&);

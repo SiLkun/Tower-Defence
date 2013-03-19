@@ -21,6 +21,7 @@ namespace TD
 		pVertexBuffer = 0;
 		pIndexBuffer = 0;
 		pTexture = 0;
+		pTextureLoadScreen = 0;
 	}
 
 
@@ -226,6 +227,13 @@ namespace TD
 		pTexture = new Texture();
 		pTexture->Initialize(device,"Data/Texture/Interface.png");
 
+		pTextureLoadScreen = new Texture();
+		pTextureLoadScreen->Initialize(device,"Data/Texture/LoadScreen.png");
+
+		pTextureGameOverScreen = new Texture();
+		pTextureGameOverScreen->Initialize(device,"Data/Texture/GameOver.jpg");
+
+		
 		// Release the arrays now that the vertex and index buffers have been created and loaded.
 		delete [] vertices;
 		vertices = 0;
@@ -292,6 +300,14 @@ namespace TD
 			delete pTexture;
 			pTexture = 0;
 		}
+
+		if(pTextureLoadScreen)
+		{
+			pTextureLoadScreen->Release();
+			delete pTextureLoadScreen;
+			pTextureLoadScreen = 0;
+		}
+		
 		return;
 	}
 
@@ -377,6 +393,69 @@ namespace TD
 		return true;
 	}
 
+	bool Gui::RenderLoadScreen(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
+	{
+		bool result;
+
+		unsigned int stride;
+		unsigned int offset;
+
+
+		// Set vertex buffer stride and offset.
+		stride = sizeof(VertexType); 
+		offset = 0;
+    
+		// Set the vertex buffer to active in the input assembler so it can be rendered.
+		deviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
+
+		// Set the index buffer to active in the input assembler so it can be rendered.
+		deviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		// Create a pixel color vector with the input sentence color.
+		D3DXVECTOR4 pixelColor = D3DXVECTOR4(1.0f,1.0f,1.0f, 1.0f);
+
+		// Render the text using the font shader.
+		result = pFontShader->Render(deviceContext, indexCount, worldMatrix, pBaseViewMatrix, orthoMatrix, pTextureLoadScreen->GetTexture(), pixelColor);
+
+
+
+		return result;
+	}
+
+	bool Gui::RenderGameOver(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
+	{
+		bool result;
+
+		unsigned int stride;
+		unsigned int offset;
+
+
+		// Set vertex buffer stride and offset.
+		stride = sizeof(VertexType); 
+		offset = 0;
+    
+		// Set the vertex buffer to active in the input assembler so it can be rendered.
+		deviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
+
+		// Set the index buffer to active in the input assembler so it can be rendered.
+		deviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		// Create a pixel color vector with the input sentence color.
+		D3DXVECTOR4 pixelColor = D3DXVECTOR4(1.0f,1.0f,1.0f, 1.0f);
+
+		// Render the text using the font shader.
+		result = pFontShader->Render(deviceContext, indexCount, worldMatrix, pBaseViewMatrix, orthoMatrix, pTextureGameOverScreen->GetTexture(), pixelColor);
+
+
+
+		return result;
+	}
 	bool Gui::InitializeSentence(SentenceType** sentence, int maxLength, ID3D11Device* device)
 	{
 		VertexType* vertices;

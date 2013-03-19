@@ -37,6 +37,8 @@ public:
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, D3DXMATRIX);
 	void Release();
 	bool Render(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX);
+	bool RenderLoadScreen(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX);
+	bool RenderGameOver(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX);
 
 	bool SetFps(int, ID3D11DeviceContext*);
 	bool SetCpu(int, ID3D11DeviceContext*);
@@ -69,6 +71,9 @@ private:
 	ID3D11Buffer *pVertexBuffer, *pIndexBuffer;
 	int vertexCount, indexCount;
 	Texture* pTexture;
+	Texture* pTextureLoadScreen;
+	Texture* pTextureGameOverScreen;
+
 	
 };
 

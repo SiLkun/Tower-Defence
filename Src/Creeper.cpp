@@ -89,9 +89,17 @@ namespace TD
 	{
 		this->config = *config;
 
-		Mesh * pMesh = new Mesh();
-		pMesh->Initialize(pDevice, this->config.mesh,pTextures);
-		pMeshes->push_back(pMesh);
+
+		Mesh * pMesh = NULL;
+		
+		pMesh = Mesh::GetMesh(pMeshes,this->config.mesh);
+
+		if(!pMesh)
+		{
+			pMesh = new Mesh();
+			pMesh->Initialize(pDevice, this->config.mesh,pTextures);
+			pMeshes->push_back(pMesh);
+		}
 
 		SetSpeed(config->speed);
 		Model::Initialize(pMesh);
@@ -262,13 +270,13 @@ namespace TD
 				node->x = posX + directions[i][0];
 				node->z = posY + directions[i][1];
 				node->moveCost =  directions[i][2];
-				node->EstimateCost = abs(destX - node->x) + abs(destY - node->z); 
+				node->EstimateCost = sqrt(pow(destX - node->x,2) + pow(destY - node->z,2));
 
 
 				for (vector<PathNode*>::iterator i = paths.begin(); i != paths.end(); i++)
 				{
 					PathNode * insertNodeHere = (PathNode*)*i;
-					if(node->moveCost + node->EstimateCost  < insertNodeHere->moveCost + insertNodeHere->EstimateCost)
+					if((node->moveCost + node->EstimateCost)  < (insertNodeHere->moveCost + insertNodeHere->EstimateCost))
 					{
 						paths.insert(i,node);
 						node = NULL;
@@ -280,7 +288,7 @@ namespace TD
 					paths.push_back(node);
 				}
 			}
-			else
+			else if(pTerrain->GetOccupied(posX + directions[i][0],posY + directions[i][1]))
 			{
 				int bla = 4;
 			}

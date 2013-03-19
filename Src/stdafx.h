@@ -58,7 +58,6 @@ namespace TD
 	#include "Cpu.h"
 	#include "Fps.h"
 	#include "Timer.h"
-	#include "Colorshader.h"
 	#include "Sound.h"
 	#include "Lightshader.h"
 	#include "Light.h"

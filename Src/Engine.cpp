@@ -440,11 +440,33 @@ namespace TD
 		// Turn on the alpha blending before rendering the text.
 		pDirect3D->TurnOnAlphaBlending();
 
-		// Render the text user interface elements.
-		result = pGui->Render(pDirect3D->GetDeviceContext(), worldMatrix, orthoMatrix);
-		if(!result)
+		if(pGame && pGame->IsLoaded())
 		{
-			return false;
+			if(pGame->IsLost())
+			{
+				result = pGui->RenderGameOver(pDirect3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+				if(!result)
+				{
+					return false;
+				}
+			}
+			else
+			{
+				// Render the text user interface elements.
+				result = pGui->Render(pDirect3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+				if(!result)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			result = pGui->RenderLoadScreen(pDirect3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+			if(!result)
+			{
+				return false;
+			}
 		}
 
 		// Turn off alpha blending after rendering the text.

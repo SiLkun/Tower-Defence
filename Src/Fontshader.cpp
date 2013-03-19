@@ -33,7 +33,7 @@ namespace TD
 
 
 		// Initialize the vertex and pixel shaders.
-		result = InitializeShader(device, hwnd, L"Data/Shader/font.vs", L"Data/Shader/font.ps");
+		result = InitializeShader(device, hwnd, L"Data/Shader/Shader.vs", L"Data/Shader/font.ps");
 		if(!result)
 		{
 			return false;
@@ -78,7 +78,7 @@ namespace TD
 		ID3D10Blob* errorMessage;
 		ID3D10Blob* vertexShaderBuffer;
 		ID3D10Blob* pixelShaderBuffer;
-		D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
+		D3D11_INPUT_ELEMENT_DESC polygonLayout[4];
 		unsigned int numElements;
 		D3D11_BUFFER_DESC constantBufferDesc;
 		D3D11_SAMPLER_DESC samplerDesc;
@@ -91,7 +91,7 @@ namespace TD
 		pixelShaderBuffer = 0;
 
 		// Compile the vertex shader code.
-		result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "FontVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
+		result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "VS", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
 									   &vertexShaderBuffer, &errorMessage, NULL);
 		if(FAILED(result))
 		{
@@ -110,7 +110,7 @@ namespace TD
 		}
 
 		// Compile the pixel shader code.
-		result = D3DX11CompileFromFile(psFilename, NULL, NULL, "FontPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
+		result = D3DX11CompileFromFile(psFilename, NULL, NULL, "PS", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
 									   &pixelShaderBuffer, &errorMessage, NULL);
 		if(FAILED(result))
 		{
@@ -145,7 +145,6 @@ namespace TD
 		}
 
 		// Create the vertex input layout description.
-		// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
 		polygonLayout[0].SemanticName = "POSITION";
 		polygonLayout[0].SemanticIndex = 0;
 		polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -161,6 +160,22 @@ namespace TD
 		polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 		polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		polygonLayout[1].InstanceDataStepRate = 0;
+
+		polygonLayout[2].SemanticName = "NORMAL";
+		polygonLayout[2].SemanticIndex = 0;
+		polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		polygonLayout[2].InputSlot = 0;
+		polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		polygonLayout[2].InstanceDataStepRate = 0;
+
+		polygonLayout[3].SemanticName = "COLOR";
+		polygonLayout[3].SemanticIndex = 0;
+		polygonLayout[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		polygonLayout[3].InputSlot = 0;
+		polygonLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		polygonLayout[3].InstanceDataStepRate = 0;
 
 		// Get a count of the elements in the layout.
 		numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);

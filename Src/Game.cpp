@@ -379,7 +379,15 @@ namespace TD
 		return lives;
 	}
 
+	bool Game::IsLoaded()
+	{
+		return loaded;
+	}
 
+	bool Game::IsLost()
+	{
+		return lives <= 0;
+	}
 
 	Game::GameConfig Game::LoadCfg(char * filename)
 	{
@@ -414,15 +422,10 @@ namespace TD
 		return config;
 	}
 
-
-
 	Terrain * Game::GetTerrain()
 	{
 		return pTerrain;
 	}
-
-	 
-
 
 	Sound * Game::GetSound(string fileName)
 	{
