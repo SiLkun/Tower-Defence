@@ -1,0 +1,24 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl iris
+Ns 68.627451
+Ka 0.000000 0.000000 0.000000
+Kd 0.094080 0.094080 0.505120
+Ks 0.428800 0.770000 0.462000
+Ni 1.000000
+d 0.900000
+illum 2
+map_Kd D:\Visual studio projects\Tower-Defence\Data\Texture\Creeper.dds
+map_Ka Map__2_Gradient.tga
+map_d Map__2_Gradient.tga
+
+newmtl wire_026177088
+Ns 29.411765
+Ka 0.000000 0.000000 0.000000
+Kd 0.081600 0.555280 0.276080
+Ks 0.350000 0.350000 0.350000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd D:\Visual studio projects\Tower-Defence\Data\Texture\Creeper.dds
