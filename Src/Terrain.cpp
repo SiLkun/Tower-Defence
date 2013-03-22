@@ -15,12 +15,14 @@ namespace TD
 		position.x = 0;
 		position.y = 0;
 		position.z = 0;
+
 	}
 
 
 
 	Terrain::Terrain(const Terrain& other)
 	{
+
 	}
 
 
@@ -65,8 +67,6 @@ namespace TD
 		{
 			return false;
 		}
-
-
 
 		D3DXMatrixIdentity(&worldMatrix);
 		D3DXMatrixTranslation(&worldMatrix,position.x,position.y,position.z);
@@ -213,7 +213,7 @@ namespace TD
 				pHeightMap[index].walkable = 1;
 				pHeightMap[index].occupied = 0;
 
-
+				pHeightMap[index].pParent = 0;
 				k+=3;
 			}
 		}
@@ -1072,9 +1072,178 @@ namespace TD
 		return value;
 	}
 
+	int Terrain::GetGridIndex(int x,int z)
+	{
+		x += terrainWidth/2;
+		z += terrainHeight/2;
+
+		return (terrainHeight * z) + x;
+	}
 
 	D3DXMATRIX Terrain::GetWorldMatrix()
 	{
 		return worldMatrix;
+	}
+
+
+
+	//-----------------------------------------------------------------------------
+	// Name: FindPath
+	// Desc: Finds a path using A*
+	//-----------------------------------------------------------------------------
+	list<POINT>  Terrain::FindPath (int posX,int posZ,int destX,int destZ)
+	{
+		vector<HeightMapType*> openNodes;
+		vector<HeightMapType*> closedNodes;
+
+		int index;
+		for(int j=0; j<terrainHeight; j++)
+		{
+			for(int i=0; i<terrainWidth; i++)
+			{	
+				index = (terrainHeight * j) + i;
+				pHeightMap[index].pParent = 0;
+			}
+		}
+
+
+		HeightMapType * node = &pHeightMap[GetGridIndex(posX,posZ)];
+		node->moveCost = 0;
+		node->pParent = 0;
+		openNodes.push_back(node);
+
+		//for (int i = 0; i < 10; i++)
+		{
+			node = NextNode(&openNodes,&closedNodes,destX,destZ);
+		}
+
+		
+
+		list<POINT> path;
+
+		while(node)
+		{
+			POINT p;
+			p.x = node->x;
+			p.y = node->z;
+			path.push_front(p);
+			node = node->pParent;
+		}
+
+		return path;
+	}
+
+
+
+	//-----------------------------------------------------------------------------
+	// Name: NextNode
+	// Desc: checks next node using A*
+	//-----------------------------------------------------------------------------
+	Terrain::HeightMapType *   Terrain::NextNode (vector<HeightMapType*> * pOpenNodes,vector<HeightMapType*> * pClosedNodes,int destX,int destZ)
+	{
+		list<Terrain::HeightMapType *> * path = NULL;
+
+		HeightMapType * node = (HeightMapType *) pOpenNodes->front();
+		pOpenNodes->erase(pOpenNodes->begin());
+		pClosedNodes->push_back(node);
+
+		if((int)node->x != destX || (int)node->z != destZ)
+		{
+
+			int directions[8][3] = {{0,1,10},{1,1,14},{-1,1,14},{1,0,10},{-1,0,10},{-1,-1,14},{1,-1,14},{0,-1,10}};
+		
+		
+			for (int i = 0; i < 8; i++)
+			{
+				int index = GetGridIndex(node->x + directions[i][0],node->z + directions[i][1]);
+
+				if(0 < index && index < terrainWidth * terrainHeight)
+				{
+					HeightMapType * nextNode = &pHeightMap[index];
+					
+					int alreadyClosed = false;
+					for (vector<HeightMapType*>::iterator it = pClosedNodes->begin(); it != pClosedNodes->end(); it++)
+					{
+						HeightMapType * closedNode = (HeightMapType*)*it;
+						if((int)nextNode->x == (int)closedNode->x && (int)nextNode->z == (int)closedNode->z)
+						{
+							alreadyClosed = true;
+							break;
+						}
+					}
+					
+					
+					
+					
+					if(!alreadyClosed && nextNode->walkable && !nextNode->occupied)
+					{
+						int moveCost = node->moveCost + directions[i][2];
+						int estimatedCost = abs(destX - nextNode->x) + abs(destZ - nextNode->z) * 10;
+						int totalCost = moveCost + estimatedCost;
+						
+						bool shorter = true;
+						if(nextNode->pParent && nextNode->pParent->totalCost < node->totalCost)
+						{
+							shorter = false;
+						}
+
+						if(shorter)
+						{
+							nextNode->moveCost = moveCost;
+							nextNode->estimatedCost = estimatedCost;
+							nextNode->totalCost = totalCost;
+							nextNode->pParent = node;
+					
+							vector<HeightMapType*>::iterator it = pOpenNodes->begin();
+							int alreadyAdded = false;
+							for (; it != pOpenNodes->end(); it++)
+							{
+								HeightMapType * p = (HeightMapType*)*it;
+								if((int)nextNode->x == (int)p->x && (int)nextNode->z == (int)p->z)
+								{
+									nextNode = NULL;
+									break;
+								}
+							}
+
+
+						
+
+							if(nextNode)
+							{			
+								for (vector<HeightMapType*>::iterator it = pOpenNodes->begin(); it != pOpenNodes->end(); it++)
+								{
+									HeightMapType * insertNodeHere = (HeightMapType*)*it;
+									if(nextNode->estimatedCost  < insertNodeHere->estimatedCost)
+									{
+									
+										pOpenNodes->insert(it,nextNode);
+										nextNode = NULL;
+										break;
+									}
+								}
+							}
+
+							if(nextNode)
+							{
+								pOpenNodes->push_back(nextNode);
+							}
+						}
+					}
+				}
+			}
+
+			bool result = false;
+			vector<HeightMapType*>::iterator i = pOpenNodes->begin();
+			for (; i != pOpenNodes->end(); i++)
+			{
+				node = NextNode(pOpenNodes,pClosedNodes,destX,destZ);
+
+				if(node)
+					break;
+			}
+		}
+
+		return node;
 	}
 }

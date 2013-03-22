@@ -40,18 +40,14 @@ public:
 		}
 	}config;
 
-	struct PathNode
-	{
-		int x,z;
-		int moveCost;
-		int EstimateCost;
-	};
+
+	float fateOutTime;
+	bool reachedEnding;
 
 private:
 	bool onMap;
-	bool reachedEnding;
 	D3DXVECTOR3 destination;
-	list<PathNode*> path;
+	list<POINT> path;
 public:
 	static vector<Config*> * LoadCfg(char*);
 
@@ -70,7 +66,7 @@ public:
 	bool ReachedEnding();
 	bool IsFlying();
 	bool IsBoss();
-	bool FindPath (Terrain * pTerrain,list<PathNode *> * path,int posX,int posY,int destX,int destY);
+	void SetPath(list<POINT>);
 
 };
 

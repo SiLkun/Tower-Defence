@@ -34,8 +34,8 @@ namespace TD
 	{
 		bool result;
 		level = 0;
-		gold = 10;
-		lives = 10;
+		gold = 100;
+		lives = 100;
 
 		config = LoadCfg("Data/Config/Game.cfg");
 
@@ -478,8 +478,6 @@ namespace TD
 					a.y = 0 ; //d.y * pCreeper->GetSpeed() ;
 					a.z = 0 ; //d.z * pCreeper->GetSpeed() ;
 
-					p.x = -1.0f;
-
 					if(pCreeper->IsFlying()) 
 					{
 						p.y += 6.0f;
@@ -488,23 +486,24 @@ namespace TD
 					
 					if(pCreeper->IsBoss())	
 					{
-						p.z = pTerrain->GetHeight()/2 - (i * 5.0f);		
+						p.z = pTerrain->GetHeight()/2 - (i * 5.0f) -1.0f;		
 						waveCount = 3;
 					}
 					else
 					{
-						p.z = pTerrain->GetHeight()/2 - (i * 2.0f);
+						p.z = pTerrain->GetHeight()/2 - (i * 2.0f)  -1.0f;
 						waveCount = 10;
 					}
 
 
 					pCreeper->SetPosition(p);
 					pCreeper->SetAcceleration(a);
-					pCreeper->SetDestination(D3DXVECTOR3(-1,0,-pTerrain->GetHeight()/2));
+					pCreeper->SetDestination(D3DXVECTOR3(0,0,-pTerrain->GetHeight()/2 -1.0f)  );
 					pCreeper->SetSpeed(0.1f);
 					pCreeper->SetScale(D3DXVECTOR3(scale,scale,scale));
 				
 					pCreeper->SetHealth(pCreeper->GetHealth() *  (1  + (    pow((level - waveId)/10,2)   )));
+					pCreeper->SetPath(pTerrain->FindPath(p.x,p.z,0,-pTerrain->GetHeight()/2));
 					creepersInGame.push_back(pCreeper);
 				}
 				level++;
@@ -582,14 +581,14 @@ namespace TD
 		for(vector<Creeper*>::iterator i = creepersInGame.begin();i != creepersInGame.end();)
 		{
 			Creeper* pCreeper = (Creeper*) *i;
-			if(pCreeper->GetHealth() <= 0)
+			if(pCreeper->GetHealth() <= 0 && pCreeper->fateOutTime <= 0.0f)
 			{
 				gold += pCreeper->config.gold;
 				delete pCreeper;
 				pCreeper = 0;
 				i = creepersInGame.erase(i);
 			}
-			else if(pCreeper->ReachedEnding())
+			else if(pCreeper->ReachedEnding() && pCreeper->fateOutTime <= 0.0f)
 			{
 				delete pCreeper;
 				pCreeper = 0;
@@ -668,6 +667,8 @@ namespace TD
 
 	void Game::MouseLeftMove(bool leftDown,float mouseX,float mouseY, D3DXVECTOR3& cameraPosition,D3DXMATRIX& viewMatrix)
 	{
+		if(!loaded)
+			return;
 		if(leftDown)
 		{
 			D3DXVECTOR3 p = Intersection(mouseX, mouseY,cameraPosition,viewMatrix);
@@ -677,6 +678,7 @@ namespace TD
 
 			p.y = pTerrain->GetHeight(p.x,p.z);
 
+		
 
 			if(pTowerPlacement == NULL)
 			{

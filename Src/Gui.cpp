@@ -912,7 +912,7 @@ namespace TD
 		float red, green, blue;
 		bool result;
 		
-		char tempString[3];
+		char tempString[32];
 
 		strcpy_s(timeString, "Lives Left:");
 		_itoa_s(livesLeft, tempString, 10);

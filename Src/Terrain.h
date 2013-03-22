@@ -6,6 +6,9 @@
 
 #include "stdafx.h"
 
+
+class Texture;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: Terrain
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +41,10 @@ private:
 		bool occupied;
 		bool buildable;
 		bool walkable;
-
+		int estimatedCost;
+		int moveCost;
+		int totalCost;
+		HeightMapType * pParent;
 	};
 
 	struct VectorType 
@@ -78,6 +84,9 @@ public:
 	bool GetWalkable(int x,int z);
 	bool GetBuildable(int x,int z);
 	D3DXMATRIX GetWorldMatrix();
+	int Terrain::GetGridIndex(int x,int z);
+	list<POINT>  FindPath (int posX,int posY,int destX,int destY);
+	HeightMapType* NextNode (vector<HeightMapType*> * ,vector<HeightMapType*> * ,int destX,int destZ);
 private:
 	bool LoadHeightMap(char*);
 	void NormalizeHeightMap();

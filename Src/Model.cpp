@@ -11,6 +11,11 @@ namespace TD
 		position.y = 0;
 		position.z = 0;
 
+		offset.x = 0.5f;
+		offset.y = 0.0f;
+		offset.z = 0.5f;
+
+
 		direction.x = 0;
 		direction.y = 0;
 		direction.z = 0;
@@ -36,6 +41,8 @@ namespace TD
 	Model::Model(const Model& other)
 	{
 		position = other.position;
+
+		offset = other.offset;
 
 		direction = other.direction;
 
@@ -63,8 +70,9 @@ namespace TD
 	{
 		acceleration += direction * speed * frameTime;
 		position += acceleration;
+
 		D3DXMatrixIdentity(&worldMatrix);
-		D3DXMatrixTranslation(&worldMatrix,position.x,position.y,position.z);
+		D3DXMatrixTranslation(&worldMatrix,position.x + offset.x,position.y,position.z + offset.z);
 		D3DXMATRIX scaleMatrix;
 		D3DXMatrixScaling (&scaleMatrix,scale.x,scale.y,scale.z);
 		D3DXMatrixMultiply(&worldMatrix,&scaleMatrix,&worldMatrix);

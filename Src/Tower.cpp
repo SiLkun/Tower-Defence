@@ -107,10 +107,10 @@ namespace TD
 		{
 			float distance = powf( powf(position.x - pTarget->GetPosition().x,2.0f) + powf(position.z - pTarget->GetPosition().z,2.0f),0.5f);
 
-				if(distance >= config.range)
-				{
-					pTarget = 0;
-				}
+			if(distance >= config.range || pTarget->GetHealth() <= 0 || pTarget->reachedEnding)
+			{
+				pTarget = 0;
+			}
 		}
 
 		if(!HasTarget() && pCreepers)
@@ -121,7 +121,7 @@ namespace TD
 				D3DXVECTOR3 p = pCreeper->GetPosition();
 				float distance = powf( powf(position.x - p.x,2.0f) + powf(position.z - p.z,2.0f),0.5f);
 
-				if(distance < config.range)
+				if(distance < config.range &&  pCreeper->GetHealth() > 0 && !pCreeper->reachedEnding)
 				{
 					pTarget = pCreeper;
 					return;

@@ -44,6 +44,7 @@ float4 PS(PixelInputType input) : SV_TARGET
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
 
+
 	// Invert the light direction for calculations.
     lightDir = -lightDirection;
 
